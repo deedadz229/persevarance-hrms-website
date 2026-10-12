@@ -34,35 +34,35 @@
 
 <div class="page-header">
     <div class="page-title-box">
-        <h2>Detail Audit Log #{{ $auditLog->id }}</h2>
-        <p>Rekam riwayat perubahan aktivitas dan data pada sistem</p>
+        <h2>{{ __('audit_logs.detail_title', ['id' => $auditLog->id]) }}</h2>
+        <p>{{ __('audit_logs.detail_subtitle') }}</p>
     </div>
     <div>
         <a href="{{ route('audit-logs.index') }}" class="btn btn-outline">
-            &larr; Kembali ke Daftar Log
+            &larr; {{ __('audit_logs.back_to_list') }}
         </a>
     </div>
 </div>
 
 <div class="card card-section" style="margin-bottom: 24px;">
-    <h3>Informasi Aktivitas</h3>
+    <h3>{{ __('audit_logs.activity_info') }}</h3>
     <div class="info-list">
-        <span class="info-label">Waktu Pencatatan</span>
+        <span class="info-label">{{ __('audit_logs.recorded_time') }}</span>
         <span class="info-val">
             <strong>{{ $auditLog->created_at ? $auditLog->created_at->format('d F Y, H:i:s') . ' WIB' : '-' }}</strong>
         </span>
 
-        <span class="info-label">Pengguna (User)</span>
+        <span class="info-label">{{ __('audit_logs.user') }}</span>
         <span class="info-val">
             @if ($auditLog->user)
                 <strong>{{ $auditLog->user->name }}</strong> ({{ $auditLog->user->email }})
                 <span class="status-badge" style="margin-left: 8px; font-size: 11px;">{{ $auditLog->user->role?->label ?? 'Role' }}</span>
             @else
-                <span style="color: var(--muted); font-style: italic;">Sistem / Eksternal</span>
+                <span style="color: var(--muted); font-style: italic;">{{ __('audit_logs.system_external') }}</span>
             @endif
         </span>
 
-        <span class="info-label">Aksi (Action)</span>
+        <span class="info-label">{{ __('audit_logs.action') }}</span>
         <span class="info-val">
             @php
                 $badgeClass = match(true) {
@@ -81,37 +81,37 @@
             </span>
         </span>
 
-        <span class="info-label">Tipe Entitas</span>
+        <span class="info-label">{{ __('audit_logs.entity_type') }}</span>
         <span class="info-val">
-            <code>{{ $auditLog->entity_type ?? 'Tidak spesifik' }}</code>
+            <code>{{ $auditLog->entity_type ?? __('audit_logs.not_specified') }}</code>
         </span>
 
-        <span class="info-label">ID Entitas</span>
+        <span class="info-label">{{ __('audit_logs.entity_id') }}</span>
         <span class="info-val">
             <strong>{{ $auditLog->entity_id ?? '-' }}</strong>
         </span>
 
-        <span class="info-label">Alamat IP</span>
+        <span class="info-label">{{ __('audit_logs.ip_address') }}</span>
         <span class="info-val" style="font-family: ui-monospace, monospace;">
-            {{ $auditLog->ip_address ?? 'Tidak tercatat' }}
+            {{ $auditLog->ip_address ?? __('audit_logs.not_recorded') }}
         </span>
 
-        <span class="info-label">User Agent</span>
+        <span class="info-label">{{ __('audit_logs.device_browser') }}</span>
         <span class="info-val" style="color: var(--muted); font-size: 12px;">
-            {{ $auditLog->user_agent ?? 'Tidak tercatat' }}
+            {{ $auditLog->user_agent ?? __('audit_logs.not_recorded') }}
         </span>
     </div>
 </div>
 
 <div class="detail-grid">
     <div class="card card-section">
-        <h3 style="color: #a33e3e;">Nilai Lama (Old Values)</h3>
+        <h3 style="color: #a33e3e;">{{ __('audit_logs.old_values') }}</h3>
         @if (!empty($auditLog->old_values) && is_array($auditLog->old_values))
             <table class="values-table">
                 <thead>
                     <tr>
-                        <th>Kolom / Field</th>
-                        <th>Nilai Sebelum Perubahan</th>
+                        <th>{{ __('audit_logs.column_field') }}</th>
+                        <th>{{ __('audit_logs.value_before') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -134,18 +134,18 @@
                 </tbody>
             </table>
         @else
-            <div class="empty-note">Tidak ada data nilai lama</div>
+            <div class="empty-note">{{ __('audit_logs.no_old_values') }}</div>
         @endif
     </div>
 
     <div class="card card-section">
-        <h3 style="color: #0a7b6f;">Nilai Baru (New Values)</h3>
+        <h3 style="color: #0a7b6f;">{{ __('audit_logs.new_values') }}</h3>
         @if (!empty($auditLog->new_values) && is_array($auditLog->new_values))
             <table class="values-table">
                 <thead>
                     <tr>
-                        <th>Kolom / Field</th>
-                        <th>Nilai Setelah Perubahan</th>
+                        <th>{{ __('audit_logs.column_field') }}</th>
+                        <th>{{ __('audit_logs.value_after') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -168,7 +168,7 @@
                 </tbody>
             </table>
         @else
-            <div class="empty-note">Tidak ada data nilai baru</div>
+            <div class="empty-note">{{ __('audit_logs.no_new_values') }}</div>
         @endif
     </div>
 </div>

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Detail Role: ' . $role->label)
+@section('title', __('roles.role_detail_title', ['label' => $role->label]))
 
 @section('content')
 <style>
@@ -31,39 +31,39 @@
 
 <div class="page-header">
     <div class="page-title-box">
-        <h2>Peran: {{ $role->label }}</h2>
-        <p>Detail izin dan daftar pengguna yang memiliki peran ini</p>
+        <h2>{{ __('roles.role_detail_heading', ['label' => $role->label]) }}</h2>
+        <p>{{ __('roles.role_detail_sub') }}</p>
     </div>
     <div class="header-actions">
-        <a href="{{ route('roles.edit', $role) }}" class="btn btn-primary">Atur Izin Role</a>
-        <a href="{{ route('roles.index') }}" class="btn btn-outline">&larr; Kembali</a>
+        <a href="{{ route('roles.edit', $role) }}" class="btn btn-primary">{{ __('roles.assign_permissions') }}</a>
+        <a href="{{ route('roles.index') }}" class="btn btn-outline">&larr; {{ __('common.back') }}</a>
     </div>
 </div>
 
 <div class="role-grid">
     <div>
         <div class="card info-card" style="margin-bottom: 20px;">
-            <h3>Informasi Peran</h3>
+            <h3>{{ __('roles.role_info') }}</h3>
             <div class="meta-row">
-                <strong>Label Tampilan</strong>
+                <strong>{{ __('roles.display_label') }}</strong>
                 <span>{{ $role->label }}</span>
             </div>
             <div class="meta-row">
-                <strong>Nama Slug Database</strong>
+                <strong>{{ __('roles.slug') }}</strong>
                 <code>{{ $role->name }}</code>
             </div>
             <div class="meta-row">
-                <strong>Deskripsi</strong>
-                <span style="font-weight: normal; color: var(--muted);">{{ $role->description ?? 'Tidak ada deskripsi' }}</span>
+                <strong>{{ __('roles.description') }}</strong>
+                <span style="font-weight: normal; color: var(--muted);">{{ $role->description ?? __('roles.no_description') }}</span>
             </div>
             <div class="meta-row">
-                <strong>Total Izin Aktif</strong>
-                <span>{{ $role->permissions->count() }} Izin</span>
+                <strong>{{ __('roles.total_active_permissions') }}</strong>
+                <span>{{ __('roles.permissions_suffix', ['count' => $role->permissions->count()]) }}</span>
             </div>
         </div>
 
         <div class="card info-card">
-            <h3>Pengguna dengan Peran Ini ({{ $role->users->count() }})</h3>
+            <h3>{{ __('roles.users_with_role', ['count' => $role->users->count()]) }}</h3>
             <ul class="user-list">
                 @forelse ($role->users as $u)
                     <li class="user-item">
@@ -74,18 +74,18 @@
                         <span class="status-badge" style="font-size: 11px;">{{ $u->status }}</span>
                     </li>
                 @empty
-                    <li style="color: var(--muted); font-style: italic; padding: 10px 0;">Belum ada pengguna.</li>
+                    <li style="color: var(--muted); font-style: italic; padding: 10px 0;">{{ __('roles.no_users') }}</li>
                 @endforelse
             </ul>
         </div>
     </div>
 
     <div class="card info-card">
-        <h3>Daftar Izin Terpasang (Permissions)</h3>
+        <h3>{{ __('roles.installed_permissions') }}</h3>
         
         @if ($groupedPermissions->isEmpty())
             <div style="padding: 24px; text-align: center; color: var(--muted); font-style: italic;">
-                Peran ini belum memiliki hak akses permission.
+                {{ __('roles.no_permissions_assigned') }}
             </div>
         @else
             @foreach ($groupedPermissions as $groupName => $perms)

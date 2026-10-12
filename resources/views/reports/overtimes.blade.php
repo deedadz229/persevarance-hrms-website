@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Laporan Lembur (Overtime)')
+@section('title', __('reports.overtime_report'))
 
 @section('content')
 <style>
@@ -52,22 +52,22 @@
 
 <div class="page-header">
     <div class="page-title-box">
-        <h2>Laporan Lembur (Overtime)</h2>
-        <p>Rekapitulasi jam kerja lembur karyawan, rincian jadwal tugas, dan kepatuhan durasi lembur</p>
+        <h2>{{ __('reports.overtime_report') }}</h2>
+        <p>{{ __('reports.overtime_subtitle') }}</p>
     </div>
     <div class="header-actions">
         <a href="{{ route('reports.index') }}" class="btn btn-outline">
-            <span>←</span> Kembali ke Pusat Laporan
+            <span>←</span> {{ __('reports.back_to_center') }}
         </a>
         @if ($canExport)
             <div style="display: inline-flex; gap: 8px;">
-                <a href="{{ route('reports.overtimes.export', array_merge(request()->query(), ['format' => 'csv'])) }}" class="btn btn-outline" title="Export format CSV">
+                <a href="{{ route('reports.overtimes.export', array_merge(request()->query(), ['format' => 'csv'])) }}" class="btn btn-outline" title="{{ __('reports.export_csv') }}">
                     <span>⤓</span> CSV
                 </a>
-                <a href="{{ route('reports.overtimes.export', array_merge(request()->query(), ['format' => 'xlsx'])) }}" class="btn btn-success" title="Export format Excel (.xlsx)">
+                <a href="{{ route('reports.overtimes.export', array_merge(request()->query(), ['format' => 'xlsx'])) }}" class="btn btn-success" title="{{ __('reports.export_excel') }}">
                     <span>⤓</span> Excel
                 </a>
-                <a href="{{ route('reports.overtimes.export', array_merge(request()->query(), ['format' => 'pdf'])) }}" class="btn btn-outline" style="border-color: #e11d48; color: #e11d48;" title="Export format PDF">
+                <a href="{{ route('reports.overtimes.export', array_merge(request()->query(), ['format' => 'pdf'])) }}" class="btn btn-outline" style="border-color: #e11d48; color: #e11d48;" title="{{ __('reports.export_pdf') }}">
                     <span>⤓</span> PDF
                 </a>
             </div>
@@ -77,36 +77,36 @@
 
 <section class="summary-grid" aria-label="Ringkasan Laporan Lembur">
     <article class="card summary-card">
-        <span>Total Pengajuan</span>
+        <span>{{ __('leave.total_requests') }}</span>
         <strong style="color: var(--ink);">{{ number_format($summary['total']) }}</strong>
-        <small>Total permohonan lembur terfilter</small>
+        <small>{{ __('reports.overtime_desc') }}</small>
     </article>
     <article class="card summary-card">
-        <span>Jam Disetujui</span>
-        <strong style="color: #0c8f82;">{{ number_format((float) $summary['total_hours'], 1) }} <small style="display:inline; font-size:14px; color:var(--muted); font-weight:normal;">Jam</small></strong>
-        <small>Akumulasi durasi lembur tervalidasi</small>
+        <span>{{ __('reports.total_overtime_hours') }}</span>
+        <strong style="color: #0c8f82;">{{ number_format((float) $summary['total_hours'], 1) }} <small style="display:inline; font-size:14px; color:var(--muted); font-weight:normal;">{{ __('overtimes.hours') }}</small></strong>
+        <small>{{ __('reports.total_overtime_hint') }}</small>
     </article>
     <article class="card summary-card">
-        <span>Disetujui</span>
+        <span>{{ __('overtimes.approved') }}</span>
         <strong style="color: #0c8f82;">{{ number_format($summary['approved']) }}</strong>
-        <small>Jumlah pengajuan yang telah diapprove</small>
+        <small>{{ __('reports.approved_overtimes_hint') }}</small>
     </article>
     <article class="card summary-card">
-        <span>Menunggu / Ditolak</span>
+        <span>{{ __('reports.pending_overtimes') }}</span>
         <strong style="color: #c98804;">{{ number_format($summary['pending']) }} <small style="display:inline; font-size:14px; color:var(--muted); font-weight:normal;">/ {{ $summary['rejected'] }}</small></strong>
-        <small>Pending verifikasi atau ditolak</small>
+        <small>{{ __('reports.pending_overtimes_hint') }}</small>
     </article>
 </section>
 
 <div class="card filter-card">
     <form action="{{ route('reports.overtimes') }}" method="GET" class="filter-form">
         <div class="filter-group search-group">
-            <input type="text" name="search" value="{{ $currentSearch }}" placeholder="Cari nama karyawan atau ID..." class="form-control">
+            <input type="text" name="search" value="{{ $currentSearch }}" placeholder="{{ __('overtimes.search_placeholder') }}" class="form-control">
         </div>
 
         <div class="filter-group">
             <select name="month" class="form-control">
-                <option value="">Semua Bulan</option>
+                <option value="">{{ __('payrolls.all_months') }}</option>
                 @foreach ($months as $num => $name)
                     <option value="{{ $num }}" {{ $currentMonth == $num ? 'selected' : '' }}>
                         {{ $name }}
@@ -117,7 +117,7 @@
 
         <div class="filter-group" style="max-width: 120px;">
             <select name="year" class="form-control">
-                <option value="">Semua Tahun</option>
+                <option value="">{{ __('payrolls.all_years') }}</option>
                 @for ($y = (int) date('Y') + 1; $y >= 2024; $y--)
                     <option value="{{ $y }}" {{ $currentYear == $y ? 'selected' : '' }}>
                         {{ $y }}
@@ -128,7 +128,7 @@
 
         <div class="filter-group">
             <select name="department_id" class="form-control">
-                <option value="">Semua Departemen</option>
+                <option value="">{{ __('overtimes.all_departments') }}</option>
                 @foreach ($departments as $dept)
                     <option value="{{ $dept->id }}" {{ $currentDepartment == $dept->id ? 'selected' : '' }}>
                         {{ $dept->name }}
@@ -139,17 +139,17 @@
 
         <div class="filter-group">
             <select name="status" class="form-control">
-                <option value="">Semua Status</option>
-                <option value="approved" {{ $currentStatus === 'approved' ? 'selected' : '' }}>Disetujui</option>
-                <option value="pending" {{ $currentStatus === 'pending' ? 'selected' : '' }}>Menunggu</option>
-                <option value="rejected" {{ $currentStatus === 'rejected' ? 'selected' : '' }}>Ditolak</option>
+                <option value="">{{ __('overtimes.all_status') }}</option>
+                <option value="approved" {{ $currentStatus === 'approved' ? 'selected' : '' }}>{{ __('overtimes.status_approved') }}</option>
+                <option value="pending" {{ $currentStatus === 'pending' ? 'selected' : '' }}>{{ __('overtimes.status_pending') }}</option>
+                <option value="rejected" {{ $currentStatus === 'rejected' ? 'selected' : '' }}>{{ __('overtimes.status_rejected') }}</option>
             </select>
         </div>
 
         <div style="display: flex; gap: 8px;">
-            <button type="submit" class="btn btn-primary" style="padding: 9px 14px;">Filter</button>
+            <button type="submit" class="btn btn-primary" style="padding: 9px 14px;">{{ __('common.filter') }}</button>
             @if ($currentSearch || $currentMonth || $currentYear || $currentDepartment || $currentStatus)
-                <a href="{{ route('reports.overtimes') }}" class="btn btn-outline" style="padding: 9px 12px;">Reset</a>
+                <a href="{{ route('reports.overtimes') }}" class="btn btn-outline" style="padding: 9px 12px;">{{ __('common.reset') }}</a>
             @endif
         </div>
     </form>
@@ -160,14 +160,14 @@
         <table class="table-report">
             <thead>
                 <tr>
-                    <th>Karyawan</th>
-                    <th>Departemen</th>
-                    <th>Tanggal Lembur</th>
-                    <th>Waktu (Mulai – Selesai)</th>
-                    <th>Durasi</th>
-                    <th>Uraian Tugas</th>
-                    <th>Status</th>
-                    <th>Persetujuan</th>
+                    <th>{{ __('overtimes.employee') }}</th>
+                    <th>{{ __('overtimes.department') }}</th>
+                    <th>{{ __('overtimes.overtime_date') }}</th>
+                    <th>{{ __('overtimes.time_period') }}</th>
+                    <th>{{ __('overtimes.duration') }}</th>
+                    <th>{{ __('overtimes.task_description') }}</th>
+                    <th>{{ __('common.status') }}</th>
+                    <th>{{ __('leave.approval_verif') ?? 'Persetujuan' }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -175,7 +175,7 @@
                     <tr>
                         <td>
                             <div class="emp-info">
-                                <strong>{{ $row->employee?->name ?? 'Karyawan Dihapus' }}</strong>
+                                <strong>{{ $row->employee?->name ?? __('attendances.deleted_employee') }}</strong>
                                 <span><code>{{ $row->employee?->employee_code ?? '-' }}</code></span>
                             </div>
                         </td>
@@ -203,21 +203,20 @@
                         </td>
                         <td>
                             @if ($row->status === 'approved')
-                                <span style="color: #0c8f82; font-weight: 600;">✓ Disetujui</span>
+                                <span style="color: #0c8f82; font-weight: 600;">✓ {{ __('overtimes.approved') }}</span>
                                 <small style="display: block; color: var(--muted); font-size: 11px;">oleh {{ $row->approver?->name ?? 'HR' }}</small>
                             @elseif ($row->status === 'rejected')
-                                <span style="color: #d93838; font-weight: 600;">✗ Ditolak</span>
+                                <span style="color: #d93838; font-weight: 600;">✗ {{ __('overtimes.status_rejected') }}</span>
                                 <small style="display: block; color: var(--muted); font-size: 11px;">oleh {{ $row->approver?->name ?? 'HR' }}</small>
                             @else
-                                <span style="color: #c98804;">Menunggu</span>
+                                <span style="color: #c98804;">{{ __('overtimes.status_pending') }}</span>
                             @endif
                         </td>
                     </tr>
                 @empty
                     <tr>
                         <td colspan="8" class="empty-state">
-                            <p style="font-size: 15px; margin: 0 0 6px;">Tidak ada data lembur yang sesuai kriteria.</p>
-                            <small>Silakan ubah filter periode atau departemen.</small>
+                            <p style="font-size: 15px; margin: 0 0 6px;">{{ __('overtimes.no_records') }}</p>
                         </td>
                     </tr>
                 @endforelse
@@ -227,7 +226,7 @@
 
     @if ($overtimes->hasPages())
         <div class="pagination-wrapper">
-            <span>Menampilkan {{ $overtimes->firstItem() }} – {{ $overtimes->lastItem() }} dari {{ $overtimes->total() }} data</span>
+            <span>{{ __('overtimes.showing_records', ['from' => $overtimes->firstItem(), 'to' => $overtimes->lastItem(), 'total' => $overtimes->total()]) }}</span>
             {{ $overtimes->links() }}
         </div>
     @endif

@@ -23,8 +23,8 @@
 
 <div class="page-header">
     <div class="page-title-box">
-        <h2>Peran & Hak Akses (Role & Permission)</h2>
-        <p>Konfigurasi matriks perizinan granular untuk setiap peran pengguna di PTI HRMS</p>
+        <h2>{{ __('roles.title') }}</h2>
+        <p>{{ __('roles.subtitle') }}</p>
     </div>
 </div>
 
@@ -33,12 +33,12 @@
         <table class="table-roles">
             <thead>
                 <tr>
-                    <th>Peran (Role)</th>
-                    <th>Slug Database</th>
-                    <th>Deskripsi Peran</th>
-                    <th>Jumlah Pengguna</th>
-                    <th>Izin (Permissions)</th>
-                    <th style="text-align: right;">Aksi</th>
+                    <th>{{ __('roles.role') }}</th>
+                    <th>{{ __('roles.slug') }}</th>
+                    <th>{{ __('roles.description') }}</th>
+                    <th>{{ __('roles.users_count') }}</th>
+                    <th>{{ __('roles.permissions_count') }}</th>
+                    <th style="text-align: right;">{{ __('common.action') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -51,22 +51,22 @@
                             <code style="font-size: 12px; background: #f0f4f7; padding: 2px 6px; border-radius: 4px;">{{ $role->name }}</code>
                         </td>
                         <td style="color: var(--muted); max-width: 300px;">
-                            {{ $role->description ?? 'Tidak ada deskripsi' }}
+                            {{ $role->description ?? __('roles.no_description') }}
                         </td>
                         <td>
                             <span class="badge-users">
-                                {{ $role->users_count }} Pengguna
+                                {{ __('roles.users_suffix', ['count' => $role->users_count]) }}
                             </span>
                         </td>
                         <td>
                             <span class="badge-count">
-                                {{ $role->permissions_count }} Izin Aktif
+                                {{ __('roles.active_perms_suffix', ['count' => $role->permissions_count]) }}
                             </span>
                         </td>
                         <td style="text-align: right;">
                             <div class="action-links">
-                                <a href="{{ route('roles.show', $role) }}" class="action-link">Detail</a>
-                                <a href="{{ route('roles.edit', $role) }}" class="action-link action-link-primary">Atur Izin</a>
+                                <a href="{{ route('roles.show', $role) }}" class="action-link">{{ __('common.detail') }}</a>
+                                <a href="{{ route('roles.edit', $role) }}" class="action-link action-link-primary">{{ __('roles.assign_permissions') }}</a>
                             </div>
                         </td>
                     </tr>

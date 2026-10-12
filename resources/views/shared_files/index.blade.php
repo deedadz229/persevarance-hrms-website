@@ -137,11 +137,11 @@
 <div class="filter-card">
     <form action="{{ route('shared-files.index') }}" method="GET" class="filter-form">
         <div class="filter-group search-group">
-            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama file, kategori, pemilik, deskripsi..." class="form-control">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('shared_files.search_placeholder') }}" class="form-control">
         </div>
         <div class="filter-group">
             <select name="category" class="form-control">
-                <option value="">Semua Kategori</option>
+                <option value="">{{ __('shared_files.all_categories') }}</option>
                 @foreach ($availableCategories as $cat)
                     <option value="{{ $cat }}" {{ request('category') === $cat ? 'selected' : '' }}>
                         {{ $cat }}
@@ -152,16 +152,16 @@
         @if (! $isTaiwanAccount)
             <div class="filter-group">
                 <select name="sync_status" class="form-control">
-                    <option value="">Semua Status Pembagian</option>
-                    <option value="synced" {{ request('sync_status') === 'synced' ? 'selected' : '' }}>Tersinkron / Dibagikan</option>
-                    <option value="pending" {{ request('sync_status') === 'pending' ? 'selected' : '' }}>Pending / Belum Dibagikan</option>
+                    <option value="">{{ __('shared_files.all_sync_status') }}</option>
+                    <option value="synced" {{ request('sync_status') === 'synced' ? 'selected' : '' }}>{{ __('shared_files.status_synced') }}</option>
+                    <option value="pending" {{ request('sync_status') === 'pending' ? 'selected' : '' }}>{{ __('shared_files.status_pending') }}</option>
                 </select>
             </div>
         @endif
         <div style="display: flex; gap: 8px;">
-            <button type="submit" class="btn btn-primary" style="padding: 8px 14px;">Filter</button>
+            <button type="submit" class="btn btn-primary" style="padding: 8px 14px;">{{ __('common.filter') }}</button>
             @if (request()->hasAny(['search', 'category', 'sync_status']))
-                <a href="{{ route('shared-files.index') }}" class="btn btn-outline" style="padding: 8px 12px;" title="Reset Filter">Reset</a>
+                <a href="{{ route('shared-files.index') }}" class="btn btn-outline" style="padding: 8px 12px;" title="{{ __('common.reset') }}">{{ __('common.reset') }}</a>
             @endif
         </div>
     </form>
@@ -172,16 +172,16 @@
     <table class="table-custom">
         <thead>
             <tr>
-                <th>Nama File</th>
-                <th>Kategori</th>
-                <th>Ukuran</th>
-                <th>Pemilik / Pengunggah</th>
+                <th>{{ __('shared_files.file_name') }}</th>
+                <th>{{ __('shared_files.category') }}</th>
+                <th>{{ __('shared_files.size') }}</th>
+                <th>{{ __('shared_files.owner_uploader') }}</th>
                 @if (! $isTaiwanAccount)
-                    <th>Penerima (Taiwan)</th>
-                    <th>Status</th>
+                    <th>{{ __('shared_files.recipients') }}</th>
+                    <th>{{ __('shared_files.sync_status') }}</th>
                 @endif
-                <th>Tanggal Unggah</th>
-                <th style="text-align: right;">Aksi</th>
+                <th>{{ __('shared_files.uploaded_at') }}</th>
+                <th style="text-align: right;">{{ __('common.action') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -196,7 +196,7 @@
                         </div>
                     </td>
                     <td>
-                        <span class="badge-category">{{ $file->category ?? 'Umum' }}</span>
+                        <span class="badge-category">{{ $file->category ?? __('shared_files.general_category') }}</span>
                     </td>
                     <td class="tabular-nums" style="white-space: nowrap; color: var(--muted); font-size: 12.5px;">
                         {{ $file->size ? number_format($file->size / 1024, 1) . ' KB' : '-' }}
@@ -204,7 +204,7 @@
                     <td>
                         <span style="font-weight: 500; color: var(--ink);">{{ $file->owner_name ?? $file->uploader?->name ?? '-' }}</span>
                         @if ($file->employee)
-                            <div style="font-size: 11.5px; color: var(--muted);">Terkait: {{ $file->employee->name }} ({{ $file->employee->employee_code }})</div>
+                            <div style="font-size: 11.5px; color: var(--muted);">{{ __('shared_files.related_prefix', ['name' => $file->employee->name, 'code' => $file->employee->employee_code]) }}</div>
                         @endif
                     </td>
                     @if (! $isTaiwanAccount)
@@ -216,14 +216,14 @@
                                     @endforeach
                                 </div>
                             @else
-                                <span style="color: var(--muted); font-size: 12px; font-style: italic;">Belum dibagikan</span>
+                                <span style="color: var(--muted); font-size: 12px; font-style: italic;">{{ __('shared_files.not_shared_yet') }}</span>
                             @endif
                         </td>
                         <td>
                             @if ($file->sync_status === 'synced')
-                                <span class="badge badge-synced">Tersinkron</span>
+                                <span class="badge badge-synced">{{ __('shared_files.synced_status') }}</span>
                             @else
-                                <span class="badge badge-pending">Pending</span>
+                                <span class="badge badge-pending">{{ __('shared_files.pending_status') }}</span>
                             @endif
                         </td>
                     @endif
@@ -233,30 +233,30 @@
                     <td style="text-align: right;">
                         <div class="action-links" style="justify-content: flex-end;">
                             {{-- Download Button (Safe Server Action) --}}
-                            <a href="{{ route('shared-files.download', $file) }}" class="btn btn-outline btn-sm" title="Unduh File">
+                            <a href="{{ route('shared-files.download', $file) }}" class="btn btn-outline btn-sm" title="{{ __('common.download') }}">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                                Unduh
+                                {{ __('common.download') }}
                             </a>
 
                             {{-- Detail Button --}}
-                            <a href="{{ route('shared-files.show', $file) }}" class="btn btn-outline btn-sm" title="Detail File">
-                                Detail
+                            <a href="{{ route('shared-files.show', $file) }}" class="btn btn-outline btn-sm" title="{{ __('common.detail') }}">
+                                {{ __('common.detail') }}
                             </a>
 
                             @if (! $isTaiwanAccount)
                                 {{-- Share Button --}}
                                 <button type="button" class="btn btn-outline btn-sm" 
                                     onclick="openShareModal({{ $file->id }}, '{{ addslashes($file->name) }}', {{ json_encode($file->recipients->pluck('id')) }})" 
-                                    title="Kelola Penerima">
-                                    Bagikan
+                                    title="{{ __('shared_files.share') }}">
+                                    {{ __('shared_files.share') }}
                                 </button>
 
                                 {{-- Delete Button --}}
-                                <form action="{{ route('shared-files.destroy', $file) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus file ini secara permanen?');" style="display: inline;">
+                                <form action="{{ route('shared-files.destroy', $file) }}" method="POST" onsubmit="return confirm('{{ __('shared_files.confirm_delete') }}');" style="display: inline;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" title="Hapus File">
-                                        Hapus
+                                    <button type="submit" class="btn btn-danger btn-sm" title="{{ __('common.delete') }}">
+                                        {{ __('common.delete') }}
                                     </button>
                                 </form>
                             @endif
@@ -267,12 +267,12 @@
                 <tr>
                     <td colspan="{{ $isTaiwanAccount ? 5 : 8 }}" class="empty-state">
                         <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--muted-light); margin-bottom: 8px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                        <p style="margin: 0; font-weight: 500;">Tidak ada file dokumen yang ditemukan.</p>
+                        <p style="margin: 0; font-weight: 500;">{{ __('shared_files.no_files') }}</p>
                         <p style="margin: 4px 0 0; font-size: 12px; color: var(--muted);">
                             @if ($isTaiwanAccount)
-                                Belum ada dokumen yang dibagikan kepada akun Anda.
+                                {{ __('shared_files.no_files_taiwan') }}
                             @else
-                                Silakan unggah file baru untuk mulai mengelola dokumen.
+                                {{ __('shared_files.no_files_admin') }}
                             @endif
                         </p>
                     </td>
@@ -282,7 +282,7 @@
     </table>
     @if ($sharedFiles->hasPages())
         <div class="pagination-wrapper">
-            <div>Menampilkan {{ $sharedFiles->firstItem() }} - {{ $sharedFiles->lastItem() }} dari {{ $sharedFiles->total() }} file</div>
+            <div>{{ __('shared_files.showing_records', ['from' => $sharedFiles->firstItem(), 'to' => $sharedFiles->lastItem(), 'total' => $sharedFiles->total()]) }}</div>
             <div>{{ $sharedFiles->links() }}</div>
         </div>
     @endif
@@ -293,23 +293,23 @@
     <div class="modal-backdrop" id="uploadModal">
         <div class="modal-card">
             <div class="modal-head">
-                <h3>Unggah Dokumen Baru</h3>
+                <h3>{{ __('shared_files.upload_modal_title') }}</h3>
                 <button type="button" class="modal-close" onclick="closeUploadModal()">&times;</button>
             </div>
             <form action="{{ route('shared-files.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
-                        <label class="form-label" for="file_input">Pilih Berkas *</label>
+                        <label class="form-label" for="file_input">{{ __('shared_files.choose_file') }} *</label>
                         <input type="file" name="file" id="file_input" required class="form-control" accept=".pdf,.xlsx,.xls,.doc,.docx,.csv,.png,.jpg,.jpeg,.zip">
-                        <div class="form-help">Mendukung format PDF, Excel (XLSX, XLS), Word, CSV, Gambar, atau ZIP. Maks 20 MB.</div>
+                        <div class="form-help">{{ __('shared_files.file_hint') }}</div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="file_name">Nama Tampilan File</label>
-                        <input type="text" name="name" id="file_name" placeholder="Biarkan kosong untuk menggunakan nama asli file" class="form-control">
+                        <label class="form-label" for="file_name">{{ __('shared_files.display_name') }}</label>
+                        <input type="text" name="name" id="file_name" placeholder="{{ __('shared_files.display_name_hint') }}" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="file_category">Kategori Dokumen</label>
+                        <label class="form-label" for="file_category">{{ __('shared_files.document_category') }}</label>
                         <input type="text" name="category" id="file_category" list="category_suggestions" placeholder="Misal: Kebijakan Perusahaan, Laporan Bulanan, Regulasi..." class="form-control" value="Umum">
                         <datalist id="category_suggestions">
                             <option value="Kebijakan & SOP">
@@ -321,16 +321,16 @@
                         </datalist>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="employee_id">Karyawan Terkait (Opsional)</label>
+                        <label class="form-label" for="employee_id">{{ __('shared_files.related_employee') }}</label>
                         <select name="employee_id" id="employee_id" class="form-control">
-                            <option value="">-- Tidak Ditautkan ke Karyawan Khusus --</option>
+                            <option value="">{{ __('shared_files.no_employee_link') }}</option>
                             @foreach ($employees as $emp)
                                 <option value="{{ $emp->id }}">{{ $emp->name }} ({{ $emp->employee_code }})</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Bagikan Langsung ke Akun Taiwan (Opsional)</label>
+                        <label class="form-label">{{ __('shared_files.share_direct') }}</label>
                         <div class="checkbox-list">
                             @forelse ($taiwanUsers as $tUser)
                                 <label class="checkbox-item">
@@ -338,19 +338,19 @@
                                     <span>{{ $tUser->name }} ({{ $tUser->email }})</span>
                                 </label>
                             @empty
-                                <span style="font-size: 12px; color: var(--muted);">Tidak ada akun Taiwan aktif yang terdaftar.</span>
+                                <span style="font-size: 12px; color: var(--muted);">{{ __('shared_files.no_active_taiwan') }}</span>
                             @endforelse
                         </div>
-                        <div class="form-help">Jika dipilih, status sinkronisasi akan langsung aktif (synced).</div>
+                        <div class="form-help">{{ __('shared_files.direct_share_hint') }}</div>
                     </div>
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label class="form-label" for="file_description">Deskripsi / Catatan Tambahan</label>
-                        <textarea name="description" id="file_description" rows="3" class="form-control" placeholder="Tuliskan catatan atau konteks dokumen ini..."></textarea>
+                        <label class="form-label" for="file_description">{{ __('shared_files.additional_description') }}</label>
+                        <textarea name="description" id="file_description" rows="3" class="form-control" placeholder="{{ __('shared_files.description_placeholder') }}"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline" onclick="closeUploadModal()">Batal</button>
-                    <button type="submit" class="btn btn-primary">Unggah Dokumen</button>
+                    <button type="button" class="btn btn-outline" onclick="closeUploadModal()">{{ __('common.cancel') }}</button>
+                    <button type="submit" class="btn btn-primary">{{ __('shared_files.upload_btn') }}</button>
                 </div>
             </form>
         </div>
@@ -360,17 +360,17 @@
     <div class="modal-backdrop" id="shareModal">
         <div class="modal-card">
             <div class="modal-head">
-                <h3>Kelola Pembagian File</h3>
+                <h3>{{ __('shared_files.share_modal_title') }}</h3>
                 <button type="button" class="modal-close" onclick="closeShareModal()">&times;</button>
             </div>
             <form id="shareForm" method="POST">
                 @csrf
                 <div class="modal-body">
                     <p style="margin: 0 0 16px; font-size: 13px; color: var(--muted);">
-                        Pilih akun Taiwan yang berhak melihat dan mengunduh file <strong id="shareModalFileName" style="color: var(--ink);"></strong>.
+                        {{ __('shared_files.share_modal_desc', ['name' => '']) }}<strong id="shareModalFileName" style="color: var(--ink);"></strong>.
                     </p>
                     <div class="form-group">
-                        <label class="form-label">Penerima Taiwan Account *</label>
+                        <label class="form-label">{{ __('shared_files.taiwan_recipients') }} *</label>
                         <div class="checkbox-list" id="shareCheckboxes">
                             @foreach ($taiwanUsers as $tUser)
                                 <label class="checkbox-item">
@@ -382,8 +382,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline" onclick="closeShareModal()">Batal</button>
-                    <button type="submit" class="btn btn-primary">Simpan Pembagian</button>
+                    <button type="button" class="btn btn-outline" onclick="closeShareModal()">{{ __('common.cancel') }}</button>
+                    <button type="submit" class="btn btn-primary">{{ __('shared_files.save_sharing') }}</button>
                 </div>
             </form>
         </div>

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Laporan Turnover & Status Karyawan')
+@section('title', __('reports.turnover_report'))
 
 @section('content')
 <style>
@@ -12,7 +12,7 @@
     .summary-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-bottom: 20px; }
     .summary-card { padding: 18px 20px; }
     .summary-card span { color: var(--muted); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
-    .summary-card strong { display: block; margin-top: 8px; font-size: 26px; letter-spacing: -.03em; }
+    .summary-card strong { display: block; margin-top: 8px; font-size: 24px; letter-spacing: -.03em; }
     .summary-card small { display: block; margin-top: 4px; color: #81909a; font-size: 11.5px; }
 
     .filter-card { padding: 18px 20px; margin-bottom: 20px; }
@@ -52,22 +52,22 @@
 
 <div class="page-header">
     <div class="page-title-box">
-        <h2>Laporan Turnover & Status Karyawan</h2>
-        <p>Rekapitulasi status kepegawaian, komposisi hubungan kerja, masa kerja, dan catatan terminasi</p>
+        <h2>{{ __('reports.turnover_report') }}</h2>
+        <p>{{ __('reports.turnover_subtitle') }}</p>
     </div>
     <div class="header-actions">
         <a href="{{ route('reports.index') }}" class="btn btn-outline">
-            <span>←</span> Kembali ke Pusat Laporan
+            <span>←</span> {{ __('reports.back_to_center') }}
         </a>
         @if ($canExport)
             <div style="display: inline-flex; gap: 8px;">
-                <a href="{{ route('reports.turnover.export', array_merge(request()->query(), ['format' => 'csv'])) }}" class="btn btn-outline" title="Export format CSV">
+                <a href="{{ route('reports.turnover.export', array_merge(request()->query(), ['format' => 'csv'])) }}" class="btn btn-outline" title="{{ __('reports.export_csv') }}">
                     <span>⤓</span> CSV
                 </a>
-                <a href="{{ route('reports.turnover.export', array_merge(request()->query(), ['format' => 'xlsx'])) }}" class="btn btn-success" title="Export format Excel (.xlsx)">
+                <a href="{{ route('reports.turnover.export', array_merge(request()->query(), ['format' => 'xlsx'])) }}" class="btn btn-success" title="{{ __('reports.export_excel') }}">
                     <span>⤓</span> Excel
                 </a>
-                <a href="{{ route('reports.turnover.export', array_merge(request()->query(), ['format' => 'pdf'])) }}" class="btn btn-outline" style="border-color: #e11d48; color: #e11d48;" title="Export format PDF">
+                <a href="{{ route('reports.turnover.export', array_merge(request()->query(), ['format' => 'pdf'])) }}" class="btn btn-outline" style="border-color: #e11d48; color: #e11d48;" title="{{ __('reports.export_pdf') }}">
                     <span>⤓</span> PDF
                 </a>
             </div>
@@ -77,36 +77,36 @@
 
 <section class="summary-grid" aria-label="Ringkasan Laporan Turnover">
     <article class="card summary-card">
-        <span>Total Karyawan</span>
-        <strong style="color: var(--ink);">{{ number_format($summary['total']) }} <small style="display:inline; font-size:13px; font-weight:normal; color:var(--muted);">Orang</small></strong>
-        <small>Total karyawan tercatat di sistem</small>
+        <span>{{ __('employees.title') }}</span>
+        <strong style="color: var(--ink);">{{ number_format($summary['total']) }} <small style="display:inline; font-size:13px; font-weight:normal; color:var(--muted);">orang</small></strong>
+        <small>{{ __('reports.turnover_desc') }}</small>
     </article>
     <article class="card summary-card">
-        <span>Karyawan Aktif</span>
-        <strong style="color: #0c8f82;">{{ number_format($summary['active']) }} <small style="display:inline; font-size:13px; font-weight:normal; color:var(--muted);">Orang</small></strong>
-        <small>Berstatus aktif bekerja</small>
+        <span>{{ __('reports.total_active_employees') }}</span>
+        <strong style="color: #0c8f82;">{{ number_format($summary['active']) }} <small style="display:inline; font-size:13px; font-weight:normal; color:var(--muted);">orang</small></strong>
+        <small>{{ __('common.active') }}</small>
     </article>
     <article class="card summary-card">
-        <span>Non-Aktif / Cuti Panjang</span>
-        <strong style="color: #c98804;">{{ number_format($summary['inactive']) }} <small style="display:inline; font-size:13px; font-weight:normal; color:var(--muted);">Orang</small></strong>
-        <small>Status penangguhan atau non-aktif</small>
+        <span>{{ __('common.inactive') }}</span>
+        <strong style="color: #c98804;">{{ number_format($summary['inactive']) }} <small style="display:inline; font-size:13px; font-weight:normal; color:var(--muted);">orang</small></strong>
+        <small>{{ __('common.inactive') }}</small>
     </article>
     <article class="card summary-card">
-        <span>Karyawan Resign</span>
-        <strong style="color: #d93838;">{{ number_format($summary['resigned']) }} <small style="display:inline; font-size:13px; font-weight:normal; color:var(--muted);">Orang</small></strong>
-        <small>Telah mengakhiri hubungan kerja</small>
+        <span>{{ __('reports.resigned_employees') }}</span>
+        <strong style="color: #d93838;">{{ number_format($summary['resigned']) }} <small style="display:inline; font-size:13px; font-weight:normal; color:var(--muted);">orang</small></strong>
+        <small>{{ __('employees.resigned_button') }}</small>
     </article>
 </section>
 
 <div class="card filter-card">
     <form action="{{ route('reports.turnover') }}" method="GET" class="filter-form">
         <div class="filter-group search-group">
-            <input type="text" name="search" value="{{ $currentSearch }}" placeholder="Cari nama karyawan atau ID..." class="form-control">
+            <input type="text" name="search" value="{{ $currentSearch }}" placeholder="{{ __('employees.search_placeholder') ?? 'Cari nama karyawan atau ID...' }}" class="form-control">
         </div>
 
         <div class="filter-group" style="max-width: 140px;">
             <select name="year" class="form-control">
-                <option value="">Semua Tahun</option>
+                <option value="">{{ __('payrolls.all_years') }}</option>
                 @for ($y = (int) date('Y') + 1; $y >= 2020; $y--)
                     <option value="{{ $y }}" {{ $currentYear == $y ? 'selected' : '' }}>
                         {{ $y }}
@@ -117,7 +117,7 @@
 
         <div class="filter-group">
             <select name="department_id" class="form-control">
-                <option value="">Semua Departemen</option>
+                <option value="">{{ __('employees.select_department') }}</option>
                 @foreach ($departments as $dept)
                     <option value="{{ $dept->id }}" {{ $currentDepartment == $dept->id ? 'selected' : '' }}>
                         {{ $dept->name }}
@@ -128,7 +128,7 @@
 
         <div class="filter-group">
             <select name="employment_type" class="form-control">
-                <option value="">Semua Tipe Kontrak</option>
+                <option value="">{{ __('employees.contract_type') }}</option>
                 <option value="permanent" {{ $currentEmploymentType === 'permanent' ? 'selected' : '' }}>Permanent (Tetap)</option>
                 <option value="contract" {{ $currentEmploymentType === 'contract' ? 'selected' : '' }}>Contract (Kontrak)</option>
                 <option value="internship" {{ $currentEmploymentType === 'internship' ? 'selected' : '' }}>Magang / Internship</option>
@@ -137,17 +137,17 @@
 
         <div class="filter-group">
             <select name="status" class="form-control">
-                <option value="">Semua Status</option>
-                <option value="active" {{ $currentStatus === 'active' ? 'selected' : '' }}>Aktif</option>
-                <option value="inactive" {{ $currentStatus === 'inactive' ? 'selected' : '' }}>Non-Aktif</option>
+                <option value="">{{ __('employees.work_status') }}</option>
+                <option value="active" {{ $currentStatus === 'active' ? 'selected' : '' }}>{{ __('common.active') }}</option>
+                <option value="inactive" {{ $currentStatus === 'inactive' ? 'selected' : '' }}>{{ __('common.inactive') }}</option>
                 <option value="resigned" {{ $currentStatus === 'resigned' ? 'selected' : '' }}>Resign</option>
             </select>
         </div>
 
         <div style="display: flex; gap: 8px;">
-            <button type="submit" class="btn btn-primary" style="padding: 9px 14px;">Filter</button>
+            <button type="submit" class="btn btn-primary" style="padding: 9px 14px;">{{ __('common.filter') }}</button>
             @if ($currentSearch || $currentYear || $currentDepartment || $currentEmploymentType || $currentStatus)
-                <a href="{{ route('reports.turnover') }}" class="btn btn-outline" style="padding: 9px 12px;">Reset</a>
+                <a href="{{ route('reports.turnover') }}" class="btn btn-outline" style="padding: 9px 12px;">{{ __('common.reset') }}</a>
             @endif
         </div>
     </form>
@@ -158,14 +158,14 @@
         <table class="table-report">
             <thead>
                 <tr>
-                    <th>Karyawan</th>
-                    <th>Departemen</th>
-                    <th>Jabatan</th>
-                    <th>Tipe Hubungan Kerja</th>
-                    <th>Tanggal Bergabung</th>
-                    <th>Status</th>
-                    <th>Tanggal Resign</th>
-                    <th>Status Khusus</th>
+                    <th>{{ __('employees.employee') }}</th>
+                    <th>{{ __('employees.department') }}</th>
+                    <th>{{ __('employees.position') }}</th>
+                    <th>{{ __('employees.employment_type') }}</th>
+                    <th>{{ __('employees.joined_at') }}</th>
+                    <th>{{ __('common.status') }}</th>
+                    <th>{{ __('employees.resigned_date') }}</th>
+                    <th>{{ __('employees.special_status') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -178,8 +178,8 @@
                             default => 'badge-inactive',
                         };
                         $statusLabel = match ($row->status) {
-                            'active' => 'Aktif',
-                            'inactive' => 'Non-Aktif',
+                            'active' => __('common.active'),
+                            'inactive' => __('common.inactive'),
                             'resigned' => 'Resign',
                             default => ucfirst($row->status),
                         };
@@ -226,8 +226,7 @@
                 @empty
                     <tr>
                         <td colspan="8" class="empty-state">
-                            <p style="font-size: 15px; margin: 0 0 6px;">Tidak ada data karyawan yang sesuai kriteria.</p>
-                            <small>Silakan ubah filter pencarian atau departemen.</small>
+                            <p style="font-size: 15px; margin: 0 0 6px;">{{ __('employees.no_employees_found') ?? 'Tidak ada data karyawan yang sesuai kriteria.' }}</p>
                         </td>
                     </tr>
                 @endforelse
@@ -237,7 +236,7 @@
 
     @if ($employees->hasPages())
         <div class="pagination-wrapper">
-            <span>Menampilkan {{ $employees->firstItem() }} – {{ $employees->lastItem() }} dari {{ $employees->total() }} data</span>
+            <span>{{ __('employees.showing_records', ['from' => $employees->firstItem(), 'to' => $employees->lastItem(), 'total' => $employees->total()]) }}</span>
             {{ $employees->links() }}
         </div>
     @endif

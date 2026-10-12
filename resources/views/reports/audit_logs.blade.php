@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Laporan Audit Trail')
+@section('title', __('reports.audit_report'))
 
 @section('content')
 <style>
@@ -47,22 +47,22 @@
 
 <div class="page-header">
     <div class="page-title-box">
-        <h2>Laporan Audit Trail</h2>
-        <p>Log rekam jejak aktivitas pengguna, riwayat mutasi data sensitif, dan integritas sistem</p>
+        <h2>{{ __('reports.audit_report') }}</h2>
+        <p>{{ __('reports.audit_subtitle') }}</p>
     </div>
     <div class="header-actions">
         <a href="{{ route('reports.index') }}" class="btn btn-outline">
-            <span>←</span> Kembali ke Pusat Laporan
+            <span>←</span> {{ __('reports.back_to_center') }}
         </a>
         @if ($canExport)
             <div style="display: inline-flex; gap: 8px;">
-                <a href="{{ route('reports.audit-logs.export', array_merge(request()->query(), ['format' => 'csv'])) }}" class="btn btn-outline" title="Export format CSV">
+                <a href="{{ route('reports.audit-logs.export', array_merge(request()->query(), ['format' => 'csv'])) }}" class="btn btn-outline" title="{{ __('reports.export_csv') }}">
                     <span>⤓</span> CSV
                 </a>
-                <a href="{{ route('reports.audit-logs.export', array_merge(request()->query(), ['format' => 'xlsx'])) }}" class="btn btn-success" title="Export format Excel (.xlsx)">
+                <a href="{{ route('reports.audit-logs.export', array_merge(request()->query(), ['format' => 'xlsx'])) }}" class="btn btn-success" title="{{ __('reports.export_excel') }}">
                     <span>⤓</span> Excel
                 </a>
-                <a href="{{ route('reports.audit-logs.export', array_merge(request()->query(), ['format' => 'pdf'])) }}" class="btn btn-outline" style="border-color: #e11d48; color: #e11d48;" title="Export format PDF">
+                <a href="{{ route('reports.audit-logs.export', array_merge(request()->query(), ['format' => 'pdf'])) }}" class="btn btn-outline" style="border-color: #e11d48; color: #e11d48;" title="{{ __('reports.export_pdf') }}">
                     <span>⤓</span> PDF
                 </a>
             </div>
@@ -73,12 +73,12 @@
 <div class="card filter-card">
     <form action="{{ route('reports.audit-logs') }}" method="GET" class="filter-form">
         <div class="filter-group search-group">
-            <input type="text" name="search" value="{{ $currentSearch }}" placeholder="Cari aksi, entitas, IP, atau pengguna..." class="form-control">
+            <input type="text" name="search" value="{{ $currentSearch }}" placeholder="{{ __('audit_logs.entity_type_placeholder') }}" class="form-control">
         </div>
 
         <div class="filter-group">
             <select name="action" class="form-control">
-                <option value="">Semua Aksi</option>
+                <option value="">{{ __('audit_logs.all_actions') }}</option>
                 @foreach ($actions as $act)
                     <option value="{{ $act }}" {{ $currentAction === $act ? 'selected' : '' }}>
                         {{ $act }}
@@ -89,7 +89,7 @@
 
         <div class="filter-group">
             <select name="user_id" class="form-control">
-                <option value="">Semua Pengguna</option>
+                <option value="">{{ __('audit_logs.all_users') }}</option>
                 @foreach ($users as $u)
                     <option value="{{ $u->id }}" {{ $currentUserId == $u->id ? 'selected' : '' }}>
                         {{ $u->name }}
@@ -99,13 +99,13 @@
         </div>
 
         <div class="filter-group" style="max-width: 160px;">
-            <input type="date" name="date" value="{{ $currentDate }}" class="form-control" title="Tanggal Aktivitas">
+            <input type="date" name="date" value="{{ $currentDate }}" class="form-control" title="{{ __('audit_logs.recorded_time') }}">
         </div>
 
         <div style="display: flex; gap: 8px;">
-            <button type="submit" class="btn btn-primary" style="padding: 9px 14px;">Filter</button>
+            <button type="submit" class="btn btn-primary" style="padding: 9px 14px;">{{ __('common.filter') }}</button>
             @if ($currentSearch || $currentAction || $currentUserId || $currentDate)
-                <a href="{{ route('reports.audit-logs') }}" class="btn btn-outline" style="padding: 9px 12px;">Reset</a>
+                <a href="{{ route('reports.audit-logs') }}" class="btn btn-outline" style="padding: 9px 12px;">{{ __('common.reset') }}</a>
             @endif
         </div>
     </form>
@@ -116,12 +116,12 @@
         <table class="table-report">
             <thead>
                 <tr>
-                    <th>Waktu</th>
-                    <th>Pengguna</th>
-                    <th>Aksi</th>
-                    <th>Entitas</th>
-                    <th>Perubahan Data</th>
-                    <th>IP & Perangkat</th>
+                    <th>{{ __('audit_logs.time') }}</th>
+                    <th>{{ __('audit_logs.user') }}</th>
+                    <th>{{ __('audit_logs.action') }}</th>
+                    <th>{{ __('audit_logs.entity') }}</th>
+                    <th>{{ __('audit_logs.activity_info') }}</th>
+                    <th>{{ __('audit_logs.ip_address') }} & {{ __('audit_logs.device_browser') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -140,7 +140,7 @@
                             <small style="display: block; color: var(--muted);">{{ $row->created_at ? $row->created_at->format('H:i:s') : '-' }} WIB</small>
                         </td>
                         <td>
-                            <strong>{{ $row->user?->name ?? 'Sistem' }}</strong>
+                            <strong>{{ $row->user?->name ?? __('audit_logs.system_guest') }}</strong>
                             <small style="display: block; color: var(--muted); font-size: 11.5px;">{{ $row->user?->email ?? '-' }}</small>
                         </td>
                         <td>
@@ -157,7 +157,7 @@
                         <td>
                             @if ($row->new_values || $row->old_values)
                                 <details class="val-details">
-                                    <summary>Lihat Payload Data</summary>
+                                    <summary>{{ __('audit_logs.view_detail') }} Payload</summary>
                                     @if ($row->old_values)
                                         <div class="val-box">
                                             <strong style="color: #991b1b;">Old:</strong>
@@ -185,8 +185,8 @@
                 @empty
                     <tr>
                         <td colspan="6" class="empty-state">
-                            <p style="font-size: 15px; margin: 0 0 6px;">Tidak ada catatan aktivitas audit yang sesuai kriteria.</p>
-                            <small>Silakan ubah filter pencarian.</small>
+                            <p style="font-size: 15px; margin: 0 0 6px;">{{ __('audit_logs.no_logs') }}</p>
+                            <small>{{ __('audit_logs.no_logs_hint') }}</small>
                         </td>
                     </tr>
                 @endforelse
@@ -196,7 +196,7 @@
 
     @if ($auditLogs->hasPages())
         <div class="pagination-wrapper">
-            <span>Menampilkan {{ $auditLogs->firstItem() }} – {{ $auditLogs->lastItem() }} dari {{ $auditLogs->total() }} data</span>
+            <span>{{ __('audit_logs.showing_records', ['from' => $auditLogs->firstItem(), 'to' => $auditLogs->lastItem(), 'total' => $auditLogs->total()]) }}</span>
             {{ $auditLogs->links() }}
         </div>
     @endif

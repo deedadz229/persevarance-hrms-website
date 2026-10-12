@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Pengaturan Sistem & Akun')
+@section('title', __('settings.title'))
 
 @section('content')
 <style>
@@ -30,23 +30,23 @@
 
 <div class="page-header">
     <div class="page-title-box">
-        <h2>Pengaturan Akun & Informasi Sistem</h2>
-        <p>Kelola preferensi akun pribadi, kata sandi, dan tinjau spesifikasi sistem HRMS</p>
+        <h2>{{ __('settings.title') }}</h2>
+        <p>{{ __('settings.subtitle') }}</p>
     </div>
 </div>
 
 <div class="settings-grid">
     <!-- Profil Pengguna -->
     <div class="card settings-card">
-        <h3>Profil Pengguna</h3>
-        <p class="subtitle">Perbarui data identitas diri dan alamat email akun Anda</p>
+        <h3>{{ __('settings.profile_title') }}</h3>
+        <p class="subtitle">{{ __('settings.profile_subtitle') }}</p>
 
         <form action="{{ route('settings.profile') }}" method="POST">
             @csrf
             @method('PUT')
 
             <div class="form-group">
-                <label for="name" class="form-label">Nama Lengkap <span class="required">*</span></label>
+                <label for="name" class="form-label">{{ __('settings.full_name') }} <span class="required">*</span></label>
                 <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name', $user->name) }}" required>
                 @error('name')
                     <div class="form-error">{{ $message }}</div>
@@ -54,7 +54,7 @@
             </div>
 
             <div class="form-group">
-                <label for="email" class="form-label">Alamat Email <span class="required">*</span></label>
+                <label for="email" class="form-label">{{ __('settings.email') }} <span class="required">*</span></label>
                 <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email', $user->email) }}" required>
                 @error('email')
                     <div class="form-error">{{ $message }}</div>
@@ -62,56 +62,56 @@
             </div>
 
             <div class="form-group">
-                <label class="form-label">Peran Pengguna (Role)</label>
+                <label class="form-label">{{ __('settings.role') }}</label>
                 <input type="text" class="form-control" value="{{ $user->role?->label ?? 'Tanpa Role' }}" readonly>
-                <div style="font-size: 11.5px; color: var(--muted); margin-top: 4px;">Peran akun ditetapkan secara terpusat oleh Super Admin.</div>
+                <div style="font-size: 11.5px; color: var(--muted); margin-top: 4px;">{{ __('settings.role_hint') }}</div>
             </div>
 
             @if ($user->employee)
                 <div class="form-group">
-                    <label class="form-label">Profil Karyawan Terhubung</label>
+                    <label class="form-label">{{ __('settings.linked_employee') }}</label>
                     <input type="text" class="form-control" value="{{ $user->employee->employee_code }} - {{ $user->employee->name }}" readonly>
                 </div>
             @endif
 
             <div style="margin-top: 20px;">
-                <button type="submit" class="btn btn-primary">Simpan Profil</button>
+                <button type="submit" class="btn btn-primary">{{ __('settings.save_profile') }}</button>
             </div>
         </form>
     </div>
 
     <!-- Ubah Kata Sandi -->
     <div class="card settings-card">
-        <h3>Ubah Kata Sandi</h3>
-        <p class="subtitle">Tingkatkan keamanan akun dengan memperbarui kata sandi secara berkala</p>
+        <h3>{{ __('settings.password_title') }}</h3>
+        <p class="subtitle">{{ __('settings.password_subtitle') }}</p>
 
         <form action="{{ route('settings.password') }}" method="POST">
             @csrf
             @method('PUT')
 
             <div class="form-group">
-                <label for="current_password" class="form-label">Kata Sandi Saat Ini <span class="required">*</span></label>
-                <input type="password" name="current_password" id="current_password" class="form-control @error('current_password') is-invalid @enderror" placeholder="Masukkan kata sandi lama Anda" required>
+                <label for="current_password" class="form-label">{{ __('settings.current_password') }} <span class="required">*</span></label>
+                <input type="password" name="current_password" id="current_password" class="form-control @error('current_password') is-invalid @enderror" placeholder="{{ __('settings.current_password_placeholder') }}" required>
                 @error('current_password')
                     <div class="form-error">{{ $message }}</div>
                 @enderror
             </div>
 
             <div class="form-group">
-                <label for="password" class="form-label">Kata Sandi Baru <span class="required">*</span></label>
-                <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" placeholder="Minimal 8 karakter" required>
+                <label for="password" class="form-label">{{ __('settings.new_password') }} <span class="required">*</span></label>
+                <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('settings.new_password_placeholder') }}" required>
                 @error('password')
                     <div class="form-error">{{ $message }}</div>
                 @enderror
             </div>
 
             <div class="form-group">
-                <label for="password_confirmation" class="form-label">Konfirmasi Kata Sandi Baru <span class="required">*</span></label>
-                <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="Ulangi kata sandi baru" required>
+                <label for="password_confirmation" class="form-label">{{ __('settings.confirm_password') }} <span class="required">*</span></label>
+                <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="{{ __('settings.confirm_password_placeholder') }}" required>
             </div>
 
             <div style="margin-top: 20px;">
-                <button type="submit" class="btn btn-primary">Perbarui Kata Sandi</button>
+                <button type="submit" class="btn btn-primary">{{ __('settings.update_password') }}</button>
             </div>
         </form>
     </div>

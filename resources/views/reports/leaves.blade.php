@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Laporan Cuti & Izin')
+@section('title', __('reports.leave_report'))
 
 @section('content')
 <style>
@@ -52,22 +52,22 @@
 
 <div class="page-header">
     <div class="page-title-box">
-        <h2>Laporan Cuti & Izin Karyawan</h2>
-        <p>Rekapitulasi permohonan istirahat tahunan, izin sakit, dan verifikasi persetujuan HRD PTI</p>
+        <h2>{{ __('reports.leave_report') }}</h2>
+        <p>{{ __('reports.leave_subtitle') }}</p>
     </div>
     <div class="header-actions">
         <a href="{{ route('reports.index') }}" class="btn btn-outline">
-            <span>←</span> Kembali ke Pusat Laporan
+            <span>←</span> {{ __('reports.back_to_center') }}
         </a>
         @if ($canExport)
             <div style="display: inline-flex; gap: 8px;">
-                <a href="{{ route('reports.leaves.export', array_merge(request()->query(), ['format' => 'csv'])) }}" class="btn btn-outline" title="Export format CSV">
+                <a href="{{ route('reports.leaves.export', array_merge(request()->query(), ['format' => 'csv'])) }}" class="btn btn-outline" title="{{ __('reports.export_csv') }}">
                     <span>⤓</span> CSV
                 </a>
-                <a href="{{ route('reports.leaves.export', array_merge(request()->query(), ['format' => 'xlsx'])) }}" class="btn btn-success" title="Export format Excel (.xlsx)">
+                <a href="{{ route('reports.leaves.export', array_merge(request()->query(), ['format' => 'xlsx'])) }}" class="btn btn-success" title="{{ __('reports.export_excel') }}">
                     <span>⤓</span> Excel
                 </a>
-                <a href="{{ route('reports.leaves.export', array_merge(request()->query(), ['format' => 'pdf'])) }}" class="btn btn-outline" style="border-color: #e11d48; color: #e11d48;" title="Export format PDF">
+                <a href="{{ route('reports.leaves.export', array_merge(request()->query(), ['format' => 'pdf'])) }}" class="btn btn-outline" style="border-color: #e11d48; color: #e11d48;" title="{{ __('reports.export_pdf') }}">
                     <span>⤓</span> PDF
                 </a>
             </div>
@@ -77,36 +77,36 @@
 
 <section class="summary-grid" aria-label="Ringkasan Laporan Cuti">
     <article class="card summary-card">
-        <span>Total Pengajuan</span>
+        <span>{{ __('leave.total_requests') }}</span>
         <strong style="color: var(--ink);">{{ number_format($summary['total']) }}</strong>
-        <small>Total permohonan cuti terfilter</small>
+        <small>{{ __('reports.total_leave_hint') }}</small>
     </article>
     <article class="card summary-card">
-        <span>Disetujui</span>
+        <span>{{ __('leave.approved') }}</span>
         <strong style="color: #0c8f82;">{{ number_format($summary['approved']) }}</strong>
-        <small>Telah disetujui pihak berwenang</small>
+        <small>{{ __('reports.approved_leaves_hint') }}</small>
     </article>
     <article class="card summary-card">
-        <span>Menunggu Persetujuan</span>
+        <span>{{ __('leave.pending_approval') }}</span>
         <strong style="color: #c98804;">{{ number_format($summary['pending']) }}</strong>
-        <small>Menunggu proses verifikasi HR</small>
+        <small>{{ __('reports.pending_leaves_hint') }}</small>
     </article>
     <article class="card summary-card">
-        <span>Ditolak</span>
+        <span>{{ __('leave.rejected') }}</span>
         <strong style="color: #d93838;">{{ number_format($summary['rejected']) }}</strong>
-        <small>Pengajuan tidak memenuhi kuota/syarat</small>
+        <small>{{ __('reports.rejected_leaves_hint') }}</small>
     </article>
 </section>
 
 <div class="card filter-card">
     <form action="{{ route('reports.leaves') }}" method="GET" class="filter-form">
         <div class="filter-group search-group">
-            <input type="text" name="search" value="{{ $currentSearch }}" placeholder="Cari nama karyawan atau ID..." class="form-control">
+            <input type="text" name="search" value="{{ $currentSearch }}" placeholder="{{ __('leave.search_placeholder') }}" class="form-control">
         </div>
 
         <div class="filter-group">
             <select name="month" class="form-control">
-                <option value="">Semua Bulan</option>
+                <option value="">{{ __('payrolls.all_months') }}</option>
                 @foreach ($months as $num => $name)
                     <option value="{{ $num }}" {{ $currentMonth == $num ? 'selected' : '' }}>
                         {{ $name }}
@@ -117,7 +117,7 @@
 
         <div class="filter-group" style="max-width: 120px;">
             <select name="year" class="form-control">
-                <option value="">Semua Tahun</option>
+                <option value="">{{ __('payrolls.all_years') }}</option>
                 @for ($y = (int) date('Y') + 1; $y >= 2024; $y--)
                     <option value="{{ $y }}" {{ $currentYear == $y ? 'selected' : '' }}>
                         {{ $y }}
@@ -128,7 +128,7 @@
 
         <div class="filter-group">
             <select name="department_id" class="form-control">
-                <option value="">Semua Departemen</option>
+                <option value="">{{ __('leave.all_departments') }}</option>
                 @foreach ($departments as $dept)
                     <option value="{{ $dept->id }}" {{ $currentDepartment == $dept->id ? 'selected' : '' }}>
                         {{ $dept->name }}
@@ -139,7 +139,7 @@
 
         <div class="filter-group">
             <select name="leave_type" class="form-control">
-                <option value="">Semua Jenis Cuti</option>
+                <option value="">{{ __('leave.all_leave_types') }}</option>
                 <option value="Cuti Tahunan" {{ $currentLeaveType === 'Cuti Tahunan' ? 'selected' : '' }}>Cuti Tahunan</option>
                 <option value="Izin Sakit" {{ $currentLeaveType === 'Izin Sakit' ? 'selected' : '' }}>Izin Sakit</option>
                 <option value="Izin Pribadi" {{ $currentLeaveType === 'Izin Pribadi' ? 'selected' : '' }}>Izin Pribadi</option>
@@ -149,17 +149,17 @@
 
         <div class="filter-group">
             <select name="status" class="form-control">
-                <option value="">Semua Status</option>
-                <option value="approved" {{ $currentStatus === 'approved' ? 'selected' : '' }}>Disetujui</option>
-                <option value="pending" {{ $currentStatus === 'pending' ? 'selected' : '' }}>Menunggu</option>
-                <option value="rejected" {{ $currentStatus === 'rejected' ? 'selected' : '' }}>Ditolak</option>
+                <option value="">{{ __('leave.all_status') }}</option>
+                <option value="approved" {{ $currentStatus === 'approved' ? 'selected' : '' }}>{{ __('leave.status_approved') }}</option>
+                <option value="pending" {{ $currentStatus === 'pending' ? 'selected' : '' }}>{{ __('leave.status_pending') }}</option>
+                <option value="rejected" {{ $currentStatus === 'rejected' ? 'selected' : '' }}>{{ __('leave.status_rejected') }}</option>
             </select>
         </div>
 
         <div style="display: flex; gap: 8px;">
-            <button type="submit" class="btn btn-primary" style="padding: 9px 14px;">Filter</button>
+            <button type="submit" class="btn btn-primary" style="padding: 9px 14px;">{{ __('common.filter') }}</button>
             @if ($currentSearch || $currentMonth || $currentYear || $currentDepartment || $currentStatus || $currentLeaveType)
-                <a href="{{ route('reports.leaves') }}" class="btn btn-outline" style="padding: 9px 12px;">Reset</a>
+                <a href="{{ route('reports.leaves') }}" class="btn btn-outline" style="padding: 9px 12px;">{{ __('common.reset') }}</a>
             @endif
         </div>
     </form>
@@ -170,14 +170,14 @@
         <table class="table-report">
             <thead>
                 <tr>
-                    <th>Karyawan</th>
-                    <th>Departemen</th>
-                    <th>Jenis Cuti</th>
-                    <th>Periode Tanggal</th>
-                    <th>Durasi</th>
-                    <th>Alasan</th>
-                    <th>Status</th>
-                    <th>Persetujuan</th>
+                    <th>{{ __('leave.employee') }}</th>
+                    <th>{{ __('leave.department') }}</th>
+                    <th>{{ __('leave.leave_type_label') }}</th>
+                    <th>{{ __('leave.date_period') }}</th>
+                    <th>{{ __('leave.duration') }}</th>
+                    <th>{{ __('leave.reason') }}</th>
+                    <th>{{ __('common.status') }}</th>
+                    <th>{{ __('leave.approval_verif') ?? 'Persetujuan' }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -185,7 +185,7 @@
                     <tr>
                         <td>
                             <div class="emp-info">
-                                <strong>{{ $row->employee?->name ?? 'Karyawan Dihapus' }}</strong>
+                                <strong>{{ $row->employee?->name ?? __('attendances.deleted_employee') }}</strong>
                                 <span><code>{{ $row->employee?->employee_code ?? '-' }}</code></span>
                             </div>
                         </td>
@@ -211,21 +211,20 @@
                         </td>
                         <td>
                             @if ($row->status === 'approved')
-                                <span style="color: #0c8f82; font-weight: 600;">✓ Disetujui</span>
+                                <span style="color: #0c8f82; font-weight: 600;">✓ {{ __('leave.approved') }}</span>
                                 <small style="display: block; color: var(--muted); font-size: 11px;">oleh {{ $row->approver?->name ?? 'HR' }}</small>
                             @elseif ($row->status === 'rejected')
-                                <span style="color: #d93838; font-weight: 600;">✗ Ditolak</span>
+                                <span style="color: #d93838; font-weight: 600;">✗ {{ __('leave.rejected') }}</span>
                                 <small style="display: block; color: var(--muted); font-size: 11px;">oleh {{ $row->approver?->name ?? 'HR' }}</small>
                             @else
-                                <span style="color: #c98804;">Menunggu</span>
+                                <span style="color: #c98804;">{{ __('leave.status_pending') }}</span>
                             @endif
                         </td>
                     </tr>
                 @empty
                     <tr>
                         <td colspan="8" class="empty-state">
-                            <p style="font-size: 15px; margin: 0 0 6px;">Tidak ada data cuti & izin yang sesuai kriteria.</p>
-                            <small>Silakan ubah filter periode atau departemen.</small>
+                            <p style="font-size: 15px; margin: 0 0 6px;">{{ __('leave.no_requests') }}</p>
                         </td>
                     </tr>
                 @endforelse
@@ -235,7 +234,7 @@
 
     @if ($leaves->hasPages())
         <div class="pagination-wrapper">
-            <span>Menampilkan {{ $leaves->firstItem() }} – {{ $leaves->lastItem() }} dari {{ $leaves->total() }} data</span>
+            <span>{{ __('leave.showing_records', ['from' => $leaves->firstItem(), 'to' => $leaves->lastItem(), 'total' => $leaves->total()]) }}</span>
             {{ $leaves->links() }}
         </div>
     @endif

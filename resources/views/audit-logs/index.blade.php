@@ -40,17 +40,17 @@
 
 <div class="page-header">
     <div class="page-title-box">
-        <h2>Audit Trail Sistem</h2>
-        <p>Rekam jejak seluruh aktivitas penting, perubahan data, dan otentikasi pengguna pada website HRMS</p>
+        <h2>{{ __('audit_logs.title_full') }}</h2>
+        <p>{{ __('audit_logs.subtitle') }}</p>
     </div>
 </div>
 
 <div class="card filter-card">
     <form action="{{ route('audit-logs.index') }}" method="GET" class="filter-form">
         <div class="filter-group">
-            <label for="user_id">Pengguna</label>
+            <label for="user_id">{{ __('audit_logs.user') }}</label>
             <select name="user_id" id="user_id" class="form-control">
-                <option value="">-- Semua Pengguna --</option>
+                <option value="">{{ __('audit_logs.all_users') }}</option>
                 @foreach ($users as $u)
                     <option value="{{ $u->id }}" {{ request('user_id') == $u->id ? 'selected' : '' }}>
                         {{ $u->name }} ({{ $u->email }})
@@ -60,9 +60,9 @@
         </div>
 
         <div class="filter-group">
-            <label for="action">Aksi</label>
+            <label for="action">{{ __('audit_logs.action') }}</label>
             <select name="action" id="action" class="form-control">
-                <option value="">-- Semua Aksi --</option>
+                <option value="">{{ __('audit_logs.all_actions') }}</option>
                 @foreach ($availableActions as $act)
                     <option value="{{ $act }}" {{ request('action') == $act ? 'selected' : '' }}>
                         {{ $act }}
@@ -72,23 +72,23 @@
         </div>
 
         <div class="filter-group">
-            <label for="entity_type">Tipe Entitas</label>
-            <input type="text" name="entity_type" id="entity_type" class="form-control" placeholder="Contoh: User, Employee" value="{{ request('entity_type') }}">
+            <label for="entity_type">{{ __('audit_logs.entity_type') }}</label>
+            <input type="text" name="entity_type" id="entity_type" class="form-control" placeholder="{{ __('audit_logs.entity_type_placeholder') }}" value="{{ request('entity_type') }}">
         </div>
 
         <div class="filter-group" style="max-width: 150px;">
-            <label for="date_from">Dari Tanggal</label>
+            <label for="date_from">{{ __('audit_logs.date_from') }}</label>
             <input type="date" name="date_from" id="date_from" class="form-control" value="{{ request('date_from') }}">
         </div>
 
         <div class="filter-group" style="max-width: 150px;">
-            <label for="date_to">Sampai Tanggal</label>
+            <label for="date_to">{{ __('audit_logs.date_to') }}</label>
             <input type="date" name="date_to" id="date_to" class="form-control" value="{{ request('date_to') }}">
         </div>
 
         <div style="display: flex; gap: 8px;">
-            <button type="submit" class="btn btn-primary">Filter</button>
-            <a href="{{ route('audit-logs.index') }}" class="btn btn-outline">Reset</a>
+            <button type="submit" class="btn btn-primary">{{ __('common.filter') }}</button>
+            <a href="{{ route('audit-logs.index') }}" class="btn btn-outline">{{ __('common.reset') }}</a>
         </div>
     </form>
 </div>
@@ -98,14 +98,14 @@
         <table class="table-audit">
             <thead>
                 <tr>
-                    <th>Waktu (WIB)</th>
-                    <th>Pengguna</th>
-                    <th>Aksi</th>
-                    <th>Entitas</th>
-                    <th>ID</th>
-                    <th>IP Address</th>
-                    <th>Perangkat / Browser</th>
-                    <th style="text-align: right;">Detail</th>
+                    <th>{{ __('audit_logs.time') }}</th>
+                    <th>{{ __('audit_logs.user') }}</th>
+                    <th>{{ __('audit_logs.action') }}</th>
+                    <th>{{ __('audit_logs.entity') }}</th>
+                    <th>{{ __('audit_logs.id') }}</th>
+                    <th>{{ __('audit_logs.ip_address') }}</th>
+                    <th>{{ __('audit_logs.device_browser') }}</th>
+                    <th style="text-align: right;">{{ __('audit_logs.detail') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -132,7 +132,7 @@
                                 <strong>{{ $log->user->name }}</strong>
                                 <span style="display: block; font-size: 11px; color: var(--muted);">{{ $log->user->email }}</span>
                             @else
-                                <span style="color: var(--muted); font-style: italic;">Sistem / Tamu</span>
+                                <span style="color: var(--muted); font-style: italic;">{{ __('audit_logs.system_guest') }}</span>
                             @endif
                         </td>
                         <td>
@@ -154,7 +154,7 @@
                         </td>
                         <td style="text-align: right;">
                             <a href="{{ route('audit-logs.show', $log) }}" class="action-link">
-                                <span>Lihat</span> &rarr;
+                                <span>{{ __('audit_logs.view_detail') }}</span> &rarr;
                             </a>
                         </td>
                     </tr>
@@ -163,8 +163,8 @@
                         <td colspan="8">
                             <div class="empty-state">
                                 <div style="font-size: 32px; margin-bottom: 8px;">◉</div>
-                                <strong>Tidak ada log audit ditemukan</strong>
-                                <p style="margin-top: 4px; font-size: 12px;">Coba sesuaikan filter pencarian Anda.</p>
+                                <strong>{{ __('audit_logs.no_logs') }}</strong>
+                                <p style="margin-top: 4px; font-size: 12px;">{{ __('audit_logs.no_logs_hint') }}</p>
                             </div>
                         </td>
                     </tr>
@@ -175,7 +175,7 @@
 
     @if ($auditLogs->hasPages())
         <div class="pagination-wrapper">
-            <span>Menampilkan {{ $auditLogs->firstItem() ?? 0 }} - {{ $auditLogs->lastItem() ?? 0 }} dari {{ $auditLogs->total() }} log audit</span>
+            <span>{{ __('audit_logs.showing_records', ['from' => $auditLogs->firstItem() ?? 0, 'to' => $auditLogs->lastItem() ?? 0, 'total' => $auditLogs->total()]) }}</span>
             {{ $auditLogs->links() }}
         </div>
     @endif

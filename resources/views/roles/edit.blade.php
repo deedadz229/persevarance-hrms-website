@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Atur Izin Role: ' . $role->label)
+@section('title', __('roles.configure_role_title', ['label' => $role->label]))
 
 @section('content')
 <style>
@@ -32,18 +32,18 @@
 
 <div class="page-header">
     <div class="page-title-box">
-        <h2>Atur Hak Akses: {{ $role->label }}</h2>
-        <p>Centang izin yang diberikan kepada pengguna dengan peran {{ $role->label }}</p>
+        <h2>{{ __('roles.configure_role_title', ['label' => $role->label]) }}</h2>
+        <p>{{ __('roles.configure_role_sub', ['label' => $role->label]) }}</p>
     </div>
     <div>
-        <a href="{{ route('roles.show', $role) }}" class="btn btn-outline">&larr; Batal & Kembali</a>
+        <a href="{{ route('roles.show', $role) }}" class="btn btn-outline">&larr; {{ __('common.cancel') }}</a>
     </div>
 </div>
 
 <div class="card form-card">
     @if ($role->name === 'super_admin')
         <div class="alert-banner">
-            <strong>Proteksi Keamanan:</strong> Role Super Admin harus mempertahankan izin inti administrasi (seperti <code>manage_roles</code>, <code>manage_users</code>, dan <code>view_dashboard</code>) untuk mencegah sistem terkunci tanpa pengelola.
+            <strong>{{ __('roles.security_protection') }}</strong> {!! __('roles.security_protection_super_admin', ['perms' => '<code>manage_roles</code>, <code>manage_users</code>, <code>view_dashboard</code>']) !!}
         </div>
     @endif
 
@@ -52,20 +52,20 @@
         @method('PUT')
 
         <div class="form-group">
-            <label for="description" class="form-label">Deskripsi Peran</label>
-            <textarea name="description" id="description" rows="2" class="form-control" placeholder="Deskripsi tugas dan tanggung jawab peran ini...">{{ old('description', $role->description) }}</textarea>
+            <label for="description" class="form-label">{{ __('roles.description') }}</label>
+            <textarea name="description" id="description" rows="2" class="form-control" placeholder="{{ __('roles.description_placeholder') }}">{{ old('description', $role->description) }}</textarea>
         </div>
 
         <div style="margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center;">
-            <h3 style="margin: 0; font-size: 15px; font-weight: 700; color: var(--ink);">Matriks Hak Akses (Permissions)</h3>
-            <span style="font-size: 12px; color: var(--muted);">Pilih izin yang diizinkan untuk peran ini</span>
+            <h3 style="margin: 0; font-size: 15px; font-weight: 700; color: var(--ink);">{{ __('roles.permissions_matrix') }}</h3>
+            <span style="font-size: 12px; color: var(--muted);">{{ __('roles.permissions_matrix_hint') }}</span>
         </div>
 
         @foreach ($groupedPermissions as $groupName => $permissions)
             <div class="group-box">
                 <div class="group-header">
                     <h4>{{ $groupName }}</h4>
-                    <span style="font-size: 11.5px; color: var(--muted);">{{ $permissions->count() }} opsi</span>
+                    <span style="font-size: 11.5px; color: var(--muted);">{{ __('roles.options_count', ['count' => $permissions->count()]) }}</span>
                 </div>
                 <div class="perm-grid">
                     @foreach ($permissions as $permission)
@@ -76,7 +76,7 @@
                             <input type="checkbox" name="permissions[]" value="{{ $permission->id }}" {{ $isChecked ? 'checked' : '' }}>
                             <div class="perm-info">
                                 <strong>{{ $permission->name }}</strong>
-                                <span>{{ $permission->description ?? 'Tidak ada deskripsi' }}</span>
+                                <span>{{ $permission->description ?? __('roles.no_description') }}</span>
                             </div>
                         </label>
                     @endforeach
@@ -85,8 +85,8 @@
         @endforeach
 
         <div class="form-actions">
-            <button type="submit" class="btn btn-primary">Simpan Perubahan Izin</button>
-            <a href="{{ route('roles.show', $role) }}" class="btn btn-outline">Batal</a>
+            <button type="submit" class="btn btn-primary">{{ __('roles.save_permission_changes') }}</button>
+            <a href="{{ route('roles.show', $role) }}" class="btn btn-outline">{{ __('common.cancel') }}</a>
         </div>
     </form>
 </div>

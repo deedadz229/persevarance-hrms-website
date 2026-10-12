@@ -146,7 +146,7 @@
                     </table>
                 @else
                     <p style="color: var(--muted); font-size: 13px; font-style: italic; margin: 0 0 16px;">
-                        File ini belum dibagikan kepada akun Taiwan manapun.
+                        {{ __('shared_files.not_shared_note') }}
                     </p>
                 @endif
 
@@ -154,7 +154,7 @@
                 <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line);">
                     <form action="{{ route('shared-files.share', $sharedFile) }}" method="POST">
                         @csrf
-                        <label style="display: block; font-size: 12.5px; font-weight: 600; margin-bottom: 8px;">Pilih Akun Taiwan untuk Dibagikan:</label>
+                        <label style="display: block; font-size: 12.5px; font-weight: 600; margin-bottom: 8px;">{{ __('shared_files.select_taiwan_accounts') }}</label>
                         <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                             @foreach ($taiwanUsers as $tUser)
                                 <label style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; margin-right: 12px; cursor: pointer;">
@@ -211,7 +211,7 @@
                         <div style="color: var(--muted);">{{ __('shared_files.direction') }}: {{ strtoupper($log->direction) }}</div>
                     </div>
                 @empty
-                    <p style="color: var(--muted); font-size: 12px; margin: 0; font-style: italic;">Belum ada catatan log sinkronisasi.</p>
+                    <p style="color: var(--muted); font-size: 12px; margin: 0; font-style: italic;">{{ __('shared_files.no_sync_logs') }}</p>
                 @endforelse
             </div>
         @endif

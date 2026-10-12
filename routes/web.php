@@ -12,6 +12,7 @@ use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\SharedFileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -204,6 +205,29 @@ Route::middleware('auth')->group(function () {
             ->name('audit-logs.index');
         Route::get('/audit-logs/{auditLog}', [AuditLogController::class, 'show'])
             ->name('audit-logs.show');
+    });
+
+    // Aktivitas File / Shared Files Module
+    Route::middleware('permission:view_shared_files')->group(function () {
+        Route::get('/shared-files', [SharedFileController::class, 'index'])
+            ->name('shared-files.index');
+        Route::get('/shared-files/{sharedFile}', [SharedFileController::class, 'show'])
+            ->name('shared-files.show');
+        Route::get('/shared-files/{sharedFile}/download', [SharedFileController::class, 'download'])
+            ->name('shared-files.download');
+
+        Route::middleware('permission:manage_shared_files')->group(function () {
+            Route::post('/shared-files', [SharedFileController::class, 'store'])
+                ->name('shared-files.store');
+            Route::put('/shared-files/{sharedFile}', [SharedFileController::class, 'update'])
+                ->name('shared-files.update');
+            Route::post('/shared-files/{sharedFile}/share', [SharedFileController::class, 'share'])
+                ->name('shared-files.share');
+            Route::post('/shared-files/{sharedFile}/revoke', [SharedFileController::class, 'revoke'])
+                ->name('shared-files.revoke');
+            Route::delete('/shared-files/{sharedFile}', [SharedFileController::class, 'destroy'])
+                ->name('shared-files.destroy');
+        });
     });
 
     // User Management (Super Admin only)

@@ -51,8 +51,9 @@
             ],
         ],
         [
-            'label' => 'Laporan',
+            'label' => 'Laporan & File',
             'items' => [
+                ['label' => 'Aktivitas File', 'icon_key' => 'shared-files', 'route' => 'shared-files.index'],
                 ['label' => 'Laporan', 'icon_key' => 'reports', 'route' => 'reports.index'],
             ],
         ],
@@ -96,8 +97,9 @@
             ],
         ],
         [
-            'label' => 'Laporan',
+            'label' => 'Laporan & File',
             'items' => [
+                ['label' => 'Aktivitas File', 'icon_key' => 'shared-files', 'route' => 'shared-files.index'],
                 ['label' => 'Laporan', 'icon_key' => 'reports', 'route' => 'reports.index'],
             ],
         ],
@@ -136,7 +138,7 @@
         [
             'label' => 'Laporan & File',
             'items' => [
-                ['label' => 'Aktivitas File',      'icon_key' => 'shared-files'],
+                ['label' => 'Aktivitas File',      'icon_key' => 'shared-files', 'route' => 'shared-files.index'],
                 ['label' => 'Laporan',             'icon_key' => 'reports', 'route' => 'reports.index'],
             ],
         ],

@@ -51,7 +51,11 @@
         <div class="card-actions">
             <a href="{{ route('reports.attendances') }}" class="btn btn-primary">Lihat Laporan</a>
             @if ($canExport)
-                <a href="{{ route('reports.attendances.export') }}" class="btn btn-outline" title="Export CSV Langsung">⤓ CSV</a>
+                <div style="display: flex; gap: 4px;">
+                    <a href="{{ route('reports.attendances.export', ['format' => 'csv']) }}" class="btn btn-outline" style="padding: 8px 9px; font-size: 11.5px;" title="Export CSV">CSV</a>
+                    <a href="{{ route('reports.attendances.export', ['format' => 'xlsx']) }}" class="btn btn-outline" style="padding: 8px 9px; font-size: 11.5px; color: #0c8f82; border-color: #0c8f82;" title="Export Excel">Excel</a>
+                    <a href="{{ route('reports.attendances.export', ['format' => 'pdf']) }}" class="btn btn-outline" style="padding: 8px 9px; font-size: 11.5px; color: #e11d48; border-color: #e11d48;" title="Export PDF">PDF</a>
+                </div>
             @endif
         </div>
     </article>
@@ -68,7 +72,11 @@
         <div class="card-actions">
             <a href="{{ route('reports.leaves') }}" class="btn btn-primary">Lihat Laporan</a>
             @if ($canExport)
-                <a href="{{ route('reports.leaves.export') }}" class="btn btn-outline" title="Export CSV Langsung">⤓ CSV</a>
+                <div style="display: flex; gap: 4px;">
+                    <a href="{{ route('reports.leaves.export', ['format' => 'csv']) }}" class="btn btn-outline" style="padding: 8px 9px; font-size: 11.5px;" title="Export CSV">CSV</a>
+                    <a href="{{ route('reports.leaves.export', ['format' => 'xlsx']) }}" class="btn btn-outline" style="padding: 8px 9px; font-size: 11.5px; color: #0c8f82; border-color: #0c8f82;" title="Export Excel">Excel</a>
+                    <a href="{{ route('reports.leaves.export', ['format' => 'pdf']) }}" class="btn btn-outline" style="padding: 8px 9px; font-size: 11.5px; color: #e11d48; border-color: #e11d48;" title="Export PDF">PDF</a>
+                </div>
             @endif
         </div>
     </article>
@@ -85,7 +93,11 @@
         <div class="card-actions">
             <a href="{{ route('reports.overtimes') }}" class="btn btn-primary">Lihat Laporan</a>
             @if ($canExport)
-                <a href="{{ route('reports.overtimes.export') }}" class="btn btn-outline" title="Export CSV Langsung">⤓ CSV</a>
+                <div style="display: flex; gap: 4px;">
+                    <a href="{{ route('reports.overtimes.export', ['format' => 'csv']) }}" class="btn btn-outline" style="padding: 8px 9px; font-size: 11.5px;" title="Export CSV">CSV</a>
+                    <a href="{{ route('reports.overtimes.export', ['format' => 'xlsx']) }}" class="btn btn-outline" style="padding: 8px 9px; font-size: 11.5px; color: #0c8f82; border-color: #0c8f82;" title="Export Excel">Excel</a>
+                    <a href="{{ route('reports.overtimes.export', ['format' => 'pdf']) }}" class="btn btn-outline" style="padding: 8px 9px; font-size: 11.5px; color: #e11d48; border-color: #e11d48;" title="Export PDF">PDF</a>
+                </div>
             @endif
         </div>
     </article>
@@ -102,7 +114,11 @@
         <div class="card-actions">
             <a href="{{ route('reports.payrolls') }}" class="btn btn-primary">Lihat Laporan</a>
             @if ($canExport)
-                <a href="{{ route('reports.payrolls.export') }}" class="btn btn-outline" title="Export CSV Langsung">⤓ CSV</a>
+                <div style="display: flex; gap: 4px;">
+                    <a href="{{ route('reports.payrolls.export', ['format' => 'csv']) }}" class="btn btn-outline" style="padding: 8px 9px; font-size: 11.5px;" title="Export CSV">CSV</a>
+                    <a href="{{ route('reports.payrolls.export', ['format' => 'xlsx']) }}" class="btn btn-outline" style="padding: 8px 9px; font-size: 11.5px; color: #0c8f82; border-color: #0c8f82;" title="Export Excel">Excel</a>
+                    <a href="{{ route('reports.payrolls.export', ['format' => 'pdf']) }}" class="btn btn-outline" style="padding: 8px 9px; font-size: 11.5px; color: #e11d48; border-color: #e11d48;" title="Export PDF">PDF</a>
+                </div>
             @endif
         </div>
     </article>
@@ -119,7 +135,11 @@
         <div class="card-actions">
             <a href="{{ route('reports.turnover') }}" class="btn btn-primary">Lihat Laporan</a>
             @if ($canExport)
-                <a href="{{ route('reports.turnover.export') }}" class="btn btn-outline" title="Export CSV Langsung">⤓ CSV</a>
+                <div style="display: flex; gap: 4px;">
+                    <a href="{{ route('reports.turnover.export', ['format' => 'csv']) }}" class="btn btn-outline" style="padding: 8px 9px; font-size: 11.5px;" title="Export CSV">CSV</a>
+                    <a href="{{ route('reports.turnover.export', ['format' => 'xlsx']) }}" class="btn btn-outline" style="padding: 8px 9px; font-size: 11.5px; color: #0c8f82; border-color: #0c8f82;" title="Export Excel">Excel</a>
+                    <a href="{{ route('reports.turnover.export', ['format' => 'pdf']) }}" class="btn btn-outline" style="padding: 8px 9px; font-size: 11.5px; color: #e11d48; border-color: #e11d48;" title="Export PDF">PDF</a>
+                </div>
             @endif
         </div>
     </article>
@@ -137,7 +157,11 @@
             <div class="card-actions">
                 <a href="{{ route('reports.audit-logs') }}" class="btn btn-primary">Lihat Laporan</a>
                 @if ($canExport)
-                    <a href="{{ route('reports.audit-logs.export') }}" class="btn btn-outline" title="Export CSV Langsung">⤓ CSV</a>
+                    <div style="display: flex; gap: 4px;">
+                        <a href="{{ route('reports.audit-logs.export', ['format' => 'csv']) }}" class="btn btn-outline" style="padding: 8px 9px; font-size: 11.5px;" title="Export CSV">CSV</a>
+                        <a href="{{ route('reports.audit-logs.export', ['format' => 'xlsx']) }}" class="btn btn-outline" style="padding: 8px 9px; font-size: 11.5px; color: #0c8f82; border-color: #0c8f82;" title="Export Excel">Excel</a>
+                        <a href="{{ route('reports.audit-logs.export', ['format' => 'pdf']) }}" class="btn btn-outline" style="padding: 8px 9px; font-size: 11.5px; color: #e11d48; border-color: #e11d48;" title="Export PDF">PDF</a>
+                    </div>
                 @endif
             </div>
         </article>

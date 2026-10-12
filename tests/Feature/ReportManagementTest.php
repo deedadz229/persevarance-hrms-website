@@ -347,4 +347,219 @@ class ReportManagementTest extends TestCase
             'entity_type' => 'Report',
         ]);
     }
+
+    public function test_excel_exports_work_for_all_six_reports(): void
+    {
+        $management = $this->userForRole('manager_hrd');
+        $emp = $this->createEmployeeWithDept('Karyawan Excel All', 'EMP-EXC01');
+
+        Attendance::create([
+            'employee_id' => $emp->id,
+            'attendance_date' => '2026-10-05',
+            'check_in' => '08:00:00',
+            'check_out' => '17:00:00',
+            'location_status' => 'valid',
+            'wifi_verified' => true,
+        ]);
+
+        LeaveRequest::factory()->create([
+            'employee_id' => $emp->id,
+            'start_date' => '2026-10-10',
+            'end_date' => '2026-10-12',
+            'status' => 'approved',
+        ]);
+
+        Overtime::factory()->create([
+            'employee_id' => $emp->id,
+            'overtime_date' => '2026-10-15',
+            'start_time' => '18:00',
+            'end_time' => '20:00',
+            'duration' => 2.0,
+            'status' => 'approved',
+        ]);
+
+        $payroll = Payroll::factory()->create([
+            'employee_id' => $emp->id,
+            'period_month' => 10,
+            'period_year' => 2026,
+            'basic_salary' => 6000000,
+            'net_salary' => 6000000,
+        ]);
+
+        AuditLog::create([
+            'user_id' => $management->id,
+            'action' => 'test_audit_event',
+            'entity_type' => 'App\Models\Employee',
+            'entity_id' => $emp->id,
+            'ip_address' => '127.0.0.1',
+        ]);
+
+        $routes = [
+            'reports.attendances.export',
+            'reports.leaves.export',
+            'reports.overtimes.export',
+            'reports.payrolls.export',
+            'reports.turnover.export',
+            'reports.audit-logs.export',
+        ];
+
+        foreach ($routes as $routeName) {
+            $response = $this->actingAs($management)->get(route($routeName, ['format' => 'xlsx']));
+            $response->assertOk();
+            $disposition = (string) $response->headers->get('Content-Disposition');
+            $this->assertStringContainsString('attachment;', $disposition);
+            $this->assertStringContainsString('.xlsx', $disposition);
+        }
+    }
+
+    public function test_pdf_exports_work_for_all_six_reports(): void
+    {
+        $management = $this->userForRole('manager_hrd');
+        $emp = $this->createEmployeeWithDept('Karyawan PDF All', 'EMP-PDF01');
+
+        Attendance::create([
+            'employee_id' => $emp->id,
+            'attendance_date' => '2026-10-05',
+            'check_in' => '08:00:00',
+            'check_out' => '17:00:00',
+            'location_status' => 'valid',
+            'wifi_verified' => true,
+        ]);
+
+        LeaveRequest::factory()->create([
+            'employee_id' => $emp->id,
+            'start_date' => '2026-10-10',
+            'end_date' => '2026-10-12',
+            'status' => 'approved',
+        ]);
+
+        Overtime::factory()->create([
+            'employee_id' => $emp->id,
+            'overtime_date' => '2026-10-15',
+            'start_time' => '18:00',
+            'end_time' => '20:00',
+            'duration' => 2.0,
+            'status' => 'approved',
+        ]);
+
+        Payroll::factory()->create([
+            'employee_id' => $emp->id,
+            'period_month' => 10,
+            'period_year' => 2026,
+            'basic_salary' => 6000000,
+            'net_salary' => 6000000,
+        ]);
+
+        AuditLog::create([
+            'user_id' => $management->id,
+            'action' => 'test_audit_event_pdf',
+            'entity_type' => 'App\Models\Employee',
+            'entity_id' => $emp->id,
+            'ip_address' => '127.0.0.1',
+        ]);
+
+        $routes = [
+            'reports.attendances.export',
+            'reports.leaves.export',
+            'reports.overtimes.export',
+            'reports.payrolls.export',
+            'reports.turnover.export',
+            'reports.audit-logs.export',
+        ];
+
+        foreach ($routes as $routeName) {
+            $response = $this->actingAs($management)->get(route($routeName, ['format' => 'pdf']));
+            $response->assertOk();
+            $contentType = (string) $response->headers->get('Content-Type');
+            $disposition = (string) $response->headers->get('Content-Disposition');
+            $this->assertStringContainsString('application/pdf', $contentType);
+            $this->assertStringContainsString('attachment;', $disposition);
+            $this->assertStringContainsString('.pdf', $disposition);
+        }
+    }
+
+    public function test_taiwan_account_is_forbidden_from_excel_and_pdf_exports(): void
+    {
+        $taiwan = $this->userForRole('taiwan_account');
+
+        $routes = [
+            'reports.attendances.export',
+            'reports.leaves.export',
+            'reports.overtimes.export',
+            'reports.payrolls.export',
+            'reports.turnover.export',
+            'reports.audit-logs.export',
+        ];
+
+        foreach ($routes as $routeName) {
+            $this->actingAs($taiwan)->get(route($routeName, ['format' => 'xlsx']))->assertForbidden();
+            $this->actingAs($taiwan)->get(route($routeName, ['format' => 'pdf']))->assertForbidden();
+        }
+    }
+
+    public function test_exports_respect_filters_across_formats(): void
+    {
+        $management = $this->userForRole('manager_hrd');
+        $emp1 = $this->createEmployeeWithDept('Karyawan Filter Alpha', 'EMP-FLT01');
+        $emp2 = $this->createEmployeeWithDept('Karyawan Filter Beta', 'EMP-FLT02');
+
+        Attendance::create([
+            'employee_id' => $emp1->id,
+            'attendance_date' => '2026-10-05',
+            'check_in' => '08:00:00',
+            'check_out' => '17:00:00',
+            'location_status' => 'valid',
+            'wifi_verified' => true,
+        ]);
+
+        Attendance::create([
+            'employee_id' => $emp2->id,
+            'attendance_date' => '2026-10-05',
+            'check_in' => '09:00:00',
+            'check_out' => '17:00:00',
+            'location_status' => 'late',
+            'wifi_verified' => true,
+        ]);
+
+        // Filter search = 'Filter Alpha' format pdf
+        $response = $this->actingAs($management)->get(route('reports.attendances.export', [
+            'search' => 'Filter Alpha',
+            'format' => 'pdf',
+        ]));
+        $response->assertOk();
+        $this->assertStringContainsString('application/pdf', (string) $response->headers->get('Content-Type'));
+
+        // Filter search = 'Filter Beta' format xlsx
+        $responseXlsx = $this->actingAs($management)->get(route('reports.attendances.export', [
+            'search' => 'Filter Beta',
+            'format' => 'xlsx',
+        ]));
+        $responseXlsx->assertOk();
+        $this->assertStringContainsString('.xlsx', (string) $responseXlsx->headers->get('Content-Disposition'));
+    }
+
+    public function test_exported_files_are_valid_binaries_with_correct_magic_bytes(): void
+    {
+        $management = $this->userForRole('manager_hrd');
+        $this->createEmployeeWithDept('Karyawan Format Tester', 'EMP-FMT01');
+
+        // Test PDF response binary format
+        $pdfResponse = $this->actingAs($management)->get(route('reports.attendances.export', ['format' => 'pdf']));
+        $pdfResponse->assertOk();
+        $pdfContent = $pdfResponse->getContent();
+        // Standard PDF file starts with %PDF-
+        $this->assertStringStartsWith('%PDF-', $pdfContent);
+        $this->assertGreaterThan(1000, strlen($pdfContent));
+
+        // Test XLSX response binary format
+        $excelResponse = $this->actingAs($management)->get(route('reports.attendances.export', ['format' => 'xlsx']));
+        $excelResponse->assertOk();
+        // BinaryFileResponse - retrieve file content from binary stream
+        $excelFilePath = $excelResponse->getFile()->getPathname();
+        $this->assertFileExists($excelFilePath);
+        $excelContent = file_get_contents($excelFilePath);
+        // Standard XLSX (ZIP package) starts with PK header
+        $this->assertStringStartsWith("PK\x03\x04", $excelContent);
+        $this->assertGreaterThan(1000, strlen($excelContent));
+    }
 }

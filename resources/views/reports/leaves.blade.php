@@ -60,9 +60,17 @@
             <span>←</span> Kembali ke Pusat Laporan
         </a>
         @if ($canExport)
-            <a href="{{ route('reports.leaves.export', request()->query()) }}" class="btn btn-success">
-                <span>⤓</span> Export CSV
-            </a>
+            <div style="display: inline-flex; gap: 8px;">
+                <a href="{{ route('reports.leaves.export', array_merge(request()->query(), ['format' => 'csv'])) }}" class="btn btn-outline" title="Export format CSV">
+                    <span>⤓</span> CSV
+                </a>
+                <a href="{{ route('reports.leaves.export', array_merge(request()->query(), ['format' => 'xlsx'])) }}" class="btn btn-success" title="Export format Excel (.xlsx)">
+                    <span>⤓</span> Excel
+                </a>
+                <a href="{{ route('reports.leaves.export', array_merge(request()->query(), ['format' => 'pdf'])) }}" class="btn btn-outline" style="border-color: #e11d48; color: #e11d48;" title="Export format PDF">
+                    <span>⤓</span> PDF
+                </a>
+            </div>
         @endif
     </div>
 </div>

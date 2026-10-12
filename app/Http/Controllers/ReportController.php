@@ -2,6 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\AttendanceExport;
+use App\Exports\AuditLogExport;
+use App\Exports\LeaveExport;
+use App\Exports\OvertimeExport;
+use App\Exports\PayrollExport;
+use App\Exports\TurnoverExport;
 use App\Models\Attendance;
 use App\Models\AuditLog;
 use App\Models\Department;
@@ -11,8 +17,12 @@ use App\Models\Overtime;
 use App\Models\Payroll;
 use App\Models\PayrollDetail;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\View\View;
+use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ReportController extends Controller
@@ -91,9 +101,11 @@ class ReportController extends Controller
         ]);
     }
 
-    public function exportAttendances(Request $request): StreamedResponse
+    public function exportAttendances(Request $request): StreamedResponse|BinaryFileResponse|Response
     {
         $this->ensureCanExportReports($request);
+
+        $format = $this->resolveExportFormat($request);
 
         $month = $request->filled('month') ? (int) $request->query('month') : null;
         $year = $request->filled('year') ? (int) $request->query('year') : null;
@@ -105,7 +117,20 @@ class ReportController extends Controller
 
         $this->logReportExport($request, 'attendances', $request->query());
 
-        $filename = 'laporan_absensi_'.date('Ymd_His').'.csv';
+        $timestamp = date('Ymd_His');
+
+        if ($format === 'xlsx') {
+            return Excel::download(new AttendanceExport($records), "laporan_absensi_{$timestamp}.xlsx");
+        }
+
+        if ($format === 'pdf') {
+            $pdf = Pdf::loadView('reports.pdf.attendances', ['records' => $records])
+                ->setPaper('a4', 'landscape');
+
+            return $pdf->download("laporan_absensi_{$timestamp}.pdf");
+        }
+
+        $filename = "laporan_absensi_{$timestamp}.csv";
         $headers = [
             'Content-Type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=\"{$filename}\"",
@@ -247,9 +272,11 @@ class ReportController extends Controller
         ]);
     }
 
-    public function exportLeaves(Request $request): StreamedResponse
+    public function exportLeaves(Request $request): StreamedResponse|BinaryFileResponse|Response
     {
         $this->ensureCanExportReports($request);
+
+        $format = $this->resolveExportFormat($request);
 
         $month = $request->filled('month') ? (int) $request->query('month') : null;
         $year = $request->filled('year') ? (int) $request->query('year') : null;
@@ -262,7 +289,20 @@ class ReportController extends Controller
 
         $this->logReportExport($request, 'leaves', $request->query());
 
-        $filename = 'laporan_cuti_izin_'.date('Ymd_His').'.csv';
+        $timestamp = date('Ymd_His');
+
+        if ($format === 'xlsx') {
+            return Excel::download(new LeaveExport($records), "laporan_cuti_izin_{$timestamp}.xlsx");
+        }
+
+        if ($format === 'pdf') {
+            $pdf = Pdf::loadView('reports.pdf.leaves', ['records' => $records])
+                ->setPaper('a4', 'landscape');
+
+            return $pdf->download("laporan_cuti_izin_{$timestamp}.pdf");
+        }
+
+        $filename = "laporan_cuti_izin_{$timestamp}.csv";
         $headers = [
             'Content-Type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=\"{$filename}\"",
@@ -388,9 +428,11 @@ class ReportController extends Controller
         ]);
     }
 
-    public function exportOvertimes(Request $request): StreamedResponse
+    public function exportOvertimes(Request $request): StreamedResponse|BinaryFileResponse|Response
     {
         $this->ensureCanExportReports($request);
+
+        $format = $this->resolveExportFormat($request);
 
         $month = $request->filled('month') ? (int) $request->query('month') : null;
         $year = $request->filled('year') ? (int) $request->query('year') : null;
@@ -402,7 +444,20 @@ class ReportController extends Controller
 
         $this->logReportExport($request, 'overtimes', $request->query());
 
-        $filename = 'laporan_lembur_'.date('Ymd_His').'.csv';
+        $timestamp = date('Ymd_His');
+
+        if ($format === 'xlsx') {
+            return Excel::download(new OvertimeExport($records), "laporan_lembur_{$timestamp}.xlsx");
+        }
+
+        if ($format === 'pdf') {
+            $pdf = Pdf::loadView('reports.pdf.overtimes', ['records' => $records])
+                ->setPaper('a4', 'landscape');
+
+            return $pdf->download("laporan_lembur_{$timestamp}.pdf");
+        }
+
+        $filename = "laporan_lembur_{$timestamp}.csv";
         $headers = [
             'Content-Type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=\"{$filename}\"",
@@ -537,9 +592,11 @@ class ReportController extends Controller
         ]);
     }
 
-    public function exportPayrolls(Request $request): StreamedResponse
+    public function exportPayrolls(Request $request): StreamedResponse|BinaryFileResponse|Response
     {
         $this->ensureCanExportReports($request);
+
+        $format = $this->resolveExportFormat($request);
 
         $month = $request->filled('month') ? (int) $request->query('month') : null;
         $year = $request->filled('year') ? (int) $request->query('year') : null;
@@ -551,7 +608,20 @@ class ReportController extends Controller
 
         $this->logReportExport($request, 'payrolls', $request->query());
 
-        $filename = 'laporan_penggajian_'.date('Ymd_His').'.csv';
+        $timestamp = date('Ymd_His');
+
+        if ($format === 'xlsx') {
+            return Excel::download(new PayrollExport($records), "laporan_penggajian_{$timestamp}.xlsx");
+        }
+
+        if ($format === 'pdf') {
+            $pdf = Pdf::loadView('reports.pdf.payrolls', ['records' => $records])
+                ->setPaper('a4', 'landscape');
+
+            return $pdf->download("laporan_penggajian_{$timestamp}.pdf");
+        }
+
+        $filename = "laporan_penggajian_{$timestamp}.csv";
         $headers = [
             'Content-Type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=\"{$filename}\"",
@@ -674,9 +744,11 @@ class ReportController extends Controller
         ]);
     }
 
-    public function exportTurnover(Request $request): StreamedResponse
+    public function exportTurnover(Request $request): StreamedResponse|BinaryFileResponse|Response
     {
         $this->ensureCanExportReports($request);
+
+        $format = $this->resolveExportFormat($request);
 
         $year = $request->filled('year') ? (int) $request->query('year') : null;
         $departmentId = $request->filled('department_id') ? (int) $request->query('department_id') : null;
@@ -688,7 +760,20 @@ class ReportController extends Controller
 
         $this->logReportExport($request, 'turnover', $request->query());
 
-        $filename = 'laporan_turnover_karyawan_'.date('Ymd_His').'.csv';
+        $timestamp = date('Ymd_His');
+
+        if ($format === 'xlsx') {
+            return Excel::download(new TurnoverExport($records), "laporan_turnover_karyawan_{$timestamp}.xlsx");
+        }
+
+        if ($format === 'pdf') {
+            $pdf = Pdf::loadView('reports.pdf.turnover', ['records' => $records])
+                ->setPaper('a4', 'landscape');
+
+            return $pdf->download("laporan_turnover_karyawan_{$timestamp}.pdf");
+        }
+
+        $filename = "laporan_turnover_karyawan_{$timestamp}.csv";
         $headers = [
             'Content-Type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=\"{$filename}\"",
@@ -716,7 +801,7 @@ class ReportController extends Controller
                     $row->position?->name ?? '-',
                     ucfirst($row->employment_type ?? 'Permanent'),
                     $row->join_date ? $row->join_date->format('Y-m-d') : '-',
-                    ucfirst($row->status),
+                    ucfirst((string) $row->status),
                     $row->resigned_at ? $row->resigned_at->format('Y-m-d') : '-',
                     $row->special_status ?? '-',
                 ]);
@@ -802,10 +887,12 @@ class ReportController extends Controller
         ]);
     }
 
-    public function exportAuditLogs(Request $request): StreamedResponse
+    public function exportAuditLogs(Request $request): StreamedResponse|BinaryFileResponse|Response
     {
         $this->ensureCanViewAuditLogs($request);
         $this->ensureCanExportReports($request);
+
+        $format = $this->resolveExportFormat($request);
 
         $action = $request->query('action');
         $userId = $request->filled('user_id') ? (int) $request->query('user_id') : null;
@@ -817,7 +904,20 @@ class ReportController extends Controller
 
         $this->logReportExport($request, 'audit_logs', $request->query());
 
-        $filename = 'laporan_audit_trail_'.date('Ymd_His').'.csv';
+        $timestamp = date('Ymd_His');
+
+        if ($format === 'xlsx') {
+            return Excel::download(new AuditLogExport($records), "laporan_audit_trail_{$timestamp}.xlsx");
+        }
+
+        if ($format === 'pdf') {
+            $pdf = Pdf::loadView('reports.pdf.audit_logs', ['records' => $records])
+                ->setPaper('a4', 'landscape');
+
+            return $pdf->download("laporan_audit_trail_{$timestamp}.pdf");
+        }
+
+        $filename = "laporan_audit_trail_{$timestamp}.csv";
         $headers = [
             'Content-Type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=\"{$filename}\"",
@@ -977,5 +1077,20 @@ class ReportController extends Controller
                 'created_at' => now(),
             ]);
         }
+    }
+
+    private function resolveExportFormat(Request $request): string
+    {
+        $format = strtolower((string) $request->query('format', 'csv'));
+
+        if ($format === 'excel') {
+            return 'xlsx';
+        }
+
+        if (! in_array($format, ['csv', 'xlsx', 'pdf'], true)) {
+            return 'csv';
+        }
+
+        return $format;
     }
 }

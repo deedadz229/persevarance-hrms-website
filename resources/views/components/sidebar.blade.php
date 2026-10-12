@@ -24,122 +24,122 @@
     // ── Menu Groups per Role (Preserving RBAC Matrix & Visible Strings) ─────
     $superAdminGroups = [
         [
-            'label' => 'Utama',
+            'label' => __('navigation.main'),
             'items' => [
-                ['label' => 'Dashboard', 'icon_key' => 'dashboard', 'route' => 'dashboard'],
+                ['label' => __('navigation.dashboard'), 'icon_key' => 'dashboard', 'route' => 'dashboard'],
             ],
         ],
         [
-            'label' => 'Manajemen SDM',
+            'label' => __('navigation.hr_management'),
             'items' => [
-                ['label' => 'Karyawan',   'icon_key' => 'employees',   'route' => 'employees.index'],
-                ['label' => 'Departemen', 'icon_key' => 'departments', 'route' => 'departments.index'],
+                ['label' => __('navigation.employees'),   'icon_key' => 'employees',   'route' => 'employees.index'],
+                ['label' => __('navigation.departments'), 'icon_key' => 'departments', 'route' => 'departments.index'],
             ],
         ],
         [
-            'label' => 'Kehadiran & Waktu',
+            'label' => __('navigation.time_attendance'),
             'items' => [
-                ['label' => 'Absensi',     'icon_key' => 'attendances',    'route' => 'attendances.index'],
-                ['label' => 'Cuti & Izin', 'icon_key' => 'leave-requests', 'route' => 'leave-requests.index'],
-                ['label' => 'Lembur',      'icon_key' => 'overtimes',      'route' => 'overtimes.index'],
+                ['label' => __('navigation.attendances'),    'icon_key' => 'attendances',    'route' => 'attendances.index'],
+                ['label' => __('navigation.leave_requests'), 'icon_key' => 'leave-requests', 'route' => 'leave-requests.index'],
+                ['label' => __('navigation.overtimes'),      'icon_key' => 'overtimes',      'route' => 'overtimes.index'],
             ],
         ],
         [
-            'label' => 'Penggajian',
+            'label' => __('navigation.payroll_group'),
             'items' => [
-                ['label' => 'Penggajian', 'icon_key' => 'payrolls', 'route' => 'payrolls.index'],
+                ['label' => __('navigation.payrolls'), 'icon_key' => 'payrolls', 'route' => 'payrolls.index'],
             ],
         ],
         [
-            'label' => 'Laporan & File',
+            'label' => __('navigation.reports_files'),
             'items' => [
-                ['label' => 'Aktivitas File', 'icon_key' => 'shared-files', 'route' => 'shared-files.index'],
-                ['label' => 'Laporan', 'icon_key' => 'reports', 'route' => 'reports.index'],
+                ['label' => __('navigation.file_activity'), 'icon_key' => 'shared-files', 'route' => 'shared-files.index'],
+                ['label' => __('navigation.reports'), 'icon_key' => 'reports', 'route' => 'reports.index'],
             ],
         ],
         [
-            'label' => 'Administrasi',
+            'label' => __('navigation.administration'),
             'items' => [
-                ['label' => 'User Management',   'icon_key' => 'users',      'route' => 'users.index'],
-                ['label' => 'Role & Permission', 'icon_key' => 'roles',      'route' => 'roles.index'],
-                ['label' => 'Audit Trail',       'icon_key' => 'audit-logs', 'route' => 'audit-logs.index'],
-                ['label' => 'Pengaturan',        'icon_key' => 'settings',   'route' => 'settings.index'],
+                ['label' => __('navigation.user_management'),   'icon_key' => 'users',      'route' => 'users.index'],
+                ['label' => __('navigation.role_permission'),   'icon_key' => 'roles',      'route' => 'roles.index'],
+                ['label' => __('navigation.audit_trail'),       'icon_key' => 'audit-logs', 'route' => 'audit-logs.index'],
+                ['label' => __('navigation.settings'),          'icon_key' => 'settings',   'route' => 'settings.index'],
             ],
         ],
     ];
 
     $managerGroups = [
         [
-            'label' => 'Utama',
+            'label' => __('navigation.main'),
             'items' => [
-                ['label' => 'Dashboard', 'icon_key' => 'dashboard', 'route' => 'dashboard'],
+                ['label' => __('navigation.dashboard'), 'icon_key' => 'dashboard', 'route' => 'dashboard'],
             ],
         ],
         [
-            'label' => 'Manajemen SDM',
+            'label' => __('navigation.hr_management'),
             'items' => [
-                ['label' => 'Karyawan',   'icon_key' => 'employees',   'route' => 'employees.index'],
-                ['label' => 'Departemen', 'icon_key' => 'departments', 'route' => 'departments.index'],
+                ['label' => __('navigation.employees'),   'icon_key' => 'employees',   'route' => 'employees.index'],
+                ['label' => __('navigation.departments'), 'icon_key' => 'departments', 'route' => 'departments.index'],
             ],
         ],
         [
-            'label' => 'Kehadiran & Waktu',
+            'label' => __('navigation.time_attendance'),
             'items' => [
-                ['label' => 'Absensi',     'icon_key' => 'attendances',    'route' => 'attendances.index'],
-                ['label' => 'Cuti & Izin', 'icon_key' => 'leave-requests', 'route' => 'leave-requests.index'],
-                ['label' => 'Lembur',      'icon_key' => 'overtimes',      'route' => 'overtimes.index'],
+                ['label' => __('navigation.attendances'),    'icon_key' => 'attendances',    'route' => 'attendances.index'],
+                ['label' => __('navigation.leave_requests'), 'icon_key' => 'leave-requests', 'route' => 'leave-requests.index'],
+                ['label' => __('navigation.overtimes'),      'icon_key' => 'overtimes',      'route' => 'overtimes.index'],
             ],
         ],
         [
-            'label' => 'Penggajian',
+            'label' => __('navigation.payroll_group'),
             'items' => [
-                ['label' => 'Penggajian', 'icon_key' => 'payrolls', 'route' => 'payrolls.index'],
+                ['label' => __('navigation.payrolls'), 'icon_key' => 'payrolls', 'route' => 'payrolls.index'],
             ],
         ],
         [
-            'label' => 'Laporan & File',
+            'label' => __('navigation.reports_files'),
             'items' => [
-                ['label' => 'Aktivitas File', 'icon_key' => 'shared-files', 'route' => 'shared-files.index'],
-                ['label' => 'Laporan', 'icon_key' => 'reports', 'route' => 'reports.index'],
+                ['label' => __('navigation.file_activity'), 'icon_key' => 'shared-files', 'route' => 'shared-files.index'],
+                ['label' => __('navigation.reports'), 'icon_key' => 'reports', 'route' => 'reports.index'],
             ],
         ],
     ];
 
     $taiwanGroups = [
         [
-            'label' => 'Utama',
+            'label' => __('navigation.main'),
             'items' => [
-                ['label' => 'Dashboard', 'icon_key' => 'dashboard', 'route' => 'dashboard'],
+                ['label' => __('navigation.dashboard'), 'icon_key' => 'dashboard', 'route' => 'dashboard'],
             ],
         ],
         [
-            'label' => 'SDM',
+            'label' => __('navigation.hr'),
             'items' => [
-                ['label' => 'View Employee',       'icon_key' => 'employees',   'route' => 'employees.index'],
-                ['label' => 'Departemen',          'icon_key' => 'departments', 'route' => 'departments.index'],
-                ['label' => 'Posisi',              'icon_key' => 'positions'],
-                ['label' => 'Karyawan Resign',     'icon_key' => 'resigned',    'route' => 'employees.resigned'],
+                ['label' => __('navigation.view_employee'),      'icon_key' => 'employees',   'route' => 'employees.index'],
+                ['label' => __('navigation.departments'),        'icon_key' => 'departments', 'route' => 'departments.index'],
+                ['label' => __('navigation.positions'),          'icon_key' => 'positions'],
+                ['label' => __('navigation.resigned_employees'), 'icon_key' => 'resigned',    'route' => 'employees.resigned'],
             ],
         ],
         [
-            'label' => 'Kehadiran & Waktu',
+            'label' => __('navigation.time_attendance'),
             'items' => [
-                ['label' => 'Kehadiran Karyawan',  'icon_key' => 'attendances',    'route' => 'attendances.index'],
-                ['label' => 'Cuti & Izin',         'icon_key' => 'leave-requests', 'route' => 'leave-requests.index'],
-                ['label' => 'Karyawan Lembur',     'icon_key' => 'overtimes',      'route' => 'overtimes.index'],
+                ['label' => __('navigation.employee_attendances'), 'icon_key' => 'attendances',    'route' => 'attendances.index'],
+                ['label' => __('navigation.leave_requests'),       'icon_key' => 'leave-requests', 'route' => 'leave-requests.index'],
+                ['label' => __('navigation.employee_overtimes'),   'icon_key' => 'overtimes',      'route' => 'overtimes.index'],
             ],
         ],
         [
-            'label' => 'Penggajian',
+            'label' => __('navigation.payroll_group'),
             'items' => [
-                ['label' => 'Penggajian',          'icon_key' => 'payrolls', 'route' => 'payrolls.index'],
+                ['label' => __('navigation.payrolls'),             'icon_key' => 'payrolls', 'route' => 'payrolls.index'],
             ],
         ],
         [
-            'label' => 'Laporan & File',
+            'label' => __('navigation.reports_files'),
             'items' => [
-                ['label' => 'Aktivitas File',      'icon_key' => 'shared-files', 'route' => 'shared-files.index'],
-                ['label' => 'Laporan',             'icon_key' => 'reports', 'route' => 'reports.index'],
+                ['label' => __('navigation.file_activity'),        'icon_key' => 'shared-files', 'route' => 'shared-files.index'],
+                ['label' => __('navigation.reports'),              'icon_key' => 'reports', 'route' => 'reports.index'],
             ],
         ],
     ];
@@ -149,8 +149,8 @@
         'manager_hrd'    => $managerGroups,
         'taiwan_account' => $taiwanGroups,
         default          => [[
-            'label' => 'Utama',
-            'items' => [['label' => 'Dashboard', 'icon_key' => 'dashboard', 'route' => 'dashboard']],
+            'label' => __('navigation.main'),
+            'items' => [['label' => __('navigation.dashboard'), 'icon_key' => 'dashboard', 'route' => 'dashboard']],
         ]],
     };
 @endphp

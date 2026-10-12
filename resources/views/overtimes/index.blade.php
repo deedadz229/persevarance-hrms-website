@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Pengajuan & Monitoring Lembur')
+@section('title', __('overtimes.title'))
 
 @section('content')
 <style>
@@ -69,53 +69,53 @@
 
 <div class="page-header">
     <div class="page-title-box">
-        <h2>Pengajuan & Monitoring Lembur</h2>
-        <p>Kelola permohonan kerja lembur, kepatuhan durasi, dan verifikasi persetujuan jam lembur</p>
+        <h2>{{ __('overtimes.title') }}</h2>
+        <p>{{ __('overtimes.subtitle') }}</p>
     </div>
     <div class="header-actions">
         @if (auth()->user()->role?->name !== 'taiwan_account' && auth()->user()->role?->permissions->contains('name', 'manage_overtime'))
             <a href="{{ route('overtimes.create') }}" class="btn btn-primary">
-                <span>+</span> Tambah Pengajuan
+                <span>+</span> {{ __('overtimes.add_overtime') }}
             </a>
         @endif
     </div>
 </div>
 
-<section class="summary-grid" aria-label="Ringkasan Lembur">
+<section class="summary-grid" aria-label="{{ __('overtimes.summary_aria') }}">
     <article class="card summary-card">
-        <span>Total Jam Lembur</span>
-        <strong style="color: #0c8f82;">{{ number_format($summary['total_hours'], 1) }} Jam</strong>
-        <small>Akumulasi lembur yang telah disetujui</small>
+        <span>{{ __('overtimes.total_overtime_hours') }}</span>
+        <strong style="color: #0c8f82;">{{ number_format($summary['total_hours'], 1) }} {{ __('overtimes.hours') }}</strong>
+        <small>{{ __('overtimes.total_hours_hint') }}</small>
     </article>
     <article class="card summary-card">
-        <span>Disetujui</span>
+        <span>{{ __('overtimes.approved') }}</span>
         <strong style="color: #0c8f82;">{{ number_format($summary['approved']) }}</strong>
-        <small>Lembur telah tervalidasi</small>
+        <small>{{ __('overtimes.approved_hint') }}</small>
     </article>
     <article class="card summary-card">
-        <span>Menunggu Persetujuan</span>
+        <span>{{ __('overtimes.pending_approval') }}</span>
         <strong style="color: #c98804;">{{ number_format($summary['pending']) }}</strong>
-        <small>Memerlukan tindakan approval HR</small>
+        <small>{{ __('overtimes.pending_approval_hint') }}</small>
     </article>
     <article class="card summary-card">
-        <span>Biaya Lembur</span>
-        <strong style="font-size: 19px; color: var(--muted); margin-top: 14px;">Modul Payroll</strong>
-        <small>Dihitung saat proses penggajian</small>
+        <span>{{ __('overtimes.overtime_cost') }}</span>
+        <strong style="font-size: 19px; color: var(--muted); margin-top: 14px;">{{ __('overtimes.payroll_module') }}</strong>
+        <small>{{ __('overtimes.payroll_cost_hint') }}</small>
     </article>
 </section>
 
 <div class="payroll-banner">
-    ℹ <strong>Integrasi Upah Lembur:</strong> Durasi jam lembur yang disetujui akan diakumulasikan dan dihitung otomatis menjadi komponen upah lembur karyawan pada Modul Payroll PTI.
+    ℹ <strong>{{ __('overtimes.payroll_banner_title') }}</strong> {{ __('overtimes.payroll_banner_desc') }}
 </div>
 
 <div class="card filter-card">
     <form action="{{ route('overtimes.index') }}" method="GET" class="filter-form">
         <div class="filter-group search-group">
-            <input type="text" name="search" value="{{ $currentSearch }}" placeholder="Cari nama karyawan atau ID..." class="form-control">
+            <input type="text" name="search" value="{{ $currentSearch }}" placeholder="{{ __('overtimes.search_placeholder') }}" class="form-control">
         </div>
         <div class="filter-group">
             <select name="department_id" class="form-control">
-                <option value="">Semua Departemen</option>
+                <option value="">{{ __('overtimes.all_departments') }}</option>
                 @foreach ($departments as $dept)
                     <option value="{{ $dept->id }}" {{ $currentDepartment == $dept->id ? 'selected' : '' }}>
                         {{ $dept->name }}
@@ -125,19 +125,19 @@
         </div>
         <div class="filter-group">
             <select name="status" class="form-control">
-                <option value="">Semua Status</option>
-                <option value="pending" {{ $currentStatus === 'pending' ? 'selected' : '' }}>Menunggu Persetujuan</option>
-                <option value="approved" {{ $currentStatus === 'approved' ? 'selected' : '' }}>Disetujui</option>
-                <option value="rejected" {{ $currentStatus === 'rejected' ? 'selected' : '' }}>Ditolak</option>
+                <option value="">{{ __('overtimes.all_status') }}</option>
+                <option value="pending" {{ $currentStatus === 'pending' ? 'selected' : '' }}>{{ __('overtimes.status_pending') }}</option>
+                <option value="approved" {{ $currentStatus === 'approved' ? 'selected' : '' }}>{{ __('overtimes.status_approved') }}</option>
+                <option value="rejected" {{ $currentStatus === 'rejected' ? 'selected' : '' }}>{{ __('overtimes.status_rejected') }}</option>
             </select>
         </div>
         <div class="filter-group" style="max-width: 160px;">
-            <input type="date" name="date" value="{{ $currentDate }}" class="form-control" title="Tanggal Lembur">
+            <input type="date" name="date" value="{{ $currentDate }}" class="form-control" title="{{ __('overtimes.date_title') }}">
         </div>
         <div style="display: flex; gap: 8px;">
-            <button type="submit" class="btn btn-primary" style="padding: 9px 14px;">Filter</button>
+            <button type="submit" class="btn btn-primary" style="padding: 9px 14px;">{{ __('common.filter') }}</button>
             @if ($currentSearch || $currentDepartment || $currentStatus || $currentDate)
-                <a href="{{ route('overtimes.index') }}" class="btn btn-outline" style="padding: 9px 12px;" title="Reset Filter">Reset</a>
+                <a href="{{ route('overtimes.index') }}" class="btn btn-outline" style="padding: 9px 12px;" title="{{ __('common.reset') }}">{{ __('common.reset') }}</a>
             @endif
         </div>
     </form>
@@ -148,14 +148,14 @@
         <table class="table-overtime">
             <thead>
                 <tr>
-                    <th>Karyawan</th>
-                    <th>Departemen</th>
-                    <th>Tanggal Lembur</th>
-                    <th>Waktu (Mulai – Selesai)</th>
-                    <th>Durasi</th>
-                    <th>Alasan</th>
-                    <th>Status</th>
-                    <th style="text-align: right;">Aksi</th>
+                    <th>{{ __('overtimes.employee') }}</th>
+                    <th>{{ __('overtimes.department') }}</th>
+                    <th>{{ __('overtimes.overtime_date') }}</th>
+                    <th>{{ __('overtimes.time_period') }}</th>
+                    <th>{{ __('overtimes.duration') }}</th>
+                    <th>{{ __('overtimes.reason') }}</th>
+                    <th>{{ __('common.status') }}</th>
+                    <th style="text-align: right;">{{ __('common.action') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -191,16 +191,16 @@
                         </td>
                         <td style="text-align: right;">
                             <div class="action-group">
-                                <a href="{{ route('overtimes.show', $overtime) }}" class="action-link" title="Detail Lembur">Detail</a>
+                                <a href="{{ route('overtimes.show', $overtime) }}" class="action-link" title="{{ __('overtimes.detail') }}">{{ __('overtimes.detail') }}</a>
 
                                 @if ($overtime->status === 'pending' && auth()->user()->role?->name !== 'taiwan_account' && auth()->user()->role?->permissions->contains('name', 'approve_overtime'))
-                                    <form action="{{ route('overtimes.approve', $overtime) }}" method="POST" style="display: inline;" onsubmit="return confirm('Apakah Anda yakin ingin menyetujui lembur ini?');">
+                                    <form action="{{ route('overtimes.approve', $overtime) }}" method="POST" style="display: inline;" onsubmit="return confirm('{{ __('overtimes.confirm_approve') }}');">
                                         @csrf
-                                        <button type="submit" class="btn btn-sm btn-approve" title="Setujui Lembur">✓ Approve</button>
+                                        <button type="submit" class="btn btn-sm btn-approve" title="{{ __('overtimes.approve') }}">{{ __('overtimes.approve') }}</button>
                                     </form>
 
-                                    <button type="button" class="btn btn-sm btn-reject" onclick="openRejectModal('{{ route('overtimes.reject', $overtime) }}', '{{ $overtime->employee?->name }}', '{{ $overtime->duration_label }}')" title="Tolak Lembur">
-                                        ✗ Reject
+                                    <button type="button" class="btn btn-sm btn-reject" onclick="openRejectModal('{{ route('overtimes.reject', $overtime) }}', '{{ $overtime->employee?->name }}', '{{ $overtime->duration_label }}')" title="{{ __('overtimes.reject') }}">
+                                        {{ __('overtimes.reject') }}
                                     </button>
                                 @endif
                             </div>
@@ -209,7 +209,7 @@
                 @empty
                     <tr>
                         <td colspan="8" class="empty-state">
-                            Belum ada permohonan lembur yang sesuai dengan kriteria filter pencarian.
+                            {{ __('overtimes.no_records') }}
                         </td>
                     </tr>
                 @endforelse
@@ -219,7 +219,7 @@
 
     @if ($overtimes->hasPages())
         <div class="pagination-wrapper">
-            <div>Menampilkan {{ $overtimes->firstItem() ?? 0 }} - {{ $overtimes->lastItem() ?? 0 }} dari {{ $overtimes->total() }} data lembur</div>
+            <div>{{ __('overtimes.showing_records', ['from' => $overtimes->firstItem() ?? 0, 'to' => $overtimes->lastItem() ?? 0, 'total' => $overtimes->total()]) }}</div>
             <div>{{ $overtimes->links() }}</div>
         </div>
     @endif
@@ -229,24 +229,24 @@
 <div id="rejectModal" class="modal-overlay" onclick="closeRejectModalOnOverlay(event)">
     <div class="modal-card">
         <div class="modal-head">
-            <h3>Tolak Pengajuan Lembur</h3>
+            <h3>{{ __('overtimes.reject_modal_title') }}</h3>
             <button type="button" class="modal-close" onclick="closeRejectModal()">&times;</button>
         </div>
         <p style="margin: 0 0 16px; font-size: 13px; color: var(--muted);" id="rejectModalDesc">
-            Mohon cantumkan alasan penolakan secara jelas.
+            {{ __('overtimes.reject_modal_desc') }}
         </p>
 
         <form id="rejectForm" method="POST" action="">
             @csrf
             <div style="margin-bottom: 18px;">
                 <label for="rejection_reason" style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 600;">
-                    Alasan Penolakan <span style="color: #d93838;">*</span>
+                    {{ __('overtimes.rejection_reason') }} <span style="color: #d93838;">*</span>
                 </label>
-                <textarea id="rejection_reason" name="rejection_reason" rows="4" class="form-control" placeholder="Contoh: Pekerjaan di luar instruksi tertulis atau alokasi anggaran lembur telah penuh." required></textarea>
+                <textarea id="rejection_reason" name="rejection_reason" rows="4" class="form-control" placeholder="{{ __('overtimes.rejection_reason_placeholder') }}" required></textarea>
             </div>
             <div style="display: flex; justify-content: flex-end; gap: 10px;">
-                <button type="button" class="btn btn-outline" onclick="closeRejectModal()">Batal</button>
-                <button type="submit" class="btn btn-reject">Tolak Lembur</button>
+                <button type="button" class="btn btn-outline" onclick="closeRejectModal()">{{ __('common.cancel') }}</button>
+                <button type="submit" class="btn btn-reject">{{ __('overtimes.reject_submit') }}</button>
             </div>
         </form>
     </div>
@@ -255,7 +255,7 @@
 <script>
     function openRejectModal(actionUrl, employeeName, duration) {
         document.getElementById('rejectForm').action = actionUrl;
-        document.getElementById('rejectModalDesc').innerText = 'Menolak permohonan lembur (' + duration + ') untuk ' + employeeName + '.';
+        document.getElementById('rejectModalDesc').innerText = "{{ __('overtimes.reject_modal_desc') }} (" + duration + " - " + employeeName + ")";
         document.getElementById('rejection_reason').value = '';
         document.getElementById('rejectModal').classList.add('is-active');
         document.getElementById('rejection_reason').focus();

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Detail Payroll · ' . ($payroll->employee?->name ?? 'Karyawan'))
+@section('title', __('payrolls.detail_title') . ' · ' . ($payroll->employee?->name ?? __('payrolls.employee')))
 
 @section('content')
 <style>
@@ -41,19 +41,19 @@
 
 <div class="page-header">
     <div class="page-title-box">
-        <h2>Detail Payroll Karyawan</h2>
-        <p>Rincian data gaji pokok, pendapatan tambahan, potongan, dan status penggajian</p>
+        <h2>{{ __('payrolls.detail_title') }}</h2>
+        <p>{{ __('payrolls.detail_subtitle') }}</p>
     </div>
     <div class="header-actions">
         <a href="{{ route('payrolls.index') }}" class="btn btn-outline">
-            <span>←</span> Kembali
+            <span>←</span> {{ __('common.back') }}
         </a>
         <a href="{{ route('payrolls.slip', $payroll) }}" class="btn btn-primary" target="_blank">
-            <span>🖨</span> Cetak Slip Gaji
+            <span>🖨</span> {{ __('payrolls.print_slip') }}
         </a>
         @if (auth()->user()->role?->name !== 'taiwan_account' && (auth()->user()->role?->name === 'super_admin' || auth()->user()->role?->permissions->contains('name', 'manage_payroll')))
             <a href="{{ route('payrolls.correction', $payroll) }}" class="btn btn-warning">
-                <span>✎</span> Koreksi Payroll
+                <span>✎</span> {{ __('payrolls.correction_title') }}
             </a>
         @endif
     </div>
@@ -62,40 +62,40 @@
 <div class="grid-details">
     <div>
         <div class="card section-card">
-            <h3>Informasi Karyawan</h3>
+            <h3>{{ __('payrolls.employee') }}</h3>
             <div class="info-list">
-                <span class="info-label">Nama Karyawan</span>
+                <span class="info-label">{{ __('employees.employee_name') }}</span>
                 <span class="info-value">
                     <a href="{{ $payroll->employee ? route('employees.show', $payroll->employee) : '#' }}" style="color: var(--brand); text-decoration: none;">
-                        {{ $payroll->employee?->name ?? 'Karyawan Dihapus' }}
+                        {{ $payroll->employee?->name ?? __('attendances.deleted_employee') }}
                     </a>
                 </span>
 
-                <span class="info-label">ID / Kode Karyawan</span>
+                <span class="info-label">{{ __('employees.employee_code_label') }}</span>
                 <span class="info-value"><code>{{ $payroll->employee?->employee_code ?? '-' }}</code></span>
 
-                <span class="info-label">Departemen</span>
+                <span class="info-label">{{ __('employees.department') }}</span>
                 <span class="info-value">{{ $payroll->employee?->department?->name ?? '-' }}</span>
 
-                <span class="info-label">Jabatan (Posisi)</span>
+                <span class="info-label">{{ __('employees.position_label') }}</span>
                 <span class="info-value">{{ $payroll->employee?->position?->name ?? '-' }}</span>
             </div>
         </div>
 
         <div class="card section-card">
-            <h3>Rincian Komponen Pendapatan (Income / Allowance)</h3>
+            <h3>{{ __('payrolls.income_components_title') }}</h3>
             <table class="table-component">
                 <thead>
                     <tr>
-                        <th>Komponen</th>
-                        <th>Keterangan</th>
-                        <th style="text-align: right;">Jumlah</th>
+                        <th>{{ __('payrolls.component') }}</th>
+                        <th>{{ __('payrolls.description') }}</th>
+                        <th style="text-align: right;">{{ __('payrolls.amount') }}</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td><strong>Gaji Pokok (Basic Salary)</strong></td>
-                        <td style="color: var(--muted);">Gaji dasar resmi</td>
+                        <td><strong>{{ __('payrolls.basic_salary_official') }}</strong></td>
+                        <td style="color: var(--muted);">{{ __('payrolls.basic_salary_desc') }}</td>
                         <td style="text-align: right; font-weight: 600;">Rp {{ number_format((float) $payroll->basic_salary, 0, ',', '.') }}</td>
                     </tr>
                     @forelse ($payroll->allowances as $allowance)
@@ -106,19 +106,19 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="3" style="text-align: center; color: var(--muted); padding: 14px;">Tidak ada komponen tunjangan tambahan.</td>
+                            <td colspan="3" style="text-align: center; color: var(--muted); padding: 14px;">{{ __('payrolls.no_allowances') }}</td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
 
-            <h3 style="margin-top: 24px;">Rincian Komponen Potongan (Deduction: BPJS, PPh21, dll)</h3>
+            <h3 style="margin-top: 24px;">{{ __('payrolls.deduction_components_title') }}</h3>
             <table class="table-component">
                 <thead>
                     <tr>
-                        <th>Komponen</th>
-                        <th>Keterangan</th>
-                        <th style="text-align: right;">Jumlah</th>
+                        <th>{{ __('payrolls.component') }}</th>
+                        <th>{{ __('payrolls.description') }}</th>
+                        <th style="text-align: right;">{{ __('payrolls.amount') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -130,7 +130,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="3" style="text-align: center; color: var(--muted); padding: 14px;">Tidak ada potongan pada periode ini.</td>
+                            <td colspan="3" style="text-align: center; color: var(--muted); padding: 14px;">{{ __('payrolls.no_deductions_period') }}</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -140,51 +140,51 @@
 
     <div>
         <div class="card section-card">
-            <h3>Ringkasan Gaji Bersih</h3>
+            <h3>{{ __('payrolls.net_summary_title') }}</h3>
             <div class="info-list">
-                <span class="info-label">Periode Gaji</span>
+                <span class="info-label">{{ __('payrolls.period') }}</span>
                 <span class="info-value" style="color: var(--brand-dark); font-size: 14px;">
                     {{ $payroll->period_label }}
                 </span>
 
-                <span class="info-label">Status</span>
+                <span class="info-label">{{ __('common.status') }}</span>
                 <span class="info-value">
                     <span class="badge-status {{ $payroll->status_badge_class }}">
                         {{ $payroll->status_label }}
                     </span>
                 </span>
 
-                <span class="info-label">Waktu Generated</span>
+                <span class="info-label">{{ __('payrolls.generated_time') }}</span>
                 <span class="info-value">{{ $payroll->generated_at?->translatedFormat('d F Y, H:i') ?? '-' }}</span>
 
-                <span class="info-label">Gaji Pokok</span>
+                <span class="info-label">{{ __('payrolls.basic_salary') }}</span>
                 <span class="info-value">Rp {{ number_format((float) $payroll->basic_salary, 0, ',', '.') }}</span>
 
-                <span class="info-label" style="color: #0c8f82;">Total Tunjangan</span>
+                <span class="info-label" style="color: #0c8f82;">{{ __('payrolls.total_allowances') }}</span>
                 <span class="info-value" style="color: #0c8f82;">+Rp {{ number_format((float) $payroll->total_allowance, 0, ',', '.') }}</span>
 
-                <span class="info-label" style="color: #b92e2e;">Total Potongan</span>
+                <span class="info-label" style="color: #b92e2e;">{{ __('payrolls.total_deductions') }}</span>
                 <span class="info-value" style="color: #b92e2e;">-Rp {{ number_format((float) $payroll->total_deduction, 0, ',', '.') }}</span>
             </div>
 
             <div class="salary-summary-box">
                 <span style="display: block; font-size: 11px; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-bottom: 4px;">
-                    Gaji Bersih Diterima (Net Salary)
+                    {{ __('payrolls.net_salary_received') }}
                 </span>
                 <strong style="display: block; font-size: 26px; color: var(--brand-dark); letter-spacing: -.03em;">
                     Rp {{ number_format((float) $payroll->net_salary, 0, ',', '.') }}
                 </strong>
                 <small style="color: var(--muted); font-size: 11.5px; display: block; margin-top: 4px;">
-                    Formula: Gaji Pokok + Tunjangan - Potongan
+                    {{ __('payrolls.net_salary_formula') }}
                 </small>
             </div>
 
             @if ($payroll->status === 'draft' && auth()->user()->role?->name !== 'taiwan_account' && (auth()->user()->role?->name === 'super_admin' || auth()->user()->role?->permissions->contains('name', 'manage_payroll')))
                 <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line);">
-                    <form action="{{ route('payrolls.generate', $payroll) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin memfinalisasi data payroll ini menjadi Dihasilkan (Generated)?');">
+                    <form action="{{ route('payrolls.generate', $payroll) }}" method="POST" onsubmit="return confirm('{{ __('payrolls.confirm_finalize') }}');">
                         @csrf
                         <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
-                            ✓ Finalisasi / Generate Slip Gaji
+                            {{ __('payrolls.finalize_button') }}
                         </button>
                     </form>
                 </div>

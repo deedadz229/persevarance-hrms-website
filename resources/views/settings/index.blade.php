@@ -116,31 +116,58 @@
         </form>
     </div>
 
+    <!-- Preferensi Bahasa -->
+    <div class="card settings-card" style="grid-column: 1 / -1;">
+        <h3>{{ __('settings.language_preference') }}</h3>
+        <p class="subtitle">{{ __('settings.language_preference_subtitle') }}</p>
+
+        <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+            <a href="{{ route('locale.switch', 'id') }}" 
+               class="btn {{ app()->getLocale() === 'id' ? 'btn-primary' : 'btn-outline' }}" 
+               style="padding: 10px 18px; border: 1px solid {{ app()->getLocale() === 'id' ? 'transparent' : 'var(--line)' }};">
+                <span style="font-size: 16px;">🇮🇩</span>
+                <strong>Bahasa Indonesia</strong>
+                @if (app()->getLocale() === 'id')
+                    <span style="font-size: 11px; background: rgba(255,255,255,0.25); padding: 1px 6px; border-radius: 4px; margin-left: 6px;">Aktif</span>
+                @endif
+            </a>
+            <a href="{{ route('locale.switch', 'en') }}" 
+               class="btn {{ app()->getLocale() === 'en' ? 'btn-primary' : 'btn-outline' }}" 
+               style="padding: 10px 18px; border: 1px solid {{ app()->getLocale() === 'en' ? 'transparent' : 'var(--line)' }};">
+                <span style="font-size: 16px;">🇬🇧</span>
+                <strong>English (UK / US)</strong>
+                @if (app()->getLocale() === 'en')
+                    <span style="font-size: 11px; background: rgba(255,255,255,0.25); padding: 1px 6px; border-radius: 4px; margin-left: 6px;">Active</span>
+                @endif
+            </a>
+        </div>
+    </div>
+
     <!-- Informasi Aplikasi -->
     <div class="card settings-card" style="grid-column: 1 / -1;">
-        <h3>Informasi Aplikasi & Sistem</h3>
-        <p class="subtitle">Spesifikasi teknis lingkungan operasional PTI HRMS</p>
+        <h3>{{ __('settings.app_info_title') }}</h3>
+        <p class="subtitle">{{ __('settings.app_info_subtitle') }}</p>
 
         <div class="app-info-list">
-            <span class="info-label">Nama Aplikasi</span>
+            <span class="info-label">{{ __('settings.app_name') }}</span>
             <span class="info-value"><strong>{{ $appInfo['name'] }}</strong></span>
 
-            <span class="info-label">Perusahaan</span>
+            <span class="info-label">{{ __('settings.company') }}</span>
             <span class="info-value">{{ $appInfo['company'] }}</span>
 
-            <span class="info-label">Versi Sistem</span>
+            <span class="info-label">{{ __('settings.system_version') }}</span>
             <span class="info-value"><span class="status-badge" style="font-size: 11px;">v{{ $appInfo['version'] }}</span></span>
 
-            <span class="info-label">Framework</span>
+            <span class="info-label">{{ __('settings.framework') }}</span>
             <span class="info-value">{{ $appInfo['framework'] }}</span>
 
-            <span class="info-label">Versi PHP</span>
+            <span class="info-label">{{ __('settings.php_version') }}</span>
             <span class="info-value"><code>PHP {{ $appInfo['php_version'] }}</code></span>
 
-            <span class="info-label">Zona Waktu Sistem</span>
+            <span class="info-label">{{ __('settings.timezone') }}</span>
             <span class="info-value">{{ $appInfo['timezone'] }}</span>
 
-            <span class="info-label">Status Lingkungan</span>
+            <span class="info-label">{{ __('settings.environment') }}</span>
             <span class="info-value" style="text-transform: capitalize;">{{ $appInfo['environment'] }}</span>
         </div>
     </div>

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Detail Department · ' . $department->name)
+@section('title', __('departments.detail_department', ['name' => $department->name]))
 
 @section('content')
 <style>
@@ -37,16 +37,16 @@
 
 <div class="page-header">
     <div class="page-title-box">
-        <h2>Detail Department: {{ $department->name }}</h2>
-        <p>Informasi detail struktur divisi dan daftar karyawan yang terdaftar</p>
+        <h2>{{ __('departments.detail_department', ['name' => $department->name]) }}</h2>
+        <p>{{ __('departments.detail_department_subtitle') }}</p>
     </div>
     <div class="header-actions">
         <a href="{{ route('departments.index') }}" class="btn btn-outline">
-            <span>←</span> Kembali
+            <span>←</span> {{ __('common.back') }}
         </a>
         @if (auth()->user()->role?->name === 'super_admin')
             <a href="{{ route('departments.edit', $department) }}" class="btn btn-primary">
-                <span>✎</span> Edit Department
+                <span>✎</span> {{ __('departments.edit_department') }}
             </a>
         @endif
     </div>
@@ -54,42 +54,42 @@
 
 <div class="detail-grid">
     <div class="card meta-card">
-        <div class="meta-title">Informasi Department</div>
+        <div class="meta-title">{{ __('departments.department_info') }}</div>
 
         <div class="meta-item">
-            <div class="meta-label">Nama Department</div>
+            <div class="meta-label">{{ __('departments.department_name') }}</div>
             <div class="meta-value" style="font-size: 16px; font-weight: 700; color: var(--brand-dark);">
                 {{ $department->name }}
             </div>
         </div>
 
         <div class="meta-item">
-            <div class="meta-label">Status Operasional</div>
+            <div class="meta-label">{{ __('departments.operational_status') }}</div>
             <div class="meta-value">
                 @if ($department->status === 'active')
-                    <span class="badge-status badge-active">Active (Aktif)</span>
+                    <span class="badge-status badge-active">{{ __('departments.active_val') }}</span>
                 @else
-                    <span class="badge-status badge-inactive">Inactive (Tidak Aktif)</span>
+                    <span class="badge-status badge-inactive">{{ __('departments.inactive_val') }}</span>
                 @endif
             </div>
         </div>
 
         <div class="meta-item">
-            <div class="meta-label">Total Karyawan Terdaftar</div>
+            <div class="meta-label">{{ __('departments.total_employees_registered') }}</div>
             <div class="meta-value" style="font-weight: 700;">
-                👥 {{ $department->employees_count }} orang
+                👥 {{ $department->employees_count }} {{ __('departments.people') }}
             </div>
         </div>
 
         <div class="meta-item">
-            <div class="meta-label">Deskripsi</div>
+            <div class="meta-label">{{ __('departments.description') }}</div>
             <div class="meta-value" style="line-height: 1.5; color: #4b5563;">
-                {{ $department->description ?: 'Tidak ada deskripsi yang ditambahkan.' }}
+                {{ $department->description ?: __('departments.no_description') }}
             </div>
         </div>
 
         <div class="meta-item" style="margin-bottom: 0;">
-            <div class="meta-label">Tanggal Dibuat</div>
+            <div class="meta-label">{{ __('departments.created_at') }}</div>
             <div class="meta-value" style="font-size: 12.5px; color: var(--muted);">
                 {{ $department->created_at ? $department->created_at->format('d M Y, H:i') : '-' }}
             </div>
@@ -99,7 +99,7 @@
     <div class="card employees-card">
         <div style="padding: 20px 22px 14px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between;">
             <h3 style="margin: 0; font-size: 15px; font-weight: 700; color: var(--ink);">
-                Daftar Karyawan di Department Ini ({{ $department->employees_count }})
+                {{ __('departments.employees_in_department', ['count' => $department->employees_count]) }}
             </h3>
         </div>
 
@@ -108,11 +108,11 @@
                 <thead>
                     <tr>
                         <th style="width: 50px;">No</th>
-                        <th>Karyawan</th>
-                        <th>ID Karyawan</th>
-                        <th>Jabatan</th>
-                        <th>Status</th>
-                        <th style="text-align: right;">Aksi</th>
+                        <th>{{ __('employees.employee') }}</th>
+                        <th>{{ __('employees.employee_code_label') }}</th>
+                        <th>{{ __('employees.position') }}</th>
+                        <th>{{ __('common.status') }}</th>
+                        <th style="text-align: right;">{{ __('common.action') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -139,15 +139,15 @@
                                 @endif
                             </td>
                             <td style="text-align: right;">
-                                <a href="{{ route('employees.show', $employee) }}" class="btn btn-outline" style="padding: 4px 10px; font-size: 11.5px;">Detail</a>
+                                <a href="{{ route('employees.show', $employee) }}" class="btn btn-outline" style="padding: 4px 10px; font-size: 11.5px;">{{ __('common.detail') }}</a>
                             </td>
                         </tr>
                     @empty
                         <tr>
                             <td colspan="6">
                                 <div class="empty-state">
-                                    <p style="margin: 0; font-weight: 600;">Belum ada karyawan di department ini</p>
-                                    <span style="font-size: 12px; margin-top: 4px; display: block;">Karyawan yang didaftarkan ke department ini akan otomatis muncul di sini.</span>
+                                    <p style="margin: 0; font-weight: 600;">{{ __('departments.no_employees_in_dept') }}</p>
+                                    <span style="font-size: 12px; margin-top: 4px; display: block;">{{ __('departments.no_employees_hint') }}</span>
                                 </div>
                             </td>
                         </tr>
@@ -159,7 +159,7 @@
         @if ($employees->hasPages())
             <div class="pagination-wrapper">
                 <div>
-                    Menampilkan {{ $employees->firstItem() }} - {{ $employees->lastItem() }} dari {{ $employees->total() }} karyawan
+                    {{ __('departments.showing_employees', ['from' => $employees->firstItem(), 'to' => $employees->lastItem(), 'total' => $employees->total()]) }}
                 </div>
                 <div>
                     {{ $employees->links() }}

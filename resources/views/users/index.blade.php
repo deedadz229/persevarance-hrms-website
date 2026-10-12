@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Manajemen Pengguna')
+@section('title', __('users.title'))
 
 @section('content')
 <style>
@@ -49,12 +49,12 @@
 
 <div class="page-header">
     <div class="page-title-box">
-        <h2>Manajemen Pengguna</h2>
-        <p>Kelola akun pengguna, peranan (role), hubungan karyawan, dan status akses website HRMS</p>
+        <h2>{{ __('users.title') }}</h2>
+        <p>{{ __('users.subtitle') }}</p>
     </div>
     <div class="header-actions">
         <a href="{{ route('users.create') }}" class="btn btn-primary">
-            <span>+</span> Tambah Pengguna
+            <span>+</span> {{ __('users.add_user') }}
         </a>
     </div>
 </div>
@@ -62,34 +62,33 @@
 <div class="card filter-card">
     <form action="{{ route('users.index') }}" method="GET" class="filter-form">
         <div class="filter-group search-group">
-            <label for="search">Cari Nama / Email</label>
-            <input type="text" name="search" id="search" class="form-control" placeholder="Ketik nama atau alamat email pengguna..." value="{{ request('search') }}">
+            <label for="search">{{ __('common.search') }}</label>
+            <input type="text" id="search" name="search" value="{{ $search }}" class="form-control" placeholder="{{ __('users.search_placeholder') }}">
         </div>
-
         <div class="filter-group">
-            <label for="role_id">Peran (Role)</label>
-            <select name="role_id" id="role_id" class="form-control">
-                <option value="">-- Semua Role --</option>
+            <label for="role">{{ __('users.role') }}</label>
+            <select id="role" name="role" class="form-control">
+                <option value="">{{ __('users.all_roles') }}</option>
                 @foreach ($roles as $r)
-                    <option value="{{ $r->id }}" {{ request('role_id') == $r->id ? 'selected' : '' }}>
+                    <option value="{{ $r->name }}" {{ $role === $r->name ? 'selected' : '' }}>
                         {{ $r->label }}
                     </option>
                 @endforeach
             </select>
         </div>
-
-        <div class="filter-group" style="max-width: 170px;">
-            <label for="status">Status Akun</label>
-            <select name="status" id="status" class="form-control">
-                <option value="">-- Semua Status --</option>
-                <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Aktif</option>
-                <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Non-Aktif</option>
+        <div class="filter-group">
+            <label for="status">{{ __('common.status') }}</label>
+            <select id="status" name="status" class="form-control">
+                <option value="">{{ __('users.all_status') }}</option>
+                <option value="active" {{ $status === 'active' ? 'selected' : '' }}>Active</option>
+                <option value="inactive" {{ $status === 'inactive' ? 'selected' : '' }}>Inactive</option>
             </select>
         </div>
-
-        <div style="display: flex; gap: 8px;">
-            <button type="submit" class="btn btn-primary">Filter</button>
-            <a href="{{ route('users.index') }}" class="btn btn-outline">Reset</a>
+        <div>
+            <button type="submit" class="btn btn-primary">{{ __('common.filter') }}</button>
+            @if ($search || $role || $status)
+                <a href="{{ route('users.index') }}" class="btn btn-outline" style="margin-left: 4px;">{{ __('common.reset') }}</a>
+            @endif
         </div>
     </form>
 </div>
@@ -99,66 +98,83 @@
         <table class="table-users">
             <thead>
                 <tr>
-                    <th>Pengguna</th>
-                    <th>Role</th>
-                    <th>Karyawan Terkait</th>
-                    <th>Status</th>
-                    <th>Login Terakhir</th>
-                    <th style="text-align: right;">Aksi</th>
+                    <th style="width: 60px;">No</th>
+                    <th>{{ __('users.user_name') }}</th>
+                    <th>{{ __('users.role') }}</th>
+                    <th>{{ __('users.linked_employee') }}</th>
+                    <th style="width: 120px;">{{ __('common.status') }}</th>
+                    <th>{{ __('users.last_login') }}</th>
+                    <th style="text-align: right; width: 220px;">{{ __('common.action') }}</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse ($users as $u)
-                    @php
-                        $roleClass = match($u->role?->name) {
-                            'super_admin' => 'role-super',
-                            'manager_hrd' => 'role-hrd',
-                            'taiwan_account' => 'role-taiwan',
-                            default => ''
-                        };
-                    @endphp
+                @forelse ($users as $user)
                     <tr>
+                        <td>{{ $users->firstItem() ? $users->firstItem() + $loop->index : $loop->iteration }}</td>
                         <td>
                             <div class="user-info">
-                                <div class="user-avatar">{{ str($u->name)->substr(0, 1)->upper() }}</div>
+                                <div class="user-avatar">
+                                    {{ strtoupper(substr($user->name, 0, 1)) }}
+                                </div>
                                 <div class="user-meta">
-                                    <strong>{{ $u->name }}</strong>
-                                    <span>{{ $u->email }}</span>
+                                    <strong>{{ $user->name }}</strong>
+                                    <span>{{ $user->email }}</span>
                                 </div>
                             </div>
                         </td>
                         <td>
+                            @php
+                                $roleClass = match($user->role?->name) {
+                                    'super_admin' => 'role-super',
+                                    'manager_hrd' => 'role-hrd',
+                                    'taiwan_account' => 'role-taiwan',
+                                    default => ''
+                                };
+                            @endphp
                             <span class="badge-role {{ $roleClass }}">
-                                {{ $u->role?->label ?? 'Tanpa Role' }}
+                                {{ $user->role?->label ?? 'User' }}
                             </span>
                         </td>
                         <td>
-                            @if ($u->employee)
-                                <strong>{{ $u->employee->name }}</strong>
-                                <span style="display: block; font-size: 11px; color: var(--muted);">{{ $u->employee->employee_code }}</span>
+                            @if ($user->employee)
+                                <a href="{{ route('employees.show', $user->employee) }}" style="color: var(--brand); text-decoration: none; font-weight: 500;">
+                                    {{ $user->employee->name }}
+                                </a>
+                                <span style="display: block; font-size: 11.5px; color: var(--muted);">ID: {{ $user->employee->employee_code }}</span>
                             @else
-                                <span style="color: var(--muted);">-</span>
+                                <span style="color: var(--muted); font-size: 12px;">—</span>
                             @endif
                         </td>
                         <td>
-                            <span class="badge-status {{ $u->status === 'active' ? 'badge-active' : 'badge-inactive' }}">
-                                {{ $u->status === 'active' ? 'Aktif' : 'Non-Aktif' }}
-                            </span>
+                            @if ($user->is_active)
+                                <span class="badge-status badge-active">{{ __('users.active') }}</span>
+                            @else
+                                <span class="badge-status badge-inactive">{{ __('users.inactive') }}</span>
+                            @endif
                         </td>
-                        <td style="color: var(--muted); font-size: 12.5px;">
-                            {{ $u->last_login_at ? $u->last_login_at->format('d/m/Y H:i') : 'Belum pernah login' }}
+                        <td>
+                            @if ($user->last_login_at)
+                                <span style="font-size: 12.5px; color: var(--ink);">{{ $user->last_login_at->format('d M Y, H:i') }}</span>
+                                @if ($user->last_login_ip)
+                                    <span style="display: block; font-size: 11px; color: var(--muted); font-family: monospace;">IP: {{ $user->last_login_ip }}</span>
+                                @endif
+                            @else
+                                <span style="color: var(--muted); font-size: 12px;">{{ __('users.never_login') }}</span>
+                            @endif
                         </td>
                         <td style="text-align: right;">
                             <div class="action-links" style="justify-content: flex-end;">
-                                <a href="{{ route('users.show', $u) }}" class="action-link" title="Detail Pengguna">Detail</a>
-                                <a href="{{ route('users.edit', $u) }}" class="action-link" title="Edit Pengguna">Edit</a>
+                                <a href="{{ route('users.show', $user) }}" class="action-link" title="{{ __('common.detail') }}">{{ __('common.detail') }}</a>
+                                <a href="{{ route('users.edit', $user) }}" class="action-link" title="{{ __('common.edit') }}">{{ __('common.edit') }}</a>
                                 
-                                @if ($u->id !== auth()->id())
-                                    <form method="POST" action="{{ route('users.toggle-status', $u) }}" style="display: inline;" onsubmit="return confirm('Apakah Anda yakin ingin {{ $u->status === 'active' ? 'menonaktifkan' : 'mengaktifkan' }} akun {{ $u->name }}?');">
+                                @if ($user->id !== auth()->id())
+                                    <form action="{{ route('users.toggle-status', $user) }}" method="POST" style="display: inline;" onsubmit="return confirm('{{ $user->is_active ? __('users.confirm_deactivate', ['name' => $user->name]) : __('users.confirm_activate', ['name' => $user->name]) }}');">
                                         @csrf
-                                        <button type="submit" class="action-link {{ $u->status === 'active' ? 'btn-toggle-deactivate' : 'btn-toggle-activate' }}">
-                                            {{ $u->status === 'active' ? 'Nonaktifkan' : 'Aktifkan' }}
-                                        </button>
+                                        @if ($user->is_active)
+                                            <button type="submit" class="action-link btn-toggle-deactivate" title="{{ __('users.deactivate') }}">{{ __('users.deactivate') }}</button>
+                                        @else
+                                            <button type="submit" class="action-link btn-toggle-activate" title="{{ __('users.activate') }}">{{ __('users.activate') }}</button>
+                                        @endif
                                     </form>
                                 @endif
                             </div>
@@ -166,11 +182,9 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6">
+                        <td colspan="7">
                             <div class="empty-state">
-                                <div style="font-size: 32px; margin-bottom: 8px;">♚</div>
-                                <strong>Tidak ada pengguna ditemukan</strong>
-                                <p style="margin-top: 4px; font-size: 12px;">Coba sesuaikan kata kunci atau filter pencarian Anda.</p>
+                                <p style="margin: 0; font-size: 14px; font-weight: 600;">{{ __('users.no_users') }}</p>
                             </div>
                         </td>
                     </tr>
@@ -181,8 +195,12 @@
 
     @if ($users->hasPages())
         <div class="pagination-wrapper">
-            <span>Menampilkan {{ $users->firstItem() ?? 0 }} - {{ $users->lastItem() ?? 0 }} dari {{ $users->total() }} pengguna</span>
-            {{ $users->links() }}
+            <div>
+                {{ __('users.showing_records', ['from' => $users->firstItem(), 'to' => $users->lastItem(), 'total' => $users->total()]) }}
+            </div>
+            <div>
+                {{ $users->links() }}
+            </div>
         </div>
     @endif
 </div>

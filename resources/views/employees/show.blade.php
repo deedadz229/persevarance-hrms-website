@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Detail Karyawan · ' . $employee->name)
+@section('title', __('employees.detail_title') . ' · ' . $employee->name)
 
 @section('content')
 <style>
@@ -33,16 +33,16 @@
 
 <div class="page-header">
     <div class="page-title-box">
-        <h2>Detail Karyawan</h2>
-        <p>Informasi profil dan administrasi kepegawaian Perseverance Technology Indonesia</p>
+        <h2>{{ __('employees.detail_title') }}</h2>
+        <p>{{ __('employees.detail_subtitle') }}</p>
     </div>
     <div class="header-actions">
         <a href="{{ route('employees.index') }}" class="btn btn-outline">
-            <span>←</span> Kembali
+            <span>←</span> {{ __('common.back') }}
         </a>
         @if (auth()->user()->role?->name !== 'taiwan_account' && auth()->user()->role?->permissions->contains('name', 'manage_employees'))
             <a href="{{ route('employees.edit', $employee) }}" class="btn btn-primary">
-                <span>✎</span> Edit Karyawan
+                <span>✎</span> {{ __('employees.edit_employee') }}
             </a>
         @endif
     </div>
@@ -61,9 +61,9 @@
         <div class="profile-meta">
             <span>ID: <code>{{ $employee->employee_code }}</code></span>
             <span>•</span>
-            <span>{{ $employee->department?->name ?? 'Belum ada departemen' }}</span>
+            <span>{{ $employee->department?->name ?? __('employees.no_dept') }}</span>
             <span>•</span>
-            <span>{{ $employee->position?->name ?? 'Belum ada jabatan' }}</span>
+            <span>{{ $employee->position?->name ?? __('employees.no_position') }}</span>
             <span>•</span>
             @if ($employee->status === 'active')
                 <span class="badge-status badge-active">Active</span>
@@ -78,44 +78,44 @@
 
 <div class="grid-details">
     <div class="card detail-card">
-        <h4>Informasi Dasar & Kontak</h4>
+        <h4>{{ __('employees.basic_info_title') }}</h4>
         <div class="info-list">
-            <span class="info-label">ID Karyawan</span>
+            <span class="info-label">{{ __('employees.employee_code_label') }}</span>
             <span class="info-value"><code>{{ $employee->employee_code }}</code></span>
 
-            <span class="info-label">Nama Lengkap</span>
+            <span class="info-label">{{ __('employees.employee_name') }}</span>
             <span class="info-value">{{ $employee->name }}</span>
 
-            <span class="info-label">Email Perusahaan</span>
+            <span class="info-label">{{ __('employees.company_email') }}</span>
             <span class="info-value">{{ $employee->email }}</span>
 
-            <span class="info-label">Nomor Telepon</span>
+            <span class="info-label">{{ __('employees.phone') }}</span>
             <span class="info-value">{{ $employee->phone ?? '-' }}</span>
 
-            <span class="info-label">Status Akun</span>
+            <span class="info-label">{{ __('employees.account_status') }}</span>
             <span class="info-value">
                 @if ($employee->user)
-                    <span style="color: #0a7b6f; font-weight: 600;">Terdaftar</span> ({{ $employee->user->email }})
+                    <span style="color: #0a7b6f; font-weight: 600;">{{ __('employees.account_registered') }}</span> ({{ $employee->user->email }})
                 @else
-                    <span style="color: var(--muted); font-weight: normal;">Belum memiliki akun</span>
+                    <span style="color: var(--muted); font-weight: normal;">{{ __('employees.account_not_registered') }}</span>
                 @endif
             </span>
         </div>
     </div>
 
     <div class="card detail-card">
-        <h4>Struktur & Status Kepegawaian</h4>
+        <h4>{{ __('employees.structure_info_title') }}</h4>
         <div class="info-list">
-            <span class="info-label">Departemen</span>
+            <span class="info-label">{{ __('employees.department') }}</span>
             <span class="info-value">{{ $employee->department?->name ?? '-' }}</span>
 
-            <span class="info-label">Jabatan (Posisi)</span>
+            <span class="info-label">{{ __('employees.position_label') }}</span>
             <span class="info-value">{{ $employee->position?->name ?? '-' }}</span>
 
-            <span class="info-label">Tipe Kontrak</span>
+            <span class="info-label">{{ __('employees.contract_type') }}</span>
             <span class="info-value">{{ ucfirst($employee->employment_type) }}</span>
 
-            <span class="info-label">Status Kerja</span>
+            <span class="info-label">{{ __('employees.work_status') }}</span>
             <span class="info-value">
                 @if ($employee->status === 'active')
                     <span class="badge-status badge-active">Active</span>
@@ -126,14 +126,14 @@
                 @endif
             </span>
 
-            <span class="info-label">Special Status</span>
+            <span class="info-label">{{ __('employees.special_status') }}</span>
             <span class="info-value">{{ $employee->special_status ?? '-' }}</span>
 
-            <span class="info-label">Tanggal Bergabung</span>
+            <span class="info-label">{{ __('employees.joined_at') }}</span>
             <span class="info-value">{{ $employee->join_date?->translatedFormat('d F Y') ?? '-' }}</span>
 
             @if ($employee->status === 'resigned')
-                <span class="info-label" style="color: #b92e2e;">Tanggal Resign</span>
+                <span class="info-label" style="color: #b92e2e;">{{ __('employees.resigned_date') }}</span>
                 <span class="info-value" style="color: #b92e2e;">
                     {{ $employee->resigned_at?->translatedFormat('d F Y') ?? '-' }}
                 </span>

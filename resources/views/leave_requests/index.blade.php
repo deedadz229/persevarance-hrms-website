@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Pengajuan & Persetujuan Cuti')
+@section('title', __('leave.title'))
 
 @section('content')
 <style>
@@ -68,46 +68,46 @@
 
 <div class="page-header">
     <div class="page-title-box">
-        <h2>Pengajuan & Persetujuan Cuti</h2>
-        <p>Kelola permohonan cuti tahunan, izin sakit, dan cuti khusus karyawan PTI</p>
+        <h2>{{ __('leave.title') }}</h2>
+        <p>{{ __('leave.subtitle') }}</p>
     </div>
 </div>
 
-<section class="summary-grid" aria-label="Ringkasan Pengajuan Cuti">
+<section class="summary-grid" aria-label="{{ __('leave.summary_aria') }}">
     <article class="card summary-card">
-        <span>Total Pengajuan</span>
+        <span>{{ __('leave.total_requests') }}</span>
         <strong>{{ number_format($summary['total']) }}</strong>
-        <small>Seluruh riwayat pengajuan</small>
+        <small>{{ __('leave.total_requests_hint') }}</small>
     </article>
     <article class="card summary-card">
-        <span>Menunggu Persetujuan</span>
+        <span>{{ __('leave.pending_approval') }}</span>
         <strong style="color: #c98804;">{{ number_format($summary['pending']) }}</strong>
-        <small>Memerlukan tindakan approval HR</small>
+        <small>{{ __('leave.pending_approval_hint') }}</small>
     </article>
     <article class="card summary-card">
-        <span>Disetujui</span>
+        <span>{{ __('leave.approved') }}</span>
         <strong style="color: #0c8f82;">{{ number_format($summary['approved']) }}</strong>
-        <small>Pengajuan cuti yang disetujui</small>
+        <small>{{ __('leave.approved_hint') }}</small>
     </article>
     <article class="card summary-card">
-        <span>Ditolak</span>
+        <span>{{ __('leave.rejected') }}</span>
         <strong style="color: #d93838;">{{ number_format($summary['rejected']) }}</strong>
-        <small>Pengajuan tidak memenuhi syarat</small>
+        <small>{{ __('leave.rejected_hint') }}</small>
     </article>
 </section>
 
 <div class="quota-banner">
-    ℹ <strong>Catatan Kebijakan Kuota Cuti:</strong> Sistem saat ini merekam seluruh durasi permohonan hari cuti yang disetujui secara presisi. Pengaturan batasan baku kuota tahunan per karyawan akan dikonfigurasi setelah pedoman resmi HRD PTI disahkan.
+    ℹ <strong>{{ __('leave.quota_banner_title') }}</strong> {{ __('leave.quota_banner_desc') }}
 </div>
 
 <div class="card filter-card">
     <form action="{{ route('leave-requests.index') }}" method="GET" class="filter-form">
         <div class="filter-group search-group">
-            <input type="text" name="search" value="{{ $currentSearch }}" placeholder="Cari nama karyawan atau ID..." class="form-control">
+            <input type="text" name="search" value="{{ $currentSearch }}" placeholder="{{ __('leave.search_placeholder') }}" class="form-control">
         </div>
         <div class="filter-group">
             <select name="department_id" class="form-control">
-                <option value="">Semua Departemen</option>
+                <option value="">{{ __('leave.all_departments') }}</option>
                 @foreach ($departments as $dept)
                     <option value="{{ $dept->id }}" {{ $currentDepartment == $dept->id ? 'selected' : '' }}>
                         {{ $dept->name }}
@@ -117,7 +117,7 @@
         </div>
         <div class="filter-group">
             <select name="leave_type" class="form-control">
-                <option value="">Semua Jenis Cuti</option>
+                <option value="">{{ __('leave.all_leave_types') }}</option>
                 @foreach ($leaveTypes as $type)
                     <option value="{{ $type }}" {{ $currentLeaveType === $type ? 'selected' : '' }}>
                         {{ $type }}
@@ -127,19 +127,19 @@
         </div>
         <div class="filter-group">
             <select name="status" class="form-control">
-                <option value="">Semua Status</option>
-                <option value="pending" {{ $currentStatus === 'pending' ? 'selected' : '' }}>Menunggu Persetujuan</option>
-                <option value="approved" {{ $currentStatus === 'approved' ? 'selected' : '' }}>Disetujui</option>
-                <option value="rejected" {{ $currentStatus === 'rejected' ? 'selected' : '' }}>Ditolak</option>
+                <option value="">{{ __('leave.all_status') }}</option>
+                <option value="pending" {{ $currentStatus === 'pending' ? 'selected' : '' }}>{{ __('leave.status_pending') }}</option>
+                <option value="approved" {{ $currentStatus === 'approved' ? 'selected' : '' }}>{{ __('leave.status_approved') }}</option>
+                <option value="rejected" {{ $currentStatus === 'rejected' ? 'selected' : '' }}>{{ __('leave.status_rejected') }}</option>
             </select>
         </div>
         <div class="filter-group" style="max-width: 160px;">
-            <input type="date" name="date" value="{{ $currentDate }}" class="form-control" title="Tanggal Cuti">
+            <input type="date" name="date" value="{{ $currentDate }}" class="form-control" title="{{ __('leave.date_title') }}">
         </div>
         <div style="display: flex; gap: 8px;">
-            <button type="submit" class="btn btn-primary" style="padding: 9px 14px;">Filter</button>
+            <button type="submit" class="btn btn-primary" style="padding: 9px 14px;">{{ __('common.filter') }}</button>
             @if ($currentSearch || $currentDepartment || $currentLeaveType || $currentStatus || $currentDate)
-                <a href="{{ route('leave-requests.index') }}" class="btn btn-outline" style="padding: 9px 12px;" title="Reset Filter">Reset</a>
+                <a href="{{ route('leave-requests.index') }}" class="btn btn-outline" style="padding: 9px 12px;" title="{{ __('common.reset') }}">{{ __('common.reset') }}</a>
             @endif
         </div>
     </form>
@@ -150,13 +150,13 @@
         <table class="table-leave">
             <thead>
                 <tr>
-                    <th>Karyawan</th>
-                    <th>Departemen</th>
-                    <th>Jenis Cuti / Izin</th>
-                    <th>Periode Tanggal</th>
-                    <th>Durasi</th>
-                    <th>Status</th>
-                    <th style="text-align: right;">Aksi</th>
+                    <th>{{ __('leave.employee') }}</th>
+                    <th>{{ __('leave.department') }}</th>
+                    <th>{{ __('leave.leave_type') }}</th>
+                    <th>{{ __('leave.date_period') }}</th>
+                    <th>{{ __('leave.duration') }}</th>
+                    <th>{{ __('common.status') }}</th>
+                    <th style="text-align: right;">{{ __('common.action') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -185,16 +185,16 @@
                         </td>
                         <td style="text-align: right;">
                             <div class="action-group">
-                                <a href="{{ route('leave-requests.show', $leave) }}" class="action-link" title="Detail Pengajuan">Detail</a>
+                                <a href="{{ route('leave-requests.show', $leave) }}" class="action-link" title="{{ __('leave.detail') }}">{{ __('leave.detail') }}</a>
 
                                 @if ($leave->status === 'pending' && auth()->user()->role?->name !== 'taiwan_account' && auth()->user()->role?->permissions->contains('name', 'approve_leave'))
-                                    <form action="{{ route('leave-requests.approve', $leave) }}" method="POST" style="display: inline;" onsubmit="return confirm('Apakah Anda yakin ingin menyetujui pengajuan cuti ini?');">
+                                    <form action="{{ route('leave-requests.approve', $leave) }}" method="POST" style="display: inline;" onsubmit="return confirm('{{ __('leave.confirm_approve') }}');">
                                         @csrf
-                                        <button type="submit" class="btn btn-sm btn-approve" title="Setujui Cuti">✓ Approve</button>
+                                        <button type="submit" class="btn btn-sm btn-approve" title="{{ __('leave.approve') }}">{{ __('leave.approve') }}</button>
                                     </form>
 
-                                    <button type="button" class="btn btn-sm btn-reject" onclick="openRejectModal('{{ route('leave-requests.reject', $leave) }}', '{{ $leave->employee?->name }}', '{{ $leave->leave_type }}')" title="Tolak Cuti">
-                                        ✗ Reject
+                                    <button type="button" class="btn btn-sm btn-reject" onclick="openRejectModal('{{ route('leave-requests.reject', $leave) }}', '{{ $leave->employee?->name }}', '{{ $leave->leave_type }}')" title="{{ __('leave.reject') }}">
+                                        {{ __('leave.reject') }}
                                     </button>
                                 @endif
                             </div>
@@ -203,7 +203,7 @@
                 @empty
                     <tr>
                         <td colspan="7" class="empty-state">
-                            Belum ada permohonan cuti atau izin yang sesuai dengan filter pencarian.
+                            {{ __('leave.no_requests') }}
                         </td>
                     </tr>
                 @endforelse
@@ -213,7 +213,7 @@
 
     @if ($leaveRequests->hasPages())
         <div class="pagination-wrapper">
-            <div>Menampilkan {{ $leaveRequests->firstItem() ?? 0 }} - {{ $leaveRequests->lastItem() ?? 0 }} dari {{ $leaveRequests->total() }} pengajuan</div>
+            <div>{{ __('leave.showing_records', ['from' => $leaveRequests->firstItem() ?? 0, 'to' => $leaveRequests->lastItem() ?? 0, 'total' => $leaveRequests->total()]) }}</div>
             <div>{{ $leaveRequests->links() }}</div>
         </div>
     @endif
@@ -223,24 +223,24 @@
 <div id="rejectModal" class="modal-overlay" onclick="closeRejectModalOnOverlay(event)">
     <div class="modal-card">
         <div class="modal-head">
-            <h3>Tolak Pengajuan Cuti</h3>
+            <h3>{{ __('leave.reject_modal_title') }}</h3>
             <button type="button" class="modal-close" onclick="closeRejectModal()">&times;</button>
         </div>
         <p style="margin: 0 0 16px; font-size: 13px; color: var(--muted);" id="rejectModalDesc">
-            Mohon cantumkan alasan penolakan secara jelas.
+            {{ __('leave.reject_modal_desc') }}
         </p>
 
         <form id="rejectForm" method="POST" action="">
             @csrf
             <div style="margin-bottom: 18px;">
                 <label for="rejection_reason" style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 600;">
-                    Alasan Penolakan <span style="color: #d93838;">*</span>
+                    {{ __('leave.rejection_reason') }} <span style="color: #d93838;">*</span>
                 </label>
-                <textarea id="rejection_reason" name="rejection_reason" rows="4" class="form-control" placeholder="Contoh: Jadwal bertabrakan dengan deployment sistem atau kuota shift telah terisi penuh." required></textarea>
+                <textarea id="rejection_reason" name="rejection_reason" rows="4" class="form-control" placeholder="{{ __('leave.rejection_reason_placeholder') }}" required></textarea>
             </div>
             <div style="display: flex; justify-content: flex-end; gap: 10px;">
-                <button type="button" class="btn btn-outline" onclick="closeRejectModal()">Batal</button>
-                <button type="submit" class="btn btn-reject">Tolak Pengajuan</button>
+                <button type="button" class="btn btn-outline" onclick="closeRejectModal()">{{ __('common.cancel') }}</button>
+                <button type="submit" class="btn btn-reject">{{ __('leave.reject_submit') }}</button>
             </div>
         </form>
     </div>
@@ -249,7 +249,7 @@
 <script>
     function openRejectModal(actionUrl, employeeName, leaveType) {
         document.getElementById('rejectForm').action = actionUrl;
-        document.getElementById('rejectModalDesc').innerText = 'Menolak pengajuan ' + leaveType + ' untuk ' + employeeName + '.';
+        document.getElementById('rejectModalDesc').innerText = "{{ __('leave.reject_modal_desc') }} (" + leaveType + " - " + employeeName + ")";
         document.getElementById('rejection_reason').value = '';
         document.getElementById('rejectModal').classList.add('is-active');
         document.getElementById('rejection_reason').focus();

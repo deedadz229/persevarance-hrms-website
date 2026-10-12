@@ -39,12 +39,12 @@
 
 <div class="page-header">
     <div class="page-title-box">
-        <h2>Karyawan Resign</h2>
-        <p>Arsip data historis mantan karyawan Perseverance Technology Indonesia yang telah menyelesaikan masa kerja</p>
+        <h2>{{ __('employees.resigned_title') }}</h2>
+        <p>{{ __('employees.resigned_subtitle') }}</p>
     </div>
     <div class="header-actions">
         <a href="{{ route('employees.index') }}" class="btn btn-outline">
-            <span>←</span> Kembali ke Direktori
+            <span>←</span> {{ __('common.back') }}
         </a>
     </div>
 </div>
@@ -56,11 +56,11 @@
 <div class="card filter-card">
     <form action="{{ route('employees.resigned') }}" method="GET" class="filter-form">
         <div class="filter-group search-group">
-            <input type="text" name="search" value="{{ $currentSearch }}" placeholder="Cari nama, ID karyawan, atau email..." class="form-control">
+            <input type="text" name="search" value="{{ $currentSearch }}" placeholder="{{ __('employees.search_placeholder') }}" class="form-control">
         </div>
         <div class="filter-group">
             <select name="department_id" class="form-control">
-                <option value="">Semua Departemen</option>
+                <option value="">{{ __('employees.all_departments') }}</option>
                 @foreach ($departments as $dept)
                     <option value="{{ $dept->id }}" {{ $currentDepartment == $dept->id ? 'selected' : '' }}>
                         {{ $dept->name }}
@@ -69,9 +69,9 @@
             </select>
         </div>
         <div style="display: flex; gap: 8px;">
-            <button type="submit" class="btn btn-primary" style="padding: 9px 14px;">Filter</button>
+            <button type="submit" class="btn btn-primary" style="padding: 9px 14px;">{{ __('common.filter') }}</button>
             @if ($currentSearch || $currentDepartment)
-                <a href="{{ route('employees.resigned') }}" class="btn btn-outline" style="padding: 9px 12px;" title="Reset Filter">Reset</a>
+                <a href="{{ route('employees.resigned') }}" class="btn btn-outline" style="padding: 9px 12px;" title="{{ __('common.reset') }}">{{ __('common.reset') }}</a>
             @endif
         </div>
     </form>
@@ -82,15 +82,15 @@
         <table class="table-employee">
             <thead>
                 <tr>
-                    <th>Karyawan</th>
-                    <th>ID / Code</th>
-                    <th>Departemen Terakhir</th>
-                    <th>Jabatan Terakhir</th>
-                    <th>Kontrak</th>
-                    <th>Tanggal Bergabung</th>
-                    <th>Tanggal Resign</th>
-                    <th>Status</th>
-                    <th style="text-align: right;">Aksi</th>
+                    <th>{{ __('employees.employee') }}</th>
+                    <th>{{ __('employees.employee_code') }}</th>
+                    <th>{{ __('employees.department') }}</th>
+                    <th>{{ __('employees.position') }}</th>
+                    <th>{{ __('employees.contract') }}</th>
+                    <th>{{ __('employees.joined_at') }}</th>
+                    <th>{{ __('employees.resigned_date') }}</th>
+                    <th>{{ __('common.status') }}</th>
+                    <th style="text-align: right;">{{ __('common.action') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -119,16 +119,16 @@
                         </td>
                         <td>{{ $employee->join_date?->format('d M Y') ?? '-' }}</td>
                         <td>
-                            <strong style="color: #b92e2e;">{{ $employee->resigned_at?->format('d M Y') ?? 'Belum tercatat' }}</strong>
+                            <strong style="color: #b92e2e;">{{ $employee->resigned_at?->format('d M Y') ?? '-' }}</strong>
                         </td>
                         <td>
-                            <span class="badge-status badge-resigned">Resigned</span>
+                            <span class="badge-status badge-resigned">{{ __('employees.status_resigned') }}</span>
                         </td>
                         <td style="text-align: right;">
                             <div class="action-links" style="justify-content: flex-end;">
-                                <a href="{{ route('employees.show', $employee) }}" class="action-link" title="Detail Karyawan">Detail</a>
+                                <a href="{{ route('employees.show', $employee) }}" class="action-link" title="{{ __('common.detail') }}">{{ __('common.detail') }}</a>
                                 @if (auth()->user()->role?->name !== 'taiwan_account' && auth()->user()->role?->permissions->contains('name', 'manage_employees'))
-                                    <a href="{{ route('employees.edit', $employee) }}" class="action-link" title="Edit Karyawan">Edit</a>
+                                    <a href="{{ route('employees.edit', $employee) }}" class="action-link" title="{{ __('common.edit') }}">{{ __('common.edit') }}</a>
                                 @endif
                             </div>
                         </td>
@@ -136,7 +136,7 @@
                 @empty
                     <tr>
                         <td colspan="9" class="empty-state">
-                            Belum ada riwayat karyawan berstatus resign yang ditemukan.
+                            {{ __('employees.no_records') }}
                         </td>
                     </tr>
                 @endforelse
@@ -146,7 +146,7 @@
 
     @if ($employees->hasPages())
         <div class="pagination-wrapper">
-            <div>Menampilkan {{ $employees->firstItem() ?? 0 }} - {{ $employees->lastItem() ?? 0 }} dari {{ $employees->total() }} karyawan</div>
+            <div>{{ __('employees.showing_records', ['from' => $employees->firstItem() ?? 0, 'to' => $employees->lastItem() ?? 0, 'total' => $employees->total()]) }}</div>
             <div>{{ $employees->links() }}</div>
         </div>
     @endif

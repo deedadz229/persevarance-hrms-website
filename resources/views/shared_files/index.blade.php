@@ -74,12 +74,12 @@
 
 <div class="page-header">
     <div class="page-title-box">
-        <h2>Aktivitas File dan Dokumen</h2>
+        <h2>{{ __('shared_files.title') }}</h2>
         <p>
             @if ($isTaiwanAccount)
-                Daftar dokumen perusahaan yang dibagikan secara resmi untuk pemantauan Taiwan Account
+                {{ __('shared_files.subtitle_taiwan') }}
             @else
-                Kelola pengunggahan dokumen, status sinkronisasi, dan pembagian file kepada Taiwan Account
+                {{ __('shared_files.subtitle_admin') }}
             @endif
         </p>
     </div>
@@ -87,7 +87,7 @@
         @if (! $isTaiwanAccount)
             <button type="button" class="btn btn-primary" onclick="openUploadModal()">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                Unggah File Baru
+                {{ __('shared_files.upload_btn') }}
             </button>
         @endif
     </div>
@@ -97,38 +97,38 @@
 <div class="stats-grid">
     <div class="stat-card">
         <div class="stat-header">
-            <span>{{ $isTaiwanAccount ? 'Total File Dibagikan' : 'Total File Tersimpan' }}</span>
+            <span>{{ $isTaiwanAccount ? __('shared_files.total_shared_taiwan') : __('shared_files.total_files') }}</span>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
         </div>
         <div class="stat-value tabular-nums">{{ $totalFiles }}</div>
-        <div class="stat-desc">Dokumen di sistem</div>
+        <div class="stat-desc">{{ __('shared_files.document_size') }}</div>
     </div>
     @if (! $isTaiwanAccount)
         <div class="stat-card">
             <div class="stat-header">
-                <span>File Dibagikan</span>
+                <span>{{ __('shared_files.shared_files') }}</span>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             </div>
             <div class="stat-value tabular-nums">{{ $sharedCount }}</div>
-            <div class="stat-desc">Dapat diakses Taiwan Account</div>
+            <div class="stat-desc">{{ __('shared_files.taiwan_recipients') }}</div>
         </div>
     @endif
     <div class="stat-card">
         <div class="stat-header">
-            <span>Status Tersinkron</span>
+            <span>{{ __('shared_files.synced_status') }}</span>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
         </div>
         <div class="stat-value tabular-nums" style="color: #15803d;">{{ $syncedCount }}</div>
-        <div class="stat-desc">Telah dibagikan aktif</div>
+        <div class="stat-desc">{{ __('shared_files.active_shared') }}</div>
     </div>
     @if (! $isTaiwanAccount)
         <div class="stat-card">
             <div class="stat-header">
-                <span>Pending / Privat</span>
+                <span>{{ __('shared_files.pending_status') }}</span>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             </div>
             <div class="stat-value tabular-nums" style="color: #b45309;">{{ $pendingCount }}</div>
-            <div class="stat-desc">Belum dibagikan</div>
+            <div class="stat-desc">{{ __('shared_files.unshared') }}</div>
         </div>
     @endif
 </div>

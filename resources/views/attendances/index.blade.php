@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Absensi Karyawan')
+@section('title', __('attendances.title'))
 
 @section('content')
 <style>
@@ -60,50 +60,50 @@
 
 <div class="page-header">
     <div class="page-title-box">
-        <h2>Absensi Karyawan</h2>
-        <p>Monitoring kehadiran, kepatuhan jam kerja, verifikasi WiFi & GPS karyawan PTI</p>
+        <h2>{{ __('attendances.title') }}</h2>
+        <p>{{ __('attendances.subtitle') }}</p>
     </div>
     <div class="header-actions">
-        <a href="{{ route('attendances.export', request()->query()) }}" class="btn btn-export" title="Unduh data dalam format CSV">
-            <span>↓</span> Ekspor CSV
+        <a href="{{ route('attendances.export', request()->query()) }}" class="btn btn-export" title="{{ __('attendances.export_csv') }}">
+            <span>↓</span> {{ __('attendances.export_csv') }}
         </a>
     </div>
 </div>
 
-<section class="summary-grid" aria-label="Ringkasan Kehadiran">
+<section class="summary-grid" aria-label="{{ __('attendances.summary_aria') }}">
     <article class="card summary-card">
-        <span>Hadir Tepat Waktu</span>
+        <span>{{ __('attendances.on_time') }}</span>
         <strong style="color: #0c8f82;">{{ number_format($summary['hadir']) }}</strong>
-        <small>Check-in ≤ 08:30 pada {{ \Carbon\Carbon::parse($summary['date'])->format('d M Y') }}</small>
+        <small>{{ __('attendances.on_time_hint', ['date' => \Carbon\Carbon::parse($summary['date'])->format('d M Y')]) }}</small>
     </article>
     <article class="card summary-card">
-        <span>Work From Home</span>
+        <span>{{ __('attendances.wfh') }}</span>
         <strong style="color: #1a73e8;">{{ number_format($summary['wfh']) }}</strong>
-        <small>Status WFH disetujui sistem</small>
+        <small>{{ __('attendances.wfh_hint') }}</small>
     </article>
     <article class="card summary-card">
-        <span>Terlambat</span>
+        <span>{{ __('attendances.late') }}</span>
         <strong style="color: #c98804;">{{ number_format($summary['telat']) }}</strong>
-        <small>Check-in > 08:30 kantor</small>
+        <small>{{ __('attendances.late_hint') }}</small>
     </article>
     <article class="card summary-card">
-        <span>Tidak Hadir (Absen)</span>
+        <span>{{ __('attendances.absent') }}</span>
         <strong style="color: #d93838;">{{ number_format($summary['absen']) }}</strong>
-        <small>Karyawan aktif tanpa absensi</small>
+        <small>{{ __('attendances.absent_hint') }}</small>
     </article>
 </section>
 
 <div class="card filter-card">
     <form action="{{ route('attendances.index') }}" method="GET" class="filter-form">
         <div class="filter-group">
-            <input type="date" name="date" value="{{ $currentDate }}" class="form-control" title="Tanggal Absensi">
+            <input type="date" name="date" value="{{ $currentDate }}" class="form-control" title="{{ __('attendances.date_title') }}">
         </div>
         <div class="filter-group search-group">
-            <input type="text" name="search" value="{{ $currentSearch }}" placeholder="Cari nama karyawan atau ID..." class="form-control">
+            <input type="text" name="search" value="{{ $currentSearch }}" placeholder="{{ __('attendances.search_placeholder') }}" class="form-control">
         </div>
         <div class="filter-group">
             <select name="department_id" class="form-control">
-                <option value="">Semua Departemen</option>
+                <option value="">{{ __('attendances.all_departments') }}</option>
                 @foreach ($departments as $dept)
                     <option value="{{ $dept->id }}" {{ $currentDepartment == $dept->id ? 'selected' : '' }}>
                         {{ $dept->name }}
@@ -113,17 +113,17 @@
         </div>
         <div class="filter-group">
             <select name="status" class="form-control">
-                <option value="" {{ empty($currentStatus) ? 'selected' : '' }}>Semua Status</option>
-                <option value="hadir" {{ $currentStatus === 'hadir' ? 'selected' : '' }}>Hadir</option>
-                <option value="wfh" {{ $currentStatus === 'wfh' ? 'selected' : '' }}>WFH</option>
-                <option value="telat" {{ $currentStatus === 'telat' ? 'selected' : '' }}>Telat</option>
-                <option value="absen" {{ $currentStatus === 'absen' ? 'selected' : '' }}>Absen (Tidak Hadir)</option>
+                <option value="" {{ empty($currentStatus) ? 'selected' : '' }}>{{ __('attendances.all_status') }}</option>
+                <option value="hadir" {{ $currentStatus === 'hadir' ? 'selected' : '' }}>{{ __('attendances.status_hadir') }}</option>
+                <option value="wfh" {{ $currentStatus === 'wfh' ? 'selected' : '' }}>{{ __('attendances.status_wfh') }}</option>
+                <option value="telat" {{ $currentStatus === 'telat' ? 'selected' : '' }}>{{ __('attendances.status_telat') }}</option>
+                <option value="absen" {{ $currentStatus === 'absen' ? 'selected' : '' }}>{{ __('attendances.status_absen') }}</option>
             </select>
         </div>
         <div style="display: flex; gap: 8px;">
-            <button type="submit" class="btn btn-primary" style="padding: 9px 14px;">Filter</button>
+            <button type="submit" class="btn btn-primary" style="padding: 9px 14px;">{{ __('common.filter') }}</button>
             @if ($currentDate !== now()->toDateString() || $currentSearch || $currentDepartment || $currentStatus)
-                <a href="{{ route('attendances.index') }}" class="btn btn-outline" style="padding: 9px 12px;" title="Reset Filter">Reset</a>
+                <a href="{{ route('attendances.index') }}" class="btn btn-outline" style="padding: 9px 12px;" title="{{ __('common.reset') }}">{{ __('common.reset') }}</a>
             @endif
         </div>
     </form>
@@ -136,13 +136,13 @@
             <table class="table-attendance">
                 <thead>
                     <tr>
-                        <th>Karyawan</th>
-                        <th>ID Karyawan</th>
-                        <th>Departemen</th>
-                        <th>Jabatan</th>
-                        <th>Tanggal Rekap</th>
-                        <th>Status</th>
-                        <th>Keterangan</th>
+                        <th>{{ __('attendances.employee') }}</th>
+                        <th>{{ __('attendances.employee_id') }}</th>
+                        <th>{{ __('attendances.department') }}</th>
+                        <th>{{ __('attendances.position') }}</th>
+                        <th>{{ __('attendances.recap_date') }}</th>
+                        <th>{{ __('common.status') }}</th>
+                        <th>{{ __('attendances.notes') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -159,12 +159,12 @@
                             <td>{{ $employee->position?->name ?? '-' }}</td>
                             <td>{{ \Carbon\Carbon::parse($currentDate ?: now())->format('d M Y') }}</td>
                             <td><span class="badge-status badge-absen">Absen</span></td>
-                            <td style="color: var(--muted); font-size: 12px;">Tidak ada catatan check-in pada tanggal ini</td>
+                            <td style="color: var(--muted); font-size: 12px;">{{ __('attendances.no_check_in_note') }}</td>
                         </tr>
                     @empty
                         <tr>
                             <td colspan="7" class="empty-state">
-                                Tidak ada karyawan yang absen pada tanggal ini. Seluruh karyawan aktif telah melakukan check-in!
+                                {{ __('attendances.no_absent_employees') }}
                             </td>
                         </tr>
                     @endforelse
@@ -173,7 +173,7 @@
 
             @if ($absentEmployees->hasPages())
                 <div class="pagination-wrapper">
-                    <div>Menampilkan {{ $absentEmployees->firstItem() ?? 0 }} - {{ $absentEmployees->lastItem() ?? 0 }} dari {{ $absentEmployees->total() }} karyawan absen</div>
+                    <div>{{ __('attendances.showing_absent', ['from' => $absentEmployees->firstItem() ?? 0, 'to' => $absentEmployees->lastItem() ?? 0, 'total' => $absentEmployees->total()]) }}</div>
                     <div>{{ $absentEmployees->links() }}</div>
                 </div>
             @endif
@@ -182,17 +182,17 @@
             <table class="table-attendance">
                 <thead>
                     <tr>
-                        <th>Karyawan</th>
-                        <th>Departemen</th>
-                        <th>Tanggal</th>
-                        <th>Jam Masuk</th>
-                        <th>Jam Keluar</th>
-                        <th>Status</th>
-                        <th>WiFi Verified</th>
-                        <th>IP WiFi</th>
-                        <th>Bukti Foto</th>
-                        <th>Koordinat GPS</th>
-                        <th style="text-align: right;">Aksi</th>
+                        <th>{{ __('attendances.employee') }}</th>
+                        <th>{{ __('attendances.department') }}</th>
+                        <th>{{ __('attendances.date') }}</th>
+                        <th>{{ __('attendances.check_in') }}</th>
+                        <th>{{ __('attendances.check_out') }}</th>
+                        <th>{{ __('common.status') }}</th>
+                        <th>{{ __('attendances.wifi_verified') }}</th>
+                        <th>{{ __('attendances.wifi_ip') }}</th>
+                        <th>{{ __('attendances.photo_proof') }}</th>
+                        <th>{{ __('attendances.gps_coords') }}</th>
+                        <th style="text-align: right;">{{ __('common.action') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -203,7 +203,7 @@
                         <tr>
                             <td>
                                 <div class="emp-info">
-                                    <strong>{{ $attendance->employee?->name ?? 'Karyawan dihapus' }}</strong>
+                                    <strong>{{ $attendance->employee?->name ?? __('attendances.deleted_employee') }}</strong>
                                     <span><code>{{ $attendance->employee?->employee_code ?? '-' }}</code></span>
                                 </div>
                             </td>
@@ -226,9 +226,9 @@
                             </td>
                             <td>
                                 @if ($attendance->wifi_verified)
-                                    <span class="badge-pill badge-verified">✓ Verified</span>
+                                    <span class="badge-pill badge-verified">{{ __('attendances.verified') }}</span>
                                 @else
-                                    <span class="badge-pill badge-unverified">Not Verified</span>
+                                    <span class="badge-pill badge-unverified">{{ __('attendances.not_verified') }}</span>
                                 @endif
                             </td>
                             <td>
@@ -238,7 +238,7 @@
                             </td>
                             <td>
                                 @if ($attendance->photo_path)
-                                    <span title="Foto tersedia" style="color: #0c8f82; font-weight: 600; font-size: 12px;">📷 Ada</span>
+                                    <span title="{{ __('attendances.photo_available') }}" style="color: #0c8f82; font-weight: 600; font-size: 12px;">{{ __('attendances.photo_available') }}</span>
                                 @else
                                     <span style="color: #8c9ba5; font-size: 12px;">-</span>
                                 @endif
@@ -256,13 +256,13 @@
                                 @endif
                             </td>
                             <td style="text-align: right;">
-                                <a href="{{ route('attendances.show', $attendance) }}" class="action-link" title="Lihat detail absensi">Detail</a>
+                                <a href="{{ route('attendances.show', $attendance) }}" class="action-link" title="{{ __('common.detail') }}">{{ __('common.detail') }}</a>
                             </td>
                         </tr>
                     @empty
                         <tr>
                             <td colspan="11" class="empty-state">
-                                Belum ada data absensi yang tercatat untuk kriteria pencarian ini.
+                                {{ __('attendances.no_attendance_records') }}
                             </td>
                         </tr>
                     @endforelse
@@ -271,7 +271,7 @@
 
             @if ($attendances->hasPages())
                 <div class="pagination-wrapper">
-                    <div>Menampilkan {{ $attendances->firstItem() ?? 0 }} - {{ $attendances->lastItem() ?? 0 }} dari {{ $attendances->total() }} data absensi</div>
+                    <div>{{ __('attendances.showing_records', ['from' => $attendances->firstItem() ?? 0, 'to' => $attendances->lastItem() ?? 0, 'total' => $attendances->total()]) }}</div>
                     <div>{{ $attendances->links() }}</div>
                 </div>
             @endif

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Tambah Pengajuan Lembur')
+@section('title', __('overtimes.add_overtime_title'))
 
 @section('content')
 <style>
@@ -28,12 +28,12 @@
 
 <div class="page-header" style="max-width: 760px; margin: 0 auto 24px;">
     <div class="page-title-box">
-        <h2>Tambah Pengajuan Lembur</h2>
-        <p>Formulir pencatatan permohonan kerja lembur resmi karyawan Perseverance Technology Indonesia</p>
+        <h2>{{ __('overtimes.add_overtime_title') }}</h2>
+        <p>{{ __('overtimes.add_overtime_subtitle') }}</p>
     </div>
     <div>
         <a href="{{ route('overtimes.index') }}" class="btn btn-outline">
-            <span>←</span> Batal
+            <span>←</span> {{ __('common.cancel') }}
         </a>
     </div>
 </div>
@@ -44,12 +44,12 @@
 
         <div class="form-grid">
             <div class="form-group full-width">
-                <label class="form-label" for="employee_id">Karyawan <span class="required">*</span></label>
+                <label class="form-label" for="employee_id">{{ __('overtimes.employee') }} <span class="required">*</span></label>
                 <select id="employee_id" name="employee_id" class="form-control @error('employee_id') is-invalid @enderror" required>
-                    <option value="">-- Pilih Karyawan --</option>
+                    <option value="">{{ __('overtimes.employee_select') }}</option>
                     @foreach ($employees as $emp)
                         <option value="{{ $emp->id }}" {{ old('employee_id') == $emp->id ? 'selected' : '' }}>
-                            {{ $emp->name }} ({{ $emp->employee_code }}) — {{ $emp->department?->name ?? 'Tanpa Departemen' }}
+                            {{ $emp->name }} ({{ $emp->employee_code }}) — {{ $emp->department?->name ?? __('overtimes.no_department') }}
                         </option>
                     @endforeach
                 </select>
@@ -59,7 +59,7 @@
             </div>
 
             <div class="form-group full-width">
-                <label class="form-label" for="overtime_date">Tanggal Lembur <span class="required">*</span></label>
+                <label class="form-label" for="overtime_date">{{ __('overtimes.overtime_date') }} <span class="required">*</span></label>
                 <input type="date" id="overtime_date" name="overtime_date" value="{{ old('overtime_date', date('Y-m-d')) }}" class="form-control @error('overtime_date') is-invalid @enderror" required>
                 @error('overtime_date')
                     <div class="error-feedback">{{ $message }}</div>
@@ -67,7 +67,7 @@
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="start_time">Jam Mulai <span class="required">*</span></label>
+                <label class="form-label" for="start_time">{{ __('overtimes.start_time') }} <span class="required">*</span></label>
                 <input type="time" id="start_time" name="start_time" value="{{ old('start_time', '18:00') }}" class="form-control @error('start_time') is-invalid @enderror" required>
                 @error('start_time')
                     <div class="error-feedback">{{ $message }}</div>
@@ -75,7 +75,7 @@
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="end_time">Jam Selesai <span class="required">*</span></label>
+                <label class="form-label" for="end_time">{{ __('overtimes.end_time') }} <span class="required">*</span></label>
                 <input type="time" id="end_time" name="end_time" value="{{ old('end_time', '21:00') }}" class="form-control @error('end_time') is-invalid @enderror" required>
                 @error('end_time')
                     <div class="error-feedback">{{ $message }}</div>
@@ -83,8 +83,8 @@
             </div>
 
             <div class="form-group full-width">
-                <label class="form-label" for="reason">Uraian Tugas / Alasan Lembur <span class="required">*</span></label>
-                <textarea id="reason" name="reason" rows="4" class="form-control @error('reason') is-invalid @enderror" placeholder="Jelaskan kebutuhan pekerjaan atau target yang harus diselesaikan selama jam lembur..." required>{{ old('reason') }}</textarea>
+                <label class="form-label" for="reason">{{ __('overtimes.task_description') }} <span class="required">*</span></label>
+                <textarea id="reason" name="reason" rows="4" class="form-control @error('reason') is-invalid @enderror" placeholder="{{ __('overtimes.task_placeholder') }}" required>{{ old('reason') }}</textarea>
                 @error('reason')
                     <div class="error-feedback">{{ $message }}</div>
                 @enderror
@@ -92,8 +92,8 @@
         </div>
 
         <div class="form-actions">
-            <a href="{{ route('overtimes.index') }}" class="btn btn-outline">Batal</a>
-            <button type="submit" class="btn btn-primary">Simpan Pengajuan</button>
+            <a href="{{ route('overtimes.index') }}" class="btn btn-outline">{{ __('common.cancel') }}</a>
+            <button type="submit" class="btn btn-primary">{{ __('overtimes.save_overtime') }}</button>
         </div>
     </form>
 </div>

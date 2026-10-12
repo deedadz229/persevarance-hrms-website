@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Detail Absensi · ' . ($attendance->employee?->name ?? 'Karyawan'))
+@section('title', __('attendances.detail_title') . ' · ' . ($attendance->employee?->name ?? __('attendances.employee')))
 
 @section('content')
 <style>
@@ -39,12 +39,12 @@
 
 <div class="page-header">
     <div class="page-title-box">
-        <h2>Detail Absensi Karyawan</h2>
-        <p>Verifikasi rekaman check-in, waktu, biometrik, lokasi GPS, dan jaringan kantor</p>
+        <h2>{{ __('attendances.detail_title') }}</h2>
+        <p>{{ __('attendances.detail_subtitle') }}</p>
     </div>
     <div>
         <a href="{{ route('attendances.index') }}" class="btn btn-outline">
-            <span>←</span> Kembali ke Monitoring
+            <span>←</span> {{ __('attendances.back_to_monitoring') }}
         </a>
     </div>
 </div>
@@ -52,114 +52,114 @@
 <div class="grid-layout">
     <div>
         <div class="card section-card">
-            <h3>Data Identitas Karyawan</h3>
+            <h3>{{ __('attendances.identity_data') }}</h3>
             <div class="info-list">
-                <span class="info-label">Nama Karyawan</span>
+                <span class="info-label">{{ __('employees.employee_name') }}</span>
                 <span class="info-value">
                     <a href="{{ $attendance->employee ? route('employees.show', $attendance->employee) : '#' }}" style="color: var(--brand); text-decoration: none;">
-                        {{ $attendance->employee?->name ?? 'Karyawan Dihapus' }}
+                        {{ $attendance->employee?->name ?? __('attendances.deleted_employee') }}
                     </a>
                 </span>
 
-                <span class="info-label">ID / Kode Karyawan</span>
+                <span class="info-label">{{ __('employees.employee_code_label') }}</span>
                 <span class="info-value"><code>{{ $attendance->employee?->employee_code ?? '-' }}</code></span>
 
-                <span class="info-label">Departemen</span>
+                <span class="info-label">{{ __('employees.department') }}</span>
                 <span class="info-value">{{ $attendance->employee?->department?->name ?? '-' }}</span>
 
-                <span class="info-label">Jabatan (Posisi)</span>
+                <span class="info-label">{{ __('employees.position_label') }}</span>
                 <span class="info-value">{{ $attendance->employee?->position?->name ?? '-' }}</span>
             </div>
         </div>
 
         <div class="card section-card">
-            <h3>Waktu & Status Kehadiran</h3>
+            <h3>{{ __('attendances.time_and_status') }}</h3>
             <div class="info-list">
-                <span class="info-label">Tanggal Absensi</span>
+                <span class="info-label">{{ __('attendances.date_title') }}</span>
                 <span class="info-value">{{ $attendance->attendance_date?->translatedFormat('l, d F Y') ?? '-' }}</span>
 
-                <span class="info-label">Jam Masuk (Check-In)</span>
+                <span class="info-label">{{ __('attendances.check_in') }}</span>
                 <span class="info-value" style="font-size: 14px;">
                     <strong>{{ $attendance->check_in?->format('H:i:s') ?? '-' }}</strong>
                 </span>
 
-                <span class="info-label">Jam Keluar (Check-Out)</span>
+                <span class="info-label">{{ __('attendances.check_out') }}</span>
                 <span class="info-value" style="font-size: 14px;">
-                    <strong>{{ $attendance->check_out?->format('H:i:s') ?? 'Belum check-out' }}</strong>
+                    <strong>{{ $attendance->check_out?->format('H:i:s') ?? __('attendances.not_checked_out') }}</strong>
                 </span>
 
-                <span class="info-label">Status Kehadiran</span>
+                <span class="info-label">{{ __('common.status') }}</span>
                 <span class="info-value">
                     @php($st = $attendance->computed_status)
                     @if ($st === 'wfh')
                         <span class="badge-status badge-wfh">Work From Home (WFH)</span>
                     @elseif ($st === 'telat')
-                        <span class="badge-status badge-telat">Terlambat</span>
+                        <span class="badge-status badge-telat">{{ __('attendances.late') }}</span>
                     @else
-                        <span class="badge-status badge-hadir">Hadir Tepat Waktu</span>
+                        <span class="badge-status badge-hadir">{{ __('attendances.on_time') }}</span>
                     @endif
                 </span>
 
-                <span class="info-label">Catatan Karyawan</span>
+                <span class="info-label">{{ __('attendances.employee_notes') }}</span>
                 <span class="info-value" style="font-weight: normal; color: var(--ink);">
-                    {{ $attendance->notes ?: 'Tidak ada catatan tambahan.' }}
+                    {{ $attendance->notes ?: __('attendances.no_notes') }}
                 </span>
             </div>
         </div>
 
         <div class="card section-card">
-            <h3>Hasil Validasi Perangkat & Jaringan</h3>
+            <h3>{{ __('attendances.validation_results') }}</h3>
             <div class="info-list">
-                <span class="info-label">Verifikasi Jaringan WiFi</span>
+                <span class="info-label">{{ __('attendances.network_verification') }}</span>
                 <span class="info-value">
                     @if ($attendance->wifi_verified)
-                        <span class="badge-pill badge-verified">✓ WiFi Terverifikasi</span>
+                        <span class="badge-pill badge-verified">{{ __('attendances.wifi_is_verified') }}</span>
                     @else
-                        <span class="badge-pill badge-unverified">WiFi Tidak Terverifikasi</span>
+                        <span class="badge-pill badge-unverified">{{ __('attendances.wifi_not_verified') }}</span>
                     @endif
                 </span>
 
-                <span class="info-label">SSID WiFi</span>
+                <span class="info-label">{{ __('attendances.wifi_ssid') }}</span>
                 <span class="info-value"><code>{{ $attendance->wifi_ssid ?? '-' }}</code></span>
 
-                <span class="info-label">IP Address</span>
+                <span class="info-label">{{ __('attendances.ip_address') }}</span>
                 <span class="info-value"><code>{{ $attendance->ip_address ?? '-' }}</code></span>
 
-                <span class="info-label">Status Verifikasi Wajah</span>
+                <span class="info-label">{{ __('attendances.face_verification_status') }}</span>
                 <span class="info-value">
                     @php($face = strtolower($attendance->face_status ?? 'pending'))
                     @if ($face === 'verified')
-                        <span class="badge-pill badge-verified">✓ Face Verified</span>
+                        <span class="badge-pill badge-verified">{{ __('attendances.face_verified') }}</span>
                     @elseif ($face === 'failed')
-                        <span class="badge-pill badge-failed">✗ Face Failed</span>
+                        <span class="badge-pill badge-failed">{{ __('attendances.face_failed') }}</span>
                     @else
                         <span class="badge-pill badge-unverified">{{ ucfirst($attendance->face_status ?? 'Pending') }}</span>
                     @endif
                 </span>
 
-                <span class="info-label">Status Lokasi (Geofencing)</span>
+                <span class="info-label">{{ __('attendances.location_status') }}</span>
                 <span class="info-value">
                     @php($loc = strtolower($attendance->location_status ?? 'pending'))
                     @if ($loc === 'verified')
-                        <span class="badge-pill badge-verified">✓ Location Verified</span>
+                        <span class="badge-pill badge-verified">{{ __('attendances.location_verified') }}</span>
                     @elseif ($loc === 'failed')
-                        <span class="badge-pill badge-failed">✗ Location Failed</span>
+                        <span class="badge-pill badge-failed">{{ __('attendances.location_failed') }}</span>
                     @elseif ($loc === 'wfh')
-                        <span class="badge-pill badge-verified">✓ WFH Approved</span>
+                        <span class="badge-pill badge-verified">{{ __('attendances.wfh_approved') }}</span>
                     @else
                         <span class="badge-pill badge-unverified">{{ ucfirst($attendance->location_status ?? 'Pending') }}</span>
                     @endif
                 </span>
 
-                <span class="info-label">Koordinat GPS</span>
+                <span class="info-label">{{ __('attendances.gps_coords') }}</span>
                 <span class="info-value">
                     @if ($attendance->latitude && $attendance->longitude)
                         <code>{{ $attendance->latitude }}, {{ $attendance->longitude }}</code>
                         <a href="https://maps.google.com/?q={{ $attendance->latitude }},{{ $attendance->longitude }}" target="_blank" rel="noopener noreferrer" style="margin-left: 8px; font-size: 11.5px; color: var(--brand); text-decoration: none;">
-                            Buka di Google Maps ↗
+                            {{ __('attendances.open_in_google_maps') }}
                         </a>
                     @else
-                        <span style="color: var(--muted); font-weight: normal;">Tidak ada koordinat yang terekam</span>
+                        <span style="color: var(--muted); font-weight: normal;">{{ __('attendances.no_coords_recorded') }}</span>
                     @endif
                 </span>
             </div>
@@ -168,14 +168,14 @@
 
     <div>
         <div class="card section-card">
-            <h3>Bukti Foto Absensi</h3>
+            <h3>{{ __('attendances.photo_evidence') }}</h3>
             <div class="photo-box">
                 @if ($attendance->photo_path && file_exists(public_path('storage/' . $attendance->photo_path)))
                     <img src="{{ asset('storage/' . $attendance->photo_path) }}" alt="Bukti Foto Absensi {{ $attendance->employee?->name }}" class="photo-preview">
                 @elseif ($attendance->photo_path)
                     <div style="padding: 20px; font-size: 13px;">
                         <span style="font-size: 32px; display: block; margin-bottom: 8px;">📷</span>
-                        <strong>Foto Tercatat</strong>
+                        <strong>{{ __('attendances.photo_recorded') }}</strong>
                         <p style="margin: 4px 0 0; color: var(--muted); font-size: 11.5px; word-break: break-all;">
                             <code>{{ $attendance->photo_path }}</code>
                         </p>
@@ -183,8 +183,8 @@
                 @else
                     <div class="no-photo">
                         <span style="font-size: 36px; display: block; margin-bottom: 8px;">📭</span>
-                        <strong>Bukti foto tidak tersedia.</strong>
-                        <p style="margin: 6px 0 0; color: var(--muted); font-size: 12px;">Absensi ini dicatat tanpa unggahan foto verifikasi.</p>
+                        <strong>{{ __('attendances.no_photo_available') }}</strong>
+                        <p style="margin: 6px 0 0; color: var(--muted); font-size: 12px;">{{ __('attendances.no_photo_desc') }}</p>
                     </div>
                 @endif
             </div>

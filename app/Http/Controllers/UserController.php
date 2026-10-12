@@ -17,29 +17,37 @@ class UserController extends Controller
 {
     public function index(Request $request): View
     {
-        $query = User::with(['role', 'employee'])
-            ->latest('id');
+        $query = User::with(['role', 'employee'])->latest('id');
 
-        if ($request->filled('search')) {
-            $search = $request->query('search');
+        // Capture filter inputs for view
+        $search = $request->filled('search') ? $request->query('search') : '';
+        $role = $request->filled('role') ? $request->query('role') : '';
+        $status = $request->filled('status') ? $request->query('status') : '';
+
+        // Apply search filter
+        if ($search !== '') {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%");
             });
         }
 
-        if ($request->filled('role_id')) {
-            $query->where('role_id', $request->query('role_id'));
+        // Apply role filter (by role name)
+        if ($role !== '') {
+            $query->whereHas('role', function ($q) use ($role) {
+                $q->where('name', $role);
+            });
         }
 
-        if ($request->filled('status')) {
-            $query->where('status', $request->query('status'));
+        // Apply status filter
+        if ($status !== '') {
+            $query->where('status', $status);
         }
 
         $users = $query->paginate(15)->withQueryString();
         $roles = Role::orderBy('name')->get();
 
-        return view('users.index', compact('users', 'roles'));
+        return view('users.index', compact('users', 'roles', 'search', 'role', 'status'));
     }
 
     public function create(): View

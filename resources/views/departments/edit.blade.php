@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Department')
+@section('title', __('departments.edit_department'))
 
 @section('content')
 <style>
@@ -25,12 +25,12 @@
 
 <div class="page-header">
     <div class="page-title-box">
-        <h2>Edit Department</h2>
-        <p>Perbarui informasi data departemen: {{ $department->name }}</p>
+        <h2>{{ __('departments.edit_department') }}</h2>
+        <p>{{ __('departments.edit_department_subtitle', ['name' => $department->name]) }}</p>
     </div>
     <div>
         <a href="{{ route('departments.index') }}" class="btn btn-outline">
-            <span>←</span> Batal
+            <span>←</span> {{ __('common.cancel') }}
         </a>
     </div>
 </div>
@@ -41,7 +41,7 @@
         @method('PUT')
 
         <div class="form-group">
-            <label class="form-label" for="name">Nama Department <span class="required">*</span></label>
+            <label class="form-label" for="name">{{ __('departments.department_name') }} <span class="required">*</span></label>
             <input type="text" id="name" name="name" value="{{ old('name', $department->name) }}" class="form-control @error('name') is-invalid @enderror" required autofocus>
             @error('name')
                 <div class="error-feedback">{{ $message }}</div>
@@ -49,7 +49,7 @@
         </div>
 
         <div class="form-group">
-            <label class="form-label" for="description">Deskripsi Department</label>
+            <label class="form-label" for="description">{{ __('departments.description') }}</label>
             <textarea id="description" name="description" rows="3" class="form-control @error('description') is-invalid @enderror">{{ old('description', $department->description) }}</textarea>
             @error('description')
                 <div class="error-feedback">{{ $message }}</div>
@@ -57,10 +57,10 @@
         </div>
 
         <div class="form-group">
-            <label class="form-label" for="status">Status Operasional <span class="required">*</span></label>
+            <label class="form-label" for="status">{{ __('departments.operational_status') }} <span class="required">*</span></label>
             <select id="status" name="status" class="form-control @error('status') is-invalid @enderror" required>
-                <option value="active" {{ old('status', $department->status) === 'active' ? 'selected' : '' }}>Active (Aktif)</option>
-                <option value="inactive" {{ old('status', $department->status) === 'inactive' ? 'selected' : '' }}>Inactive (Tidak Aktif)</option>
+                <option value="active" {{ old('status', $department->status) === 'active' ? 'selected' : '' }}>{{ __('departments.active_val') }}</option>
+                <option value="inactive" {{ old('status', $department->status) === 'inactive' ? 'selected' : '' }}>{{ __('departments.inactive_val') }}</option>
             </select>
             @error('status')
                 <div class="error-feedback">{{ $message }}</div>
@@ -68,8 +68,8 @@
         </div>
 
         <div class="form-actions">
-            <a href="{{ route('departments.index') }}" class="btn btn-outline">Batal</a>
-            <button type="submit" class="btn btn-primary">Perbarui Department</button>
+            <a href="{{ route('departments.index') }}" class="btn btn-outline">{{ __('common.cancel') }}</a>
+            <button type="submit" class="btn btn-primary">{{ __('departments.update_department') }}</button>
         </div>
     </form>
 </div>

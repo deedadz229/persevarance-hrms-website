@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Proses / Buat Payroll Baru')
+@section('title', __('payrolls.process_new_payroll'))
 
 @section('content')
 <style>
@@ -48,12 +48,12 @@
 <div class="form-container">
     <div class="page-header">
         <div class="page-title-box">
-            <h2>Proses / Buat Payroll Baru</h2>
-            <p>Pencatatan data kompensasi, komponen tunjangan, dan potongan karyawan</p>
+            <h2>{{ __('payrolls.process_new_payroll') }}</h2>
+            <p>{{ __('payrolls.process_new_payroll_subtitle') }}</p>
         </div>
         <div>
             <a href="{{ route('payrolls.index') }}" class="btn btn-outline">
-                <span>←</span> Batal
+                <span>←</span> {{ __('common.cancel') }}
             </a>
         </div>
     </div>
@@ -73,15 +73,15 @@
         <form action="{{ route('payrolls.store') }}" method="POST" id="payrollForm">
             @csrf
 
-            <h3 class="section-title" style="margin-top: 0;">Informasi Karyawan & Periode</h3>
+            <h3 class="section-title" style="margin-top: 0;">{{ __('employees.basic_info_title') }}</h3>
             <div class="form-grid">
                 <div class="form-group full-width">
-                    <label class="form-label" for="employee_id">Karyawan <span class="required">*</span></label>
+                    <label class="form-label" for="employee_id">{{ __('payrolls.employee') }} <span class="required">*</span></label>
                     <select id="employee_id" name="employee_id" class="form-control @error('employee_id') is-invalid @enderror" required>
-                        <option value="">-- Pilih Karyawan --</option>
+                        <option value="">{{ __('payrolls.select_employee') }}</option>
                         @foreach ($employees as $emp)
                             <option value="{{ $emp->id }}" {{ old('employee_id') == $emp->id ? 'selected' : '' }}>
-                                {{ $emp->name }} ({{ $emp->employee_code }}) — {{ $emp->department?->name ?? 'Tanpa Departemen' }}
+                                {{ $emp->name }} ({{ $emp->employee_code }}) — {{ $emp->department?->name ?? __('overtimes.no_department') }}
                             </option>
                         @endforeach
                     </select>
@@ -91,7 +91,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="period_month">Bulan Periode <span class="required">*</span></label>
+                    <label class="form-label" for="period_month">{{ __('payrolls.month') }} <span class="required">*</span></label>
                     <select id="period_month" name="period_month" class="form-control" required>
                         @foreach ($months as $num => $name)
                             <option value="{{ $num }}" {{ old('period_month', $currentMonth) == $num ? 'selected' : '' }}>
@@ -102,7 +102,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="period_year">Tahun Periode <span class="required">*</span></label>
+                    <label class="form-label" for="period_year">{{ __('payrolls.year') }} <span class="required">*</span></label>
                     <select id="period_year" name="period_year" class="form-control" required>
                         @for ($y = (int) date('Y') + 1; $y >= 2024; $y--)
                             <option value="{{ $y }}" {{ old('period_year', $currentYear) == $y ? 'selected' : '' }}>
@@ -113,7 +113,7 @@
                 </div>
 
                 <div class="form-group full-width">
-                    <label class="form-label" for="basic_salary">Gaji Pokok (Basic Salary) <span class="required">*</span></label>
+                    <label class="form-label" for="basic_salary">{{ __('payrolls.basic_salary_official') }} <span class="required">*</span></label>
                     <input type="number" step="0.01" min="0" id="basic_salary" name="basic_salary" value="{{ old('basic_salary', 0) }}" class="form-control @error('basic_salary') is-invalid @enderror" placeholder="Contoh: 7500000" required oninput="recalculateTotals()">
                     @error('basic_salary')
                         <span class="error-feedback">{{ $message }}</span>
@@ -121,59 +121,59 @@
                 </div>
             </div>
 
-            <h3 class="section-title">Komponen Tunjangan (Income / Allowance)</h3>
+            <h3 class="section-title">{{ __('payrolls.income_components_title') }}</h3>
             <p style="font-size: 12.5px; color: var(--muted); margin: 0 0 14px;">Masukkan rincian tunjangan resmi (misal: transport, makan, jabatan, bonus kinerja):</p>
 
             <div id="allowancesContainer">
                 <div class="component-row">
-                    <input type="text" name="allowances[0][name]" value="{{ old('allowances.0.name', 'Tunjangan Operasional') }}" class="form-control" placeholder="Nama Tunjangan">
-                    <input type="number" step="0.01" min="0" name="allowances[0][amount]" value="{{ old('allowances.0.amount', 0) }}" class="form-control allowance-input" placeholder="Jumlah (Rp)" oninput="recalculateTotals()">
-                    <input type="text" name="allowances[0][description]" value="{{ old('allowances.0.description', 'Tunjangan bulanan') }}" class="form-control" placeholder="Keterangan (opsional)">
+                    <input type="text" name="allowances[0][name]" value="{{ old('allowances.0.name', 'Tunjangan Operasional') }}" class="form-control" placeholder="{{ __('payrolls.component_name') }}">
+                    <input type="number" step="0.01" min="0" name="allowances[0][amount]" value="{{ old('allowances.0.amount', 0) }}" class="form-control allowance-input" placeholder="{{ __('payrolls.component_amount') }}" oninput="recalculateTotals()">
+                    <input type="text" name="allowances[0][description]" value="{{ old('allowances.0.description', 'Tunjangan bulanan') }}" class="form-control" placeholder="{{ __('payrolls.description') }}">
                 </div>
                 <div class="component-row">
-                    <input type="text" name="allowances[1][name]" value="{{ old('allowances.1.name', 'Tunjangan Kehadiran / Makan') }}" class="form-control" placeholder="Nama Tunjangan">
-                    <input type="number" step="0.01" min="0" name="allowances[1][amount]" value="{{ old('allowances.1.amount', 0) }}" class="form-control allowance-input" placeholder="Jumlah (Rp)" oninput="recalculateTotals()">
-                    <input type="text" name="allowances[1][description]" value="{{ old('allowances.1.description') }}" class="form-control" placeholder="Keterangan (opsional)">
+                    <input type="text" name="allowances[1][name]" value="{{ old('allowances.1.name', 'Tunjangan Kehadiran / Makan') }}" class="form-control" placeholder="{{ __('payrolls.component_name') }}">
+                    <input type="number" step="0.01" min="0" name="allowances[1][amount]" value="{{ old('allowances.1.amount', 0) }}" class="form-control allowance-input" placeholder="{{ __('payrolls.component_amount') }}" oninput="recalculateTotals()">
+                    <input type="text" name="allowances[1][description]" value="{{ old('allowances.1.description') }}" class="form-control" placeholder="{{ __('payrolls.description') }}">
                 </div>
             </div>
 
-            <h3 class="section-title">Komponen Potongan (Deduction: BPJS, PPh21, dll)</h3>
+            <h3 class="section-title">{{ __('payrolls.deduction_components_title') }}</h3>
             <p style="font-size: 12.5px; color: var(--muted); margin: 0 0 14px;">Masukkan potongan resmi karyawan secara transparan (tanpa membuat formula asumsi):</p>
 
             <div id="deductionsContainer">
                 <div class="component-row">
-                    <input type="text" name="deductions[0][name]" value="{{ old('deductions.0.name', 'BPJS Kesehatan & Ketenagakerjaan') }}" class="form-control" placeholder="Nama Potongan">
-                    <input type="number" step="0.01" min="0" name="deductions[0][amount]" value="{{ old('deductions.0.amount', 0) }}" class="form-control deduction-input" placeholder="Jumlah (Rp)" oninput="recalculateTotals()">
-                    <input type="text" name="deductions[0][description]" value="{{ old('deductions.0.description', 'Iuran BPJS Karyawan') }}" class="form-control" placeholder="Keterangan (opsional)">
+                    <input type="text" name="deductions[0][name]" value="{{ old('deductions.0.name', 'BPJS Kesehatan & Ketenagakerjaan') }}" class="form-control" placeholder="{{ __('payrolls.component_name') }}">
+                    <input type="number" step="0.01" min="0" name="deductions[0][amount]" value="{{ old('deductions.0.amount', 0) }}" class="form-control deduction-input" placeholder="{{ __('payrolls.component_amount') }}" oninput="recalculateTotals()">
+                    <input type="text" name="deductions[0][description]" value="{{ old('deductions.0.description', 'Iuran BPJS Karyawan') }}" class="form-control" placeholder="{{ __('payrolls.description') }}">
                 </div>
                 <div class="component-row">
-                    <input type="text" name="deductions[1][name]" value="{{ old('deductions.1.name', 'PPh21') }}" class="form-control" placeholder="Nama Potongan">
-                    <input type="number" step="0.01" min="0" name="deductions[1][amount]" value="{{ old('deductions.1.amount', 0) }}" class="form-control deduction-input" placeholder="Jumlah (Rp)" oninput="recalculateTotals()">
-                    <input type="text" name="deductions[1][description]" value="{{ old('deductions.1.description', 'Pajak Penghasilan Pasal 21') }}" class="form-control" placeholder="Keterangan (opsional)">
+                    <input type="text" name="deductions[1][name]" value="{{ old('deductions.1.name', 'PPh21') }}" class="form-control" placeholder="{{ __('payrolls.component_name') }}">
+                    <input type="number" step="0.01" min="0" name="deductions[1][amount]" value="{{ old('deductions.1.amount', 0) }}" class="form-control deduction-input" placeholder="{{ __('payrolls.component_amount') }}" oninput="recalculateTotals()">
+                    <input type="text" name="deductions[1][description]" value="{{ old('deductions.1.description', 'Pajak Penghasilan Pasal 21') }}" class="form-control" placeholder="{{ __('payrolls.description') }}">
                 </div>
                 <div class="component-row">
-                    <input type="text" name="deductions[2][name]" value="{{ old('deductions.2.name', 'Potongan Lain-lain') }}" class="form-control" placeholder="Nama Potongan">
-                    <input type="number" step="0.01" min="0" name="deductions[2][amount]" value="{{ old('deductions.2.amount', 0) }}" class="form-control deduction-input" placeholder="Jumlah (Rp)" oninput="recalculateTotals()">
-                    <input type="text" name="deductions[2][description]" value="{{ old('deductions.2.description') }}" class="form-control" placeholder="Keterangan (opsional)">
+                    <input type="text" name="deductions[2][name]" value="{{ old('deductions.2.name', 'Potongan Lain-lain') }}" class="form-control" placeholder="{{ __('payrolls.component_name') }}">
+                    <input type="number" step="0.01" min="0" name="deductions[2][amount]" value="{{ old('deductions.2.amount', 0) }}" class="form-control deduction-input" placeholder="{{ __('payrolls.component_amount') }}" oninput="recalculateTotals()">
+                    <input type="text" name="deductions[2][description]" value="{{ old('deductions.2.description') }}" class="form-control" placeholder="{{ __('payrolls.description') }}">
                 </div>
             </div>
 
             <div class="calc-box">
                 <div class="calc-list">
                     <div class="calc-item">
-                        <span>Gaji Pokok</span>
+                        <span>{{ __('payrolls.basic_salary') }}</span>
                         <strong id="displayBasic">Rp 0</strong>
                     </div>
                     <div class="calc-item" style="color: #0c8f82;">
-                        <span>+ Total Tunjangan</span>
+                        <span>+ {{ __('payrolls.total_allowances') }}</span>
                         <strong id="displayAllowance" style="color: #0c8f82;">Rp 0</strong>
                     </div>
                     <div class="calc-item" style="color: #b92e2e;">
-                        <span>- Total Potongan</span>
+                        <span>- {{ __('payrolls.total_deductions') }}</span>
                         <strong id="displayDeduction" style="color: #b92e2e;">Rp 0</strong>
                     </div>
                     <div class="calc-item" style="border-left: 2px solid #bce6d9; padding-left: 16px;">
-                        <span>= Estimasi Gaji Bersih (Net)</span>
+                        <span>= {{ __('payrolls.net_salary_received') }}</span>
                         <strong id="displayNet" style="color: var(--brand-dark); font-size: 22px;">Rp 0</strong>
                     </div>
                 </div>
@@ -181,17 +181,17 @@
 
             <div class="form-grid" style="margin-top: 20px;">
                 <div class="form-group full-width">
-                    <label class="form-label" for="status">Status Awal</label>
+                    <label class="form-label" for="status">{{ __('common.status') }}</label>
                     <select id="status" name="status" class="form-control">
-                        <option value="draft" {{ old('status') === 'draft' ? 'selected' : '' }}>Draft (Dapat dievaluasi / diedit sebelum rilis)</option>
-                        <option value="generated" {{ old('status') === 'generated' ? 'selected' : '' }}>Dihasilkan / Generated (Siap dicetak slip gaji)</option>
+                        <option value="draft" {{ old('status') === 'draft' ? 'selected' : '' }}>Draft</option>
+                        <option value="generated" {{ old('status') === 'generated' ? 'selected' : '' }}>Generated ({{ __('payrolls.status_generated') }})</option>
                     </select>
                 </div>
             </div>
 
             <div class="form-actions">
-                <a href="{{ route('payrolls.index') }}" class="btn btn-outline">Batal</a>
-                <button type="submit" class="btn btn-primary">Simpan & Proses Payroll</button>
+                <a href="{{ route('payrolls.index') }}" class="btn btn-outline">{{ __('common.cancel') }}</a>
+                <button type="submit" class="btn btn-primary">{{ __('payrolls.save_payroll') }}</button>
             </div>
         </form>
     </div>

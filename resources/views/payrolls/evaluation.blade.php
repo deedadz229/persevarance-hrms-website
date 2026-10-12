@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Evaluasi Pra-Finalisasi Payroll')
+@section('title', __('payrolls.evaluation_title') . ' · ' . __('payrolls.title'))
 
 @section('content')
 <style>
@@ -48,19 +48,19 @@
 
 <div class="page-header">
     <div class="page-title-box">
-        <h2>Evaluasi Pra-Finalisasi Payroll</h2>
-        <p>Tinjauan menyeluruh kesesuaian data gaji, kehadiran, dan jam lembur karyawan sebelum rilis slip</p>
+        <h2>{{ __('payrolls.evaluation_title') }}</h2>
+        <p>{{ __('payrolls.evaluation_subtitle') }}</p>
     </div>
 </div>
 
 <nav class="nav-tabs" aria-label="Menu Tab Payroll">
-    <a href="{{ route('payrolls.index') }}" class="nav-tab">Daftar Payroll</a>
-    <a href="{{ route('payrolls.evaluation') }}" class="nav-tab is-active">Evaluasi Pra-Finalisasi</a>
-    <a href="{{ route('payrolls.department-summary') }}" class="nav-tab">Rekap Departemen</a>
+    <a href="{{ route('payrolls.index') }}" class="nav-tab">{{ __('payrolls.tab_list') }}</a>
+    <a href="{{ route('payrolls.evaluation') }}" class="nav-tab is-active">{{ __('payrolls.tab_evaluation') }}</a>
+    <a href="{{ route('payrolls.department-summary') }}" class="nav-tab">{{ __('payrolls.tab_department_summary') }}</a>
 </nav>
 
 <div class="info-banner">
-    <strong>ℹ Panduan Evaluasi:</strong> Halaman ini menyajikan data penggajian bersama ringkasan kehadiran (hari kerja) dan lembur yang telah disetujui selama periode bersangkutan. Jika terdapat ketidaksesuaian nilai tunjangan atau potongan, lakukan penyesuaian melalui menu <strong>Koreksi</strong> dengan mencantumkan alasan resmi.
+    <strong>ℹ Panduan Evaluasi:</strong> Halaman ini menyajikan data penggajian bersama ringkasan kehadiran (hari kerja) dan lembur yang telah disetujui selama periode bersangkutan. Jika terdapat ketidaksesuaian nilai tunjangan atau potongan, lakukan penyesuaian melalui menu <strong>{{ __('payrolls.correction') }}</strong> dengan mencantumkan alasan resmi.
 </div>
 
 <div class="card filter-card">
@@ -87,7 +87,7 @@
 
         <div class="filter-group">
             <select name="department_id" class="form-control">
-                <option value="">Semua Departemen</option>
+                <option value="">{{ __('payrolls.all_departments') }}</option>
                 @foreach ($departments as $dept)
                     <option value="{{ $dept->id }}" {{ $currentDepartment == $dept->id ? 'selected' : '' }}>
                         {{ $dept->name }}
@@ -97,7 +97,7 @@
         </div>
 
         <div>
-            <button type="submit" class="btn btn-primary" style="padding: 9px 14px;">Evaluasi Data</button>
+            <button type="submit" class="btn btn-primary" style="padding: 9px 14px;">{{ __('common.filter') }}</button>
         </div>
     </form>
 </div>
@@ -107,16 +107,16 @@
         <table class="table-eval">
             <thead>
                 <tr>
-                    <th>Karyawan</th>
-                    <th>Departemen</th>
+                    <th>{{ __('payrolls.employee') }}</th>
+                    <th>{{ __('payrolls.department') }}</th>
                     <th style="text-align: center;">Ref. Hadir</th>
                     <th style="text-align: center;">Ref. Lembur</th>
-                    <th>Gaji Pokok</th>
-                    <th>Tunjangan</th>
-                    <th>Potongan</th>
-                    <th>Gaji Bersih</th>
-                    <th>Status</th>
-                    <th style="text-align: right;">Aksi</th>
+                    <th>{{ __('payrolls.basic_salary') }}</th>
+                    <th>{{ __('payrolls.allowances') }}</th>
+                    <th>{{ __('payrolls.deductions') }}</th>
+                    <th>{{ __('payrolls.net_salary') }}</th>
+                    <th>{{ __('common.status') }}</th>
+                    <th style="text-align: right;">{{ __('common.action') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -154,9 +154,9 @@
                         </td>
                         <td style="text-align: right;">
                             <div class="action-group">
-                                <a href="{{ route('payrolls.show', $payroll) }}" class="action-link" title="Detail Payroll">Detail</a>
+                                <a href="{{ route('payrolls.show', $payroll) }}" class="action-link" title="{{ __('payrolls.detail') }}">{{ __('payrolls.detail') }}</a>
                                 @if (auth()->user()->role?->name !== 'taiwan_account' && (auth()->user()->role?->name === 'super_admin' || auth()->user()->role?->permissions->contains('name', 'manage_payroll')))
-                                    <a href="{{ route('payrolls.correction', $payroll) }}" class="action-link" style="color: #9a6a00;" title="Koreksi Payroll">Koreksi</a>
+                                    <a href="{{ route('payrolls.correction', $payroll) }}" class="action-link" style="color: #9a6a00;" title="{{ __('payrolls.correction') }}">{{ __('payrolls.correction') }}</a>
                                 @endif
                             </div>
                         </td>
@@ -164,7 +164,7 @@
                 @empty
                     <tr>
                         <td colspan="10" style="text-align: center; color: var(--muted); padding: 40px;">
-                            Tidak ada data payroll yang perlu dievaluasi pada periode ini.
+                            {{ __('payrolls.no_records') }}
                         </td>
                     </tr>
                 @endforelse

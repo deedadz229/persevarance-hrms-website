@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Koreksi Payroll · ' . ($payroll->employee?->name ?? 'Karyawan'))
+@section('title', __('payrolls.correction_title') . ' · ' . ($payroll->employee?->name ?? __('payrolls.employee')))
 
 @section('content')
 <style>
@@ -51,12 +51,12 @@
 <div class="form-container">
     <div class="page-header">
         <div class="page-title-box">
-            <h2>Koreksi Payroll Karyawan</h2>
-            <p>Penyesuaian gaji pokok atau komponen penggajian resmi dengan pencatatan audit trail</p>
+            <h2>{{ __('payrolls.correction_title') }}</h2>
+            <p>{{ __('payrolls.correction_subtitle') }}</p>
         </div>
         <div>
             <a href="{{ route('payrolls.show', $payroll) }}" class="btn btn-outline">
-                <span>←</span> Batal
+                <span>←</span> {{ __('common.cancel') }}
             </a>
         </div>
     </div>
@@ -78,32 +78,32 @@
 
             <div style="background: var(--canvas); padding: 16px 20px; border-radius: 8px; margin-bottom: 24px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; font-size: 13px;">
                 <div>
-                    <span style="color: var(--muted);">Karyawan:</span>
+                    <span style="color: var(--muted);">{{ __('payrolls.employee') }}:</span>
                     <strong>{{ $payroll->employee?->name }} ({{ $payroll->employee?->employee_code }})</strong>
                 </div>
                 <div>
-                    <span style="color: var(--muted);">Departemen / Posisi:</span>
+                    <span style="color: var(--muted);">{{ __('payrolls.department') }} / {{ __('employees.position') }}:</span>
                     <strong>{{ $payroll->employee?->department?->name }} · {{ $payroll->employee?->position?->name }}</strong>
                 </div>
                 <div>
-                    <span style="color: var(--muted);">Periode:</span>
+                    <span style="color: var(--muted);">{{ __('payrolls.period') }}:</span>
                     <strong>{{ $payroll->period_label }}</strong>
                 </div>
                 <div>
-                    <span style="color: var(--muted);">Status Saat Ini:</span>
+                    <span style="color: var(--muted);">{{ __('common.status') }}:</span>
                     <strong>{{ $payroll->status_label }}</strong>
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="basic_salary">Gaji Pokok (Basic Salary) <span class="required">*</span></label>
+                <label class="form-label" for="basic_salary">{{ __('payrolls.basic_salary_official') }} <span class="required">*</span></label>
                 <input type="number" step="0.01" min="0" id="basic_salary" name="basic_salary" value="{{ old('basic_salary', $payroll->basic_salary) }}" class="form-control @error('basic_salary') is-invalid @enderror" required oninput="recalculateTotals()">
                 @error('basic_salary')
                     <span class="error-feedback">{{ $message }}</span>
                 @enderror
             </div>
 
-            <h3 class="section-title">Komponen Tunjangan (Allowances)</h3>
+            <h3 class="section-title">{{ __('payrolls.allowances') }}</h3>
             <div id="allowancesContainer">
                 @php
                     $allowances = old('allowances', $payroll->allowances->toArray());
@@ -113,14 +113,14 @@
                 @endphp
                 @foreach ($allowances as $index => $item)
                     <div class="component-row">
-                        <input type="text" name="allowances[{{ $index }}][name]" value="{{ $item['name'] ?? '' }}" class="form-control" placeholder="Nama Tunjangan">
-                        <input type="number" step="0.01" min="0" name="allowances[{{ $index }}][amount]" value="{{ $item['amount'] ?? 0 }}" class="form-control allowance-input" placeholder="Jumlah (Rp)" oninput="recalculateTotals()">
-                        <input type="text" name="allowances[{{ $index }}][description]" value="{{ $item['description'] ?? '' }}" class="form-control" placeholder="Keterangan">
+                        <input type="text" name="allowances[{{ $index }}][name]" value="{{ $item['name'] ?? '' }}" class="form-control" placeholder="{{ __('payrolls.component_name') }}">
+                        <input type="number" step="0.01" min="0" name="allowances[{{ $index }}][amount]" value="{{ $item['amount'] ?? 0 }}" class="form-control allowance-input" placeholder="{{ __('payrolls.component_amount') }}" oninput="recalculateTotals()">
+                        <input type="text" name="allowances[{{ $index }}][description]" value="{{ $item['description'] ?? '' }}" class="form-control" placeholder="{{ __('payrolls.description') }}">
                     </div>
                 @endforeach
             </div>
 
-            <h3 class="section-title">Komponen Potongan (Deductions: BPJS, PPh21, dll)</h3>
+            <h3 class="section-title">{{ __('payrolls.deductions') }}</h3>
             <div id="deductionsContainer">
                 @php
                     $deductions = old('deductions', $payroll->deductions->toArray());
@@ -130,9 +130,9 @@
                 @endphp
                 @foreach ($deductions as $index => $item)
                     <div class="component-row">
-                        <input type="text" name="deductions[{{ $index }}][name]" value="{{ $item['name'] ?? '' }}" class="form-control" placeholder="Nama Potongan">
-                        <input type="number" step="0.01" min="0" name="deductions[{{ $index }}][amount]" value="{{ $item['amount'] ?? 0 }}" class="form-control deduction-input" placeholder="Jumlah (Rp)" oninput="recalculateTotals()">
-                        <input type="text" name="deductions[{{ $index }}][description]" value="{{ $item['description'] ?? '' }}" class="form-control" placeholder="Keterangan">
+                        <input type="text" name="deductions[{{ $index }}][name]" value="{{ $item['name'] ?? '' }}" class="form-control" placeholder="{{ __('payrolls.component_name') }}">
+                        <input type="number" step="0.01" min="0" name="deductions[{{ $index }}][amount]" value="{{ $item['amount'] ?? 0 }}" class="form-control deduction-input" placeholder="{{ __('payrolls.component_amount') }}" oninput="recalculateTotals()">
+                        <input type="text" name="deductions[{{ $index }}][description]" value="{{ $item['description'] ?? '' }}" class="form-control" placeholder="{{ __('payrolls.description') }}">
                     </div>
                 @endforeach
             </div>
@@ -140,19 +140,19 @@
             <div class="calc-box">
                 <div class="calc-list">
                     <div class="calc-item">
-                        <span>Gaji Pokok Baru</span>
+                        <span>{{ __('payrolls.basic_salary') }}</span>
                         <strong id="displayBasic">Rp 0</strong>
                     </div>
                     <div class="calc-item" style="color: #0c8f82;">
-                        <span>+ Total Tunjangan</span>
+                        <span>+ {{ __('payrolls.total_allowances') }}</span>
                         <strong id="displayAllowance" style="color: #0c8f82;">Rp 0</strong>
                     </div>
                     <div class="calc-item" style="color: #b92e2e;">
-                        <span>- Total Potongan</span>
+                        <span>- {{ __('payrolls.total_deductions') }}</span>
                         <strong id="displayDeduction" style="color: #b92e2e;">Rp 0</strong>
                     </div>
                     <div class="calc-item" style="border-left: 2px solid #f6e8b8; padding-left: 16px;">
-                        <span>= Gaji Bersih Terkoreksi</span>
+                        <span>= {{ __('payrolls.net_salary_received') }}</span>
                         <strong id="displayNet" style="color: #a67003; font-size: 22px;">Rp 0</strong>
                     </div>
                 </div>
@@ -160,20 +160,20 @@
 
             <div class="reason-box">
                 <label class="form-label" for="correction_reason" style="color: #a33e3e;">
-                    Alasan Koreksi Payroll <span class="required">*</span>
+                    {{ __('payrolls.correction_reason') }} <span class="required">*</span>
                 </label>
                 <p style="font-size: 12px; color: var(--muted); margin: 2px 0 8px;">
                     Sesuai kepatuhan audit sistem, setiap penyesuaian nominal payroll wajib menyertakan alasan atau dokumen referensi yang jelas.
                 </p>
-                <textarea id="correction_reason" name="correction_reason" rows="3" class="form-control @error('correction_reason') is-invalid @enderror" placeholder="Contoh: Penyesuaian kekurangan tunjangan operasional berdasarkan memo supervisor tanggal 28/09/2026." required>{{ old('correction_reason') }}</textarea>
+                <textarea id="correction_reason" name="correction_reason" rows="3" class="form-control @error('correction_reason') is-invalid @enderror" placeholder="{{ __('payrolls.correction_reason_placeholder') }}" required>{{ old('correction_reason') }}</textarea>
                 @error('correction_reason')
                     <span class="error-feedback">{{ $message }}</span>
                 @enderror
             </div>
 
             <div class="form-actions">
-                <a href="{{ route('payrolls.show', $payroll) }}" class="btn btn-outline">Batal</a>
-                <button type="submit" class="btn btn-warning">Simpan & Perbarui Koreksi</button>
+                <a href="{{ route('payrolls.show', $payroll) }}" class="btn btn-outline">{{ __('common.cancel') }}</a>
+                <button type="submit" class="btn btn-warning">{{ __('payrolls.save_correction') }}</button>
             </div>
         </form>
     </div>

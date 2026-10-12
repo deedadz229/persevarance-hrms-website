@@ -176,6 +176,39 @@
             gap: 12px;
         }
 
+        /* ── Language Switcher ────────────────────────────────────── */
+        .lang-switcher {
+            display: inline-flex;
+            align-items: center;
+            background: var(--surface-subtle);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-sm);
+            padding: 2px;
+            gap: 2px;
+        }
+        .lang-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-decoration: none;
+            color: var(--muted);
+            transition: all var(--trans-fast);
+            line-height: 1.2;
+        }
+        .lang-btn:hover {
+            color: var(--ink);
+            background: rgba(255, 255, 255, 0.6);
+        }
+        .lang-btn.is-active {
+            background: var(--surface);
+            color: var(--brand);
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+        }
+
         /* ── Profile Dropdown Menu ────────────────────────────────── */
         .profile-menu {
             position: relative;
@@ -362,6 +395,20 @@
             </div>
             <div class="topbar-spacer"></div>
             <div class="topbar-actions">
+                {{-- Language Switcher Component --}}
+                <div class="lang-switcher" aria-label="{{ __('common.language') }}">
+                    <a href="{{ route('locale.switch', 'id') }}" 
+                       class="lang-btn {{ app()->getLocale() === 'id' ? 'is-active' : '' }}" 
+                       title="Bahasa Indonesia">
+                        <span>🇮🇩</span> ID
+                    </a>
+                    <a href="{{ route('locale.switch', 'en') }}" 
+                       class="lang-btn {{ app()->getLocale() === 'en' ? 'is-active' : '' }}" 
+                       title="English">
+                        <span>🇬🇧</span> EN
+                    </a>
+                </div>
+
                 <details class="profile-menu">
                     <summary>
                         <span class="avatar">{{ str(auth()->user()->name)->substr(0, 1)->upper() }}</span>
@@ -376,7 +423,7 @@
                                 <circle cx="12" cy="12" r="3"></circle>
                                 <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                             </svg>
-                            <span>{{ auth()->user()->role?->name === 'super_admin' ? 'Pengaturan' : 'Profil & Akun' }}</span>
+                            <span>{{ auth()->user()->role?->name === 'super_admin' ? __('navigation.settings') : __('navigation.profile_account') }}</span>
                         </a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
@@ -386,7 +433,7 @@
                                     <polyline points="16 17 21 12 16 7"></polyline>
                                     <line x1="21" y1="12" x2="9" y2="12"></line>
                                 </svg>
-                                <span>Keluar dari akun</span>
+                                <span>{{ __('navigation.logout') }}</span>
                             </button>
                         </form>
                     </div>

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Detail Lembur · ' . ($overtime->employee?->name ?? 'Karyawan'))
+@section('title', __('overtimes.detail_title') . ' · ' . ($overtime->employee?->name ?? __('overtimes.employee')))
 
 @section('content')
 <style>
@@ -45,12 +45,12 @@
 
 <div class="page-header">
     <div class="page-title-box">
-        <h2>Detail Pengajuan Lembur</h2>
-        <p>Informasi lembur karyawan, rincian jam kerja, dan status persetujuan</p>
+        <h2>{{ __('overtimes.detail_title') }}</h2>
+        <p>{{ __('overtimes.detail_subtitle') }}</p>
     </div>
     <div>
         <a href="{{ route('overtimes.index') }}" class="btn btn-outline">
-            <span>←</span> Kembali ke Daftar
+            <span>←</span> {{ __('overtimes.back_to_list') }}
         </a>
     </div>
 </div>
@@ -58,52 +58,52 @@
 <div class="grid-details">
     <div>
         <div class="card section-card">
-            <h3>Informasi Karyawan</h3>
+            <h3>{{ __('overtimes.employee_info') }}</h3>
             <div class="info-list">
-                <span class="info-label">Nama Karyawan</span>
+                <span class="info-label">{{ __('employees.employee_name') }}</span>
                 <span class="info-value">
                     <a href="{{ $overtime->employee ? route('employees.show', $overtime->employee) : '#' }}" style="color: var(--brand); text-decoration: none;">
-                        {{ $overtime->employee?->name ?? 'Karyawan Dihapus' }}
+                        {{ $overtime->employee?->name ?? __('attendances.deleted_employee') }}
                     </a>
                 </span>
 
-                <span class="info-label">ID / Kode Karyawan</span>
+                <span class="info-label">{{ __('employees.employee_code_label') }}</span>
                 <span class="info-value"><code>{{ $overtime->employee?->employee_code ?? '-' }}</code></span>
 
-                <span class="info-label">Departemen</span>
+                <span class="info-label">{{ __('employees.department') }}</span>
                 <span class="info-value">{{ $overtime->employee?->department?->name ?? '-' }}</span>
 
-                <span class="info-label">Jabatan (Posisi)</span>
+                <span class="info-label">{{ __('employees.position_label') }}</span>
                 <span class="info-value">{{ $overtime->employee?->position?->name ?? '-' }}</span>
             </div>
         </div>
 
         <div class="card section-card">
-            <h3>Rincian Waktu & Alasan Lembur</h3>
+            <h3>{{ __('overtimes.time_and_reason_details') }}</h3>
             <div class="info-list">
-                <span class="info-label">Tanggal Lembur</span>
+                <span class="info-label">{{ __('overtimes.overtime_date') }}</span>
                 <span class="info-value" style="font-size: 14px; color: var(--brand-dark);">
                     {{ $overtime->overtime_date?->translatedFormat('l, d F Y') }}
                 </span>
 
-                <span class="info-label">Jam Mulai</span>
+                <span class="info-label">{{ __('overtimes.start_time') }}</span>
                 <span class="info-value">{{ \Illuminate\Support\Str::substr($overtime->start_time, 0, 5) }} WIB</span>
 
-                <span class="info-label">Jam Selesai</span>
+                <span class="info-label">{{ __('overtimes.end_time') }}</span>
                 <span class="info-value">{{ \Illuminate\Support\Str::substr($overtime->end_time, 0, 5) }} WIB</span>
 
-                <span class="info-label">Durasi Terhitung</span>
+                <span class="info-label">{{ __('overtimes.calculated_duration') }}</span>
                 <span class="info-value" style="color: #0c8f82; font-size: 14px;">
                     <strong>{{ $overtime->duration_label }}</strong>
-                    <span style="font-size: 12px; color: var(--muted); font-weight: normal;">({{ number_format((float) $overtime->duration, 2) }} jam)</span>
+                    <span style="font-size: 12px; color: var(--muted); font-weight: normal;">({{ number_format((float) $overtime->duration, 2) }} {{ __('overtimes.hours_decimal') }})</span>
                 </span>
 
-                <span class="info-label">Alasan / Tugas</span>
+                <span class="info-label">{{ __('overtimes.reason_task') }}</span>
                 <span class="info-value" style="font-weight: normal; color: var(--ink); line-height: 1.5;">
                     {{ $overtime->reason ?? '-' }}
                 </span>
 
-                <span class="info-label">Tanggal Diajukan</span>
+                <span class="info-label">{{ __('overtimes.submitted_at') }}</span>
                 <span class="info-value" style="font-weight: normal; color: var(--muted);">
                     {{ $overtime->created_at?->translatedFormat('d F Y, H:i') ?? '-' }} WIB
                 </span>
@@ -113,9 +113,9 @@
 
     <div>
         <div class="card section-card">
-            <h3>Status & Riwayat Pemrosesan</h3>
+            <h3>{{ __('overtimes.status_history') }}</h3>
             <div class="info-list">
-                <span class="info-label">Status Saat Ini</span>
+                <span class="info-label">{{ __('overtimes.current_status') }}</span>
                 <span class="info-value">
                     <span class="badge-status {{ $overtime->status_badge_class }}">
                         {{ $overtime->status_label }}
@@ -123,26 +123,26 @@
                 </span>
 
                 @if ($overtime->status === 'approved')
-                    <span class="info-label">Disetujui Oleh</span>
-                    <span class="info-value">{{ $overtime->approver?->name ?? 'Sistem / HR' }}</span>
+                    <span class="info-label">{{ __('overtimes.approved_by') }}</span>
+                    <span class="info-value">{{ $overtime->approver?->name ?? __('leave.system_hr') }}</span>
 
-                    <span class="info-label">Waktu Disetujui</span>
+                    <span class="info-label">{{ __('overtimes.approved_at') }}</span>
                     <span class="info-value">{{ $overtime->approved_at?->translatedFormat('d F Y, H:i') ?? '-' }} WIB</span>
                 @elseif ($overtime->status === 'rejected')
-                    <span class="info-label">Ditolak Oleh</span>
-                    <span class="info-value">{{ $overtime->approver?->name ?? 'Sistem / HR' }}</span>
+                    <span class="info-label">{{ __('overtimes.rejected_by') }}</span>
+                    <span class="info-value">{{ $overtime->approver?->name ?? __('leave.system_hr') }}</span>
 
-                    <span class="info-label">Waktu Ditolak</span>
+                    <span class="info-label">{{ __('overtimes.rejected_at') }}</span>
                     <span class="info-value">{{ $overtime->approved_at?->translatedFormat('d F Y, H:i') ?? '-' }} WIB</span>
 
-                    <span class="info-label" style="color: #b92e2e;">Alasan Penolakan</span>
+                    <span class="info-label" style="color: #b92e2e;">{{ __('overtimes.rejection_reason') }}</span>
                     <span class="info-value" style="color: #b92e2e; font-weight: normal; line-height: 1.45;">
                         {{ $overtime->rejection_reason }}
                     </span>
                 @else
-                    <span class="info-label">Keterangan</span>
+                    <span class="info-label">{{ __('attendances.notes') }}</span>
                     <span class="info-value" style="color: #9a6a00; font-weight: normal;">
-                        Menunggu tinjauan dan keputusan dari pihak HR / Management.
+                        {{ __('overtimes.pending_explanation') }}
                     </span>
                 @endif
             </div>
@@ -150,18 +150,18 @@
             @if ($overtime->status === 'pending' && auth()->user()->role?->name !== 'taiwan_account' && auth()->user()->role?->permissions->contains('name', 'approve_overtime'))
                 <div class="action-panel">
                     <p style="margin: 0 0 12px; font-size: 13px; font-weight: 600; color: var(--ink);">
-                        Tindakan Persetujuan:
+                        {{ __('overtimes.approval_action') }}
                     </p>
                     <div style="display: flex; gap: 10px;">
-                        <form action="{{ route('overtimes.approve', $overtime) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menyetujui pengajuan lembur ini?');" style="flex: 1;">
+                        <form action="{{ route('overtimes.approve', $overtime) }}" method="POST" onsubmit="return confirm('{{ __('overtimes.confirm_approve') }}');" style="flex: 1;">
                             @csrf
                             <button type="submit" class="btn btn-approve" style="width: 100%; justify-content: center;">
-                                ✓ Setujui Lembur
+                                {{ __('overtimes.approve_submit') }}
                             </button>
                         </form>
 
                         <button type="button" class="btn btn-reject" style="flex: 1; justify-content: center;" onclick="openRejectModal()">
-                            ✗ Tolak Lembur
+                            {{ __('overtimes.reject_submit') }}
                         </button>
                     </div>
                 </div>
@@ -175,24 +175,24 @@
 <div id="rejectModal" class="modal-overlay" onclick="closeRejectModalOnOverlay(event)">
     <div class="modal-card">
         <div class="modal-head">
-            <h3>Tolak Pengajuan Lembur</h3>
+            <h3>{{ __('overtimes.reject_modal_title') }}</h3>
             <button type="button" class="modal-close" onclick="closeRejectModal()">&times;</button>
         </div>
         <p style="margin: 0 0 16px; font-size: 13px; color: var(--muted);">
-            Menolak pengajuan lembur untuk <strong>{{ $overtime->employee?->name }}</strong> pada tanggal <strong>{{ $overtime->overtime_date?->translatedFormat('d F Y') }}</strong>.
+            {{ __('overtimes.reject_modal_desc_detail', ['name' => $overtime->employee?->name, 'date' => $overtime->overtime_date?->translatedFormat('d F Y')]) }}
         </p>
 
         <form method="POST" action="{{ route('overtimes.reject', $overtime) }}">
             @csrf
             <div style="margin-bottom: 18px;">
                 <label for="rejection_reason" style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 600;">
-                    Alasan Penolakan <span style="color: #d93838;">*</span>
+                    {{ __('overtimes.rejection_reason') }} <span style="color: #d93838;">*</span>
                 </label>
-                <textarea id="rejection_reason" name="rejection_reason" rows="4" class="form-control" placeholder="Tuliskan alasan penolakan secara jelas..." required></textarea>
+                <textarea id="rejection_reason" name="rejection_reason" rows="4" class="form-control" placeholder="{{ __('overtimes.rejection_reason_input_placeholder') }}" required></textarea>
             </div>
             <div style="display: flex; justify-content: flex-end; gap: 10px;">
-                <button type="button" class="btn btn-outline" onclick="closeRejectModal()">Batal</button>
-                <button type="submit" class="btn btn-reject">Tolak Pengajuan</button>
+                <button type="button" class="btn btn-outline" onclick="closeRejectModal()">{{ __('common.cancel') }}</button>
+                <button type="submit" class="btn btn-reject">{{ __('overtimes.reject_submit_detail') }}</button>
             </div>
         </form>
     </div>

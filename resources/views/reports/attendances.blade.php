@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Laporan Absensi Bulanan')
+@section('title', __('reports.attendance_report'))
 
 @section('content')
 <style>
@@ -52,22 +52,22 @@
 
 <div class="page-header">
     <div class="page-title-box">
-        <h2>Laporan Absensi Bulanan</h2>
-        <p>Rekapitulasi log kehadiran, kepatuhan jadwal, dan verifikasi perangkat karyawan PTI</p>
+        <h2>{{ __('reports.attendance_report') }}</h2>
+        <p>{{ __('reports.attendance_subtitle') }}</p>
     </div>
     <div class="header-actions">
         <a href="{{ route('reports.index') }}" class="btn btn-outline">
-            <span>←</span> Kembali ke Pusat Laporan
+            <span>←</span> {{ __('reports.back_to_center') }}
         </a>
         @if ($canExport)
             <div style="display: inline-flex; gap: 8px;">
-                <a href="{{ route('reports.attendances.export', array_merge(request()->query(), ['format' => 'csv'])) }}" class="btn btn-outline" title="Export format CSV">
+                <a href="{{ route('reports.attendances.export', array_merge(request()->query(), ['format' => 'csv'])) }}" class="btn btn-outline" title="{{ __('reports.export_csv') }}">
                     <span>⤓</span> CSV
                 </a>
-                <a href="{{ route('reports.attendances.export', array_merge(request()->query(), ['format' => 'xlsx'])) }}" class="btn btn-success" title="Export format Excel (.xlsx)">
+                <a href="{{ route('reports.attendances.export', array_merge(request()->query(), ['format' => 'xlsx'])) }}" class="btn btn-success" title="{{ __('reports.export_excel') }}">
                     <span>⤓</span> Excel
                 </a>
-                <a href="{{ route('reports.attendances.export', array_merge(request()->query(), ['format' => 'pdf'])) }}" class="btn btn-outline" style="border-color: #e11d48; color: #e11d48;" title="Export format PDF">
+                <a href="{{ route('reports.attendances.export', array_merge(request()->query(), ['format' => 'pdf'])) }}" class="btn btn-outline" style="border-color: #e11d48; color: #e11d48;" title="{{ __('reports.export_pdf') }}">
                     <span>⤓</span> PDF
                 </a>
             </div>
@@ -77,36 +77,36 @@
 
 <section class="summary-grid" aria-label="Ringkasan Laporan Absensi">
     <article class="card summary-card">
-        <span>Total Kehadiran</span>
+        <span>{{ __('reports.total_attendance') }}</span>
         <strong style="color: var(--ink);">{{ number_format($summary['total']) }}</strong>
-        <small>Total rekam presensi terfilter</small>
+        <small>{{ __('reports.total_attendance_hint') }}</small>
     </article>
     <article class="card summary-card">
-        <span>Hadir Tepat Waktu</span>
+        <span>{{ __('reports.on_time') }}</span>
         <strong style="color: #0c8f82;">{{ number_format($summary['hadir']) }}</strong>
-        <small>Check-in tepat waktu (&le; 08:30)</small>
+        <small>{{ __('reports.on_time_hint') }}</small>
     </article>
     <article class="card summary-card">
-        <span>WFH (Remote)</span>
+        <span>{{ __('reports.wfh') }}</span>
         <strong style="color: #2b7bb9;">{{ number_format($summary['wfh']) }}</strong>
-        <small>Presensi dari lokasi kerja WFH</small>
+        <small>{{ __('reports.wfh_hint') }}</small>
     </article>
     <article class="card summary-card">
-        <span>Terlambat</span>
+        <span>{{ __('reports.late') }}</span>
         <strong style="color: #d93838;">{{ number_format($summary['telat']) }}</strong>
-        <small>Check-in melebihi batas waktu toleransi</small>
+        <small>{{ __('reports.late_hint') }}</small>
     </article>
 </section>
 
 <div class="card filter-card">
     <form action="{{ route('reports.attendances') }}" method="GET" class="filter-form">
         <div class="filter-group search-group">
-            <input type="text" name="search" value="{{ $currentSearch }}" placeholder="Cari nama karyawan atau ID..." class="form-control">
+            <input type="text" name="search" value="{{ $currentSearch }}" placeholder="{{ __('attendances.search_placeholder') }}" class="form-control">
         </div>
 
         <div class="filter-group">
             <select name="month" class="form-control">
-                <option value="">Semua Bulan</option>
+                <option value="">{{ __('payrolls.all_months') }}</option>
                 @foreach ($months as $num => $name)
                     <option value="{{ $num }}" {{ $currentMonth == $num ? 'selected' : '' }}>
                         {{ $name }}
@@ -117,7 +117,7 @@
 
         <div class="filter-group" style="max-width: 120px;">
             <select name="year" class="form-control">
-                <option value="">Semua Tahun</option>
+                <option value="">{{ __('payrolls.all_years') }}</option>
                 @for ($y = (int) date('Y') + 1; $y >= 2024; $y--)
                     <option value="{{ $y }}" {{ $currentYear == $y ? 'selected' : '' }}>
                         {{ $y }}
@@ -128,7 +128,7 @@
 
         <div class="filter-group">
             <select name="department_id" class="form-control">
-                <option value="">Semua Departemen</option>
+                <option value="">{{ __('attendances.all_departments') }}</option>
                 @foreach ($departments as $dept)
                     <option value="{{ $dept->id }}" {{ $currentDepartment == $dept->id ? 'selected' : '' }}>
                         {{ $dept->name }}
@@ -139,17 +139,17 @@
 
         <div class="filter-group">
             <select name="status" class="form-control">
-                <option value="">Semua Status</option>
-                <option value="hadir" {{ $currentStatus === 'hadir' ? 'selected' : '' }}>Hadir</option>
-                <option value="wfh" {{ $currentStatus === 'wfh' ? 'selected' : '' }}>WFH</option>
-                <option value="telat" {{ $currentStatus === 'telat' ? 'selected' : '' }}>Terlambat</option>
+                <option value="">{{ __('attendances.all_status') }}</option>
+                <option value="hadir" {{ $currentStatus === 'hadir' ? 'selected' : '' }}>{{ __('attendances.status_hadir') }}</option>
+                <option value="telat" {{ $currentStatus === 'telat' ? 'selected' : '' }}>{{ __('attendances.status_telat') }}</option>
+                <option value="wfh" {{ $currentStatus === 'wfh' ? 'selected' : '' }}>{{ __('attendances.status_wfh') }}</option>
             </select>
         </div>
 
         <div style="display: flex; gap: 8px;">
-            <button type="submit" class="btn btn-primary" style="padding: 9px 14px;">Filter</button>
+            <button type="submit" class="btn btn-primary" style="padding: 9px 14px;">{{ __('common.filter') }}</button>
             @if ($currentSearch || $currentMonth || $currentYear || $currentDepartment || $currentStatus)
-                <a href="{{ route('reports.attendances') }}" class="btn btn-outline" style="padding: 9px 12px;">Reset</a>
+                <a href="{{ route('reports.attendances') }}" class="btn btn-outline" style="padding: 9px 12px;" title="{{ __('common.reset') }}">{{ __('common.reset') }}</a>
             @endif
         </div>
     </form>
@@ -160,70 +160,54 @@
         <table class="table-report">
             <thead>
                 <tr>
-                    <th>Karyawan</th>
-                    <th>Departemen</th>
-                    <th>Tanggal</th>
-                    <th>Jam Masuk</th>
-                    <th>Jam Keluar</th>
-                    <th>Status Presensi</th>
-                    <th>WiFi</th>
-                    <th>Alamat IP</th>
-                    <th>Lokasi GPS</th>
-                    <th>Verifikasi Wajah</th>
+                    <th>{{ __('attendances.employee') }}</th>
+                    <th>{{ __('attendances.department') }}</th>
+                    <th>{{ __('attendances.date') }}</th>
+                    <th>{{ __('attendances.check_in') }}</th>
+                    <th>{{ __('attendances.check_out') }}</th>
+                    <th>{{ __('common.status') }}</th>
+                    <th>{{ __('attendances.wifi_verified') }}</th>
+                    <th>{{ __('attendances.location_status') }}</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse ($attendances as $row)
-                    @php
-                        $isWfh = $row->location_status === 'wfh' || str_contains(strtolower($row->notes ?? ''), 'wfh');
-                        $isLate = ($row->check_in && substr($row->check_in, 0, 5) > '08:30') || $row->location_status === 'late' || str_contains(strtolower($row->notes ?? ''), 'telat');
-                    @endphp
+                    @php($st = $row->computed_status)
                     <tr>
                         <td>
                             <div class="emp-info">
-                                <strong>{{ $row->employee?->name ?? 'Karyawan Dihapus' }}</strong>
+                                <strong>{{ $row->employee?->name ?? __('attendances.deleted_employee') }}</strong>
                                 <span><code>{{ $row->employee?->employee_code ?? '-' }}</code></span>
                             </div>
                         </td>
                         <td>{{ $row->employee?->department?->name ?? '-' }}</td>
-                        <td>{{ $row->attendance_date ? date('d M Y', strtotime($row->attendance_date)) : '-' }}</td>
-                        <td><strong>{{ $row->check_in ? substr($row->check_in, 0, 5) : '-' }}</strong></td>
-                        <td><strong>{{ $row->check_out ? substr($row->check_out, 0, 5) : '-' }}</strong></td>
+                        <td>{{ $row->attendance_date?->format('d M Y') }}</td>
+                        <td><strong>{{ $row->check_in?->format('H:i') ?? '-' }}</strong></td>
+                        <td>{{ $row->check_out?->format('H:i') ?? '-' }}</td>
                         <td>
-                            @if ($isWfh)
+                            @if ($st === 'wfh')
                                 <span class="badge-status badge-wfh">WFH</span>
-                            @elseif ($isLate)
-                                <span class="badge-status badge-late">Terlambat</span>
+                            @elseif ($st === 'telat')
+                                <span class="badge-status badge-late">{{ __('attendances.late') }}</span>
                             @else
-                                <span class="badge-status badge-present">Hadir</span>
+                                <span class="badge-status badge-present">{{ __('attendances.on_time') }}</span>
                             @endif
                         </td>
                         <td>
                             @if ($row->wifi_verified)
-                                <span style="color: #0c8f82; font-weight: 600;">✓ Terverifikasi</span>
+                                <span style="color: #0c8f82; font-weight: 600;">{{ __('attendances.verified') }}</span>
                             @else
-                                <span style="color: var(--muted);">-</span>
+                                <span style="color: var(--muted);">{{ __('attendances.not_verified') }}</span>
                             @endif
                         </td>
-                        <td><code>{{ $row->ip_address ?? '-' }}</code></td>
                         <td>
-                            <span style="font-size: 12px; color: {{ $row->location_status === 'invalid' ? '#d93838' : 'var(--ink)' }};">
-                                {{ ucfirst($row->location_status ?? 'valid') }}
-                            </span>
-                        </td>
-                        <td>
-                            @if ($row->face_verified)
-                                <span style="color: #0c8f82; font-weight: 600;">✓ Cocok</span>
-                            @else
-                                <span style="color: var(--muted);">-</span>
-                            @endif
+                            {{ ucfirst($row->location_status ?? 'Recorded') }}
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="10" class="empty-state">
-                            <p style="font-size: 15px; margin: 0 0 6px;">Tidak ada data presensi yang sesuai kriteria filter.</p>
-                            <small>Silakan ubah filter periode tanggal atau departemen.</small>
+                        <td colspan="8" class="empty-state">
+                            <p style="margin: 0; font-weight: 600;">{{ __('attendances.no_attendance_records') }}</p>
                         </td>
                     </tr>
                 @endforelse
@@ -233,7 +217,7 @@
 
     @if ($attendances->hasPages())
         <div class="pagination-wrapper">
-            <span>Menampilkan {{ $attendances->firstItem() }} – {{ $attendances->lastItem() }} dari {{ $attendances->total() }} data</span>
+            <span>{{ __('attendances.showing_records', ['from' => $attendances->firstItem(), 'to' => $attendances->lastItem(), 'total' => $attendances->total()]) }}</span>
             {{ $attendances->links() }}
         </div>
     @endif

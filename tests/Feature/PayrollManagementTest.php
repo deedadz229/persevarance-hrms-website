@@ -373,7 +373,7 @@ class PayrollManagementTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('Commercial Sales');
-        $response->assertSee('2 Orang');
+        $response->assertSee('2 orang');
         $response->assertSee('11.000.000'); // 5M + 6M basic
         $response->assertSee('12.500.000'); // 5.5M + 7M net
     }

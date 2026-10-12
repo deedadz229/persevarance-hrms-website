@@ -38,6 +38,15 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * Convenience accessor so views can use $user->is_active
+     * instead of comparing $user->status === 'active'.
+     */
+    public function getIsActiveAttribute(): bool
+    {
+        return $this->status === 'active';
+    }
+
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);

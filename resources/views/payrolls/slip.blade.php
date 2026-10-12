@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Slip Gaji · {{ $payroll->employee?->name ?? 'Karyawan' }} ({{ $payroll->period_label }})</title>
+    <title>{{ __('payrolls.slip_title') }} · {{ $payroll->employee?->name ?? __('payrolls.employee') }} ({{ $payroll->period_label }})</title>
     <style>
         :root { --ink: #172b3a; --muted: #53636e; --line: #cbd5e1; }
         * { box-sizing: border-box; }
@@ -56,8 +56,8 @@
 <body>
 
 <div class="slip-actions">
-    <a href="{{ route('payrolls.show', $payroll) }}" class="btn btn-back">← Kembali ke Detail</a>
-    <button type="button" class="btn btn-print" onclick="window.print()">🖨 Cetak Dokumen</button>
+    <a href="{{ route('payrolls.show', $payroll) }}" class="btn btn-back">← {{ __('payrolls.back_to_detail') }}</a>
+    <button type="button" class="btn btn-print" onclick="window.print()">{{ __('payrolls.print_document') }}</button>
 </div>
 
 <div class="slip-box">
@@ -67,26 +67,26 @@
             <p>Human Resource Management & Workforce System</p>
         </div>
         <div class="slip-badge">
-            <h2>SLIP GAJI KARYAWAN</h2>
-            <span>Periode: <strong>{{ $payroll->period_label }}</strong></span>
+            <h2>{{ __('payrolls.payslip_uppercase') }}</h2>
+            <span>{{ __('payrolls.period') }}: <strong>{{ $payroll->period_label }}</strong></span>
         </div>
     </header>
 
     <section class="meta-grid">
         <div class="meta-row">
-            <span class="meta-label">Nama Karyawan</span>
+            <span class="meta-label">{{ __('employees.employee_name') }}</span>
             <span class="meta-val">: {{ $payroll->employee?->name ?? '-' }}</span>
         </div>
         <div class="meta-row">
-            <span class="meta-label">Departemen</span>
+            <span class="meta-label">{{ __('employees.department') }}</span>
             <span class="meta-val">: {{ $payroll->employee?->department?->name ?? '-' }}</span>
         </div>
         <div class="meta-row">
-            <span class="meta-label">Kode / NIK</span>
+            <span class="meta-label">{{ __('employees.employee_code_label') }}</span>
             <span class="meta-val">: {{ $payroll->employee?->employee_code ?? '-' }}</span>
         </div>
         <div class="meta-row">
-            <span class="meta-label">Jabatan (Posisi)</span>
+            <span class="meta-label">{{ __('employees.position_label') }}</span>
             <span class="meta-val">: {{ $payroll->employee?->position?->name ?? '-' }}</span>
         </div>
     </section>
@@ -96,13 +96,13 @@
             <table class="component-table">
                 <thead>
                     <tr>
-                        <th>Penerimaan (Income)</th>
-                        <th style="text-align: right;">Jumlah</th>
+                        <th>{{ __('payrolls.income_table') }}</th>
+                        <th style="text-align: right;">{{ __('payrolls.amount') }}</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Gaji Pokok</td>
+                        <td>{{ __('payrolls.basic_salary') }}</td>
                         <td style="text-align: right;">Rp {{ number_format((float) $payroll->basic_salary, 0, ',', '.') }}</td>
                     </tr>
                     @forelse ($payroll->allowances as $allowance)
@@ -113,7 +113,7 @@
                     @empty
                     @endforelse
                     <tr class="total-row">
-                        <td>Total Penerimaan</td>
+                        <td>{{ __('payrolls.total_income') }}</td>
                         <td style="text-align: right;">
                             Rp {{ number_format((float) ($payroll->basic_salary + $payroll->total_allowance), 0, ',', '.') }}
                         </td>
@@ -126,8 +126,8 @@
             <table class="component-table">
                 <thead>
                     <tr>
-                        <th>Potongan (Deductions)</th>
-                        <th style="text-align: right;">Jumlah</th>
+                        <th>{{ __('payrolls.deductions_table') }}</th>
+                        <th style="text-align: right;">{{ __('payrolls.amount') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -138,11 +138,11 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="2" style="text-align: center; color: var(--muted); padding: 12px;">Tidak ada potongan</td>
+                            <td colspan="2" style="text-align: center; color: var(--muted); padding: 12px;">{{ __('payrolls.no_deductions') }}</td>
                         </tr>
                     @endforelse
                     <tr class="total-row">
-                        <td>Total Potongan</td>
+                        <td>{{ __('payrolls.total_deductions') }}</td>
                         <td style="text-align: right;">
                             Rp {{ number_format((float) $payroll->total_deduction, 0, ',', '.') }}
                         </td>
@@ -153,21 +153,21 @@
     </div>
 
     <div class="net-summary">
-        <span>Gaji Bersih Diterima (Take Home Pay)</span>
+        <span>{{ __('payrolls.take_home_pay') }}</span>
         <strong>Rp {{ number_format((float) $payroll->net_salary, 0, ',', '.') }}</strong>
     </div>
 
     <footer class="signature-grid">
         <div class="sign-box">
-            <div class="sign-title">Penerima (Karyawan),</div>
-            <div class="sign-name">{{ $payroll->employee?->name ?? 'Karyawan' }}</div>
+            <div class="sign-title">{{ __('payrolls.recipient_sign') }}</div>
+            <div class="sign-name">{{ $payroll->employee?->name ?? __('payrolls.employee') }}</div>
             <div class="sign-sub">ID: {{ $payroll->employee?->employee_code ?? '-' }}</div>
         </div>
 
         <div class="sign-box">
-            <div class="sign-title">Pengelola (HRD / Finance),</div>
+            <div class="sign-title">{{ __('payrolls.manager_sign') }}</div>
             <div class="sign-name">PTI Management</div>
-            <div class="sign-sub">Diterbitkan pada: {{ $payroll->generated_at ? $payroll->generated_at->format('d/m/Y') : date('d/m/Y') }}</div>
+            <div class="sign-sub">{{ __('payrolls.published_on', ['date' => $payroll->generated_at ? $payroll->generated_at->format('d/m/Y') : date('d/m/Y')]) }}</div>
         </div>
     </footer>
 </div>

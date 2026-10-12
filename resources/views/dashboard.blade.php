@@ -36,76 +36,76 @@
 
     <div class="dashboard-intro">
         <div>
-            <span class="status-badge">{{ $user->role?->label ?? 'Akun aktif' }}</span>
-            <h2 style="margin-top: 12px;">Selamat datang, {{ $user->name }}</h2>
-            <p>Ringkasan informasi HR berdasarkan akses akun Anda.</p>
+            <span class="status-badge">{{ $user->role?->label ?? __('dashboard.active_account') }}</span>
+            <h2 style="margin-top: 12px;">{{ __('dashboard.greeting', ['name' => $user->name]) }}</h2>
+            <p>{{ __('dashboard.subtitle') }}</p>
         </div>
         <p style="margin: 0;">{{ now()->translatedFormat('l, d F Y') }}</p>
     </div>
 
     @if ($dashboardRole === 'manager_hrd')
         <section class="metric-grid" aria-label="Ringkasan HR">
-            <article class="metric-card card"><span>Total Karyawan</span><strong>{{ number_format($dashboard['total_employees']) }}</strong><small>Data karyawan aktif dan historis</small></article>
-            <article class="metric-card card"><span>Hadir Hari Ini</span><strong>{{ number_format($dashboard['present_today']) }}</strong><small>Check-in pada {{ now()->format('d M Y') }}</small></article>
-            <article class="metric-card card"><span>Pengajuan Cuti</span><strong>{{ number_format($dashboard['pending_leaves']) }}</strong><small>Menunggu persetujuan</small></article>
-            <article class="metric-card card"><span>Total Gaji</span><strong>Rp {{ number_format((float) $dashboard['total_payroll'], 0, ',', '.') }}</strong><small>Periode {{ now()->translatedFormat('F Y') }}</small></article>
+            <article class="metric-card card"><span>{{ __('dashboard.total_employees') }}</span><strong>{{ number_format($dashboard['total_employees']) }}</strong><small>{{ __('dashboard.employee_data_desc') }}</small></article>
+            <article class="metric-card card"><span>{{ __('dashboard.present_today') }}</span><strong>{{ number_format($dashboard['present_today']) }}</strong><small>{{ __('dashboard.check_in_at', ['date' => now()->format('d M Y')]) }}</small></article>
+            <article class="metric-card card"><span>{{ __('dashboard.pending_leaves') }}</span><strong>{{ number_format($dashboard['pending_leaves']) }}</strong><small>{{ __('dashboard.waiting_approval') }}</small></article>
+            <article class="metric-card card"><span>{{ __('dashboard.total_payroll') }}</span><strong>Rp {{ number_format((float) $dashboard['total_payroll'], 0, ',', '.') }}</strong><small>{{ __('dashboard.period', ['period' => now()->translatedFormat('F Y')]) }}</small></article>
         </section>
 
         <section class="dashboard-grid">
             <article class="panel card">
-                <div class="panel-head"><h3>Aktivitas Terbaru</h3><span>5 aktivitas terakhir</span></div>
+                <div class="panel-head"><h3>{{ __('dashboard.recent_activities') }}</h3><span>{{ __('dashboard.last_5_activities') }}</span></div>
                 @forelse ($dashboard['recent_activities'] as $activity)
-                    <div class="activity-list"><li><span class="activity-mark">A</span><div class="activity-copy"><strong>{{ str($activity->action)->replace('_', ' ')->title() }}</strong><span>{{ $activity->user?->name ?? 'Sistem' }} · {{ $activity->created_at?->format('d M Y, H:i') ?? '-' }}</span></div></li></div>
+                    <div class="activity-list"><li><span class="activity-mark">A</span><div class="activity-copy"><strong>{{ str($activity->action)->replace('_', ' ')->title() }}</strong><span>{{ $activity->user?->name ?? __('dashboard.system') }} · {{ $activity->created_at?->format('d M Y, H:i') ?? '-' }}</span></div></li></div>
                 @empty
-                    <p class="empty-state">Belum ada aktivitas yang tercatat.</p>
+                    <p class="empty-state">{{ __('dashboard.no_activities') }}</p>
                 @endforelse
             </article>
             <article class="panel card">
-                <div class="panel-head"><h3>Cuti Menunggu Persetujuan</h3><span>{{ $dashboard['pending_leaves'] }} data</span></div>
+                <div class="panel-head"><h3>{{ __('dashboard.leaves_waiting_approval') }}</h3><span>{{ __('dashboard.records_count', ['count' => $dashboard['pending_leaves']]) }}</span></div>
                 @forelse ($dashboard['pending_leave_requests'] as $leave)
-                    <div class="activity-list"><li><span class="activity-mark">C</span><div class="activity-copy"><strong>{{ $leave->employee?->name ?? 'Karyawan tidak ditemukan' }}</strong><span>{{ $leave->leave_type }} · {{ $leave->start_date?->format('d M') }}–{{ $leave->end_date?->format('d M Y') }}</span></div></li></div>
+                    <div class="activity-list"><li><span class="activity-mark">C</span><div class="activity-copy"><strong>{{ $leave->employee?->name ?? __('dashboard.employee_not_found') }}</strong><span>{{ $leave->leave_type }} · {{ $leave->start_date?->format('d M') }}–{{ $leave->end_date?->format('d M Y') }}</span></div></li></div>
                 @empty
-                    <p class="empty-state">Tidak ada cuti yang menunggu persetujuan.</p>
+                    <p class="empty-state">{{ __('dashboard.no_pending_leaves') }}</p>
                 @endforelse
             </article>
         </section>
 
         <section class="panel card" style="margin-top: 18px;">
-            <div class="panel-head"><h3>Kehadiran Hari Ini</h3><span>{{ now()->translatedFormat('d F Y') }}</span></div>
+            <div class="panel-head"><h3>{{ __('dashboard.today_attendance') }}</h3><span>{{ now()->translatedFormat('d F Y') }}</span></div>
             @if ($dashboard['today_attendances']->isNotEmpty())
-                <table class="data-table"><thead><tr><th>Karyawan</th><th>Check-in</th><th>Status Lokasi</th></tr></thead><tbody>
+                <table class="data-table"><thead><tr><th>{{ __('common.employees') ?? 'Karyawan' }}</th><th>{{ __('dashboard.check_in') }}</th><th>{{ __('dashboard.location_status') }}</th></tr></thead><tbody>
                     @foreach ($dashboard['today_attendances'] as $attendance)
-                        <tr><td>{{ $attendance->employee?->name ?? 'Karyawan tidak ditemukan' }}</td><td>{{ $attendance->check_in?->format('H:i') ?? '-' }}</td><td><span class="table-status">{{ $attendance->location_status ?? 'Tercatat' }}</span></td></tr>
+                        <tr><td>{{ $attendance->employee?->name ?? __('dashboard.employee_not_found') }}</td><td>{{ $attendance->check_in?->format('H:i') ?? '-' }}</td><td><span class="table-status">{{ $attendance->location_status ?? __('dashboard.recorded') }}</span></td></tr>
                     @endforeach
                 </tbody></table>
             @else
-                <p class="empty-state">Belum ada kehadiran yang tercatat hari ini.</p>
+                <p class="empty-state">{{ __('dashboard.no_attendance_today') }}</p>
             @endif
         </section>
     @elseif ($dashboardRole === 'super_admin')
         <section class="metric-grid" aria-label="Ringkasan sistem">
-            <article class="metric-card card"><span>Total User</span><strong>{{ number_format($dashboard['total_users']) }}</strong><small>Akun terdaftar di sistem</small></article>
-            <article class="metric-card card"><span>Total Karyawan</span><strong>{{ number_format($dashboard['total_employees']) }}</strong><small>Data karyawan tersimpan</small></article>
-            <article class="metric-card card"><span>Aktivitas Sistem</span><strong>{{ number_format($dashboard['total_audit_logs']) }}</strong><small>Audit log yang tersedia</small></article>
-            <article class="metric-card card"><span>Status Sistem</span><strong style="color: var(--brand-dark);">Aktif</strong><small>Database siap digunakan</small></article>
+            <article class="metric-card card"><span>{{ __('dashboard.total_users') }}</span><strong>{{ number_format($dashboard['total_users']) }}</strong><small>{{ __('dashboard.registered_accounts') }}</small></article>
+            <article class="metric-card card"><span>{{ __('dashboard.total_employees') }}</span><strong>{{ number_format($dashboard['total_employees']) }}</strong><small>{{ __('dashboard.saved_employees') }}</small></article>
+            <article class="metric-card card"><span>{{ __('dashboard.system_activity') }}</span><strong>{{ number_format($dashboard['total_audit_logs']) }}</strong><small>{{ __('dashboard.available_audit_logs') }}</small></article>
+            <article class="metric-card card"><span>{{ __('dashboard.system_status') }}</span><strong style="color: var(--brand-dark);">{{ __('dashboard.status_active') }}</strong><small>{{ __('dashboard.database_ready') }}</small></article>
         </section>
         <section class="panel card" style="max-width: 880px;">
-            <div class="panel-head"><h3>Aktivitas Sistem Terbaru</h3><span>Audit & aktivitas pengguna</span></div>
+            <div class="panel-head"><h3>{{ __('dashboard.recent_system_activities') }}</h3><span>{{ __('dashboard.audit_user_activities') }}</span></div>
             @forelse ($dashboard['recent_activities'] as $activity)
-                <div class="activity-list"><li><span class="activity-mark">A</span><div class="activity-copy"><strong>{{ str($activity->action)->replace('_', ' ')->title() }}</strong><span>{{ $activity->user?->name ?? 'Sistem' }} · {{ $activity->created_at?->format('d M Y, H:i') ?? '-' }}</span></div></li></div>
+                <div class="activity-list"><li><span class="activity-mark">A</span><div class="activity-copy"><strong>{{ str($activity->action)->replace('_', ' ')->title() }}</strong><span>{{ $activity->user?->name ?? __('dashboard.system') }} · {{ $activity->created_at?->format('d M Y, H:i') ?? '-' }}</span></div></li></div>
             @empty
-                <p class="empty-state">Belum ada aktivitas sistem yang tercatat.</p>
+                <p class="empty-state">{{ __('dashboard.no_system_activities') }}</p>
             @endforelse
         </section>
     @elseif ($dashboardRole === 'taiwan_account')
         <section class="metric-grid" aria-label="Ringkasan monitoring">
-            <article class="metric-card card"><span>Total Employee</span><strong>{{ number_format($dashboard['total_employees']) }}</strong><small>Data karyawan untuk monitoring</small></article>
-            <article class="metric-card card"><span>Kehadiran Hari Ini</span><strong>{{ number_format($dashboard['present_today']) }}</strong><small>Check-in pada {{ now()->format('d M Y') }}</small></article>
-            <article class="metric-card card"><span>Cuti Menunggu Proses</span><strong>{{ number_format($dashboard['pending_leaves']) }}</strong><small>Ringkasan pengajuan cuti</small></article>
-            <article class="metric-card card"><span>Ringkasan Payroll</span><strong>{{ $dashboard['payroll_summary'] !== null ? 'Rp '.number_format((float) $dashboard['payroll_summary'], 0, ',', '.') : '-' }}</strong><small>Periode {{ now()->translatedFormat('F Y') }}</small></article>
+            <article class="metric-card card"><span>{{ __('dashboard.total_employee_taiwan') }}</span><strong>{{ number_format($dashboard['total_employees']) }}</strong><small>{{ __('dashboard.employee_monitoring_desc') }}</small></article>
+            <article class="metric-card card"><span>{{ __('dashboard.present_today') }}</span><strong>{{ number_format($dashboard['present_today']) }}</strong><small>{{ __('dashboard.check_in_at', ['date' => now()->format('d M Y')]) }}</small></article>
+            <article class="metric-card card"><span>{{ __('dashboard.pending_leaves_taiwan') }}</span><strong>{{ number_format($dashboard['pending_leaves']) }}</strong><small>{{ __('dashboard.leave_summary_desc') }}</small></article>
+            <article class="metric-card card"><span>{{ __('dashboard.payroll_summary') }}</span><strong>{{ $dashboard['payroll_summary'] !== null ? 'Rp '.number_format((float) $dashboard['payroll_summary'], 0, ',', '.') : '-' }}</strong><small>{{ __('dashboard.period', ['period' => now()->translatedFormat('F Y')]) }}</small></article>
         </section>
-        <p class="read-only-note">Dashboard monitoring ini bersifat read-only. Tidak ada aksi perubahan data tersedia untuk Taiwan Account.</p>
+        <p class="read-only-note">{{ __('dashboard.taiwan_readonly_note') }}</p>
     @else
-        <section class="card" style="padding: 24px;"><p style="margin: 0; color: var(--muted);">Ringkasan dashboard belum tersedia untuk role ini.</p></section>
+        <section class="card" style="padding: 24px;"><p style="margin: 0; color: var(--muted);">{{ __('dashboard.not_available') }}</p></section>
     @endif
 @endsection

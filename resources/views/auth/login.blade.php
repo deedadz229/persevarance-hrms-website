@@ -360,7 +360,20 @@
     <!-- Login Centered Card -->
     <main class="login-wrapper">
         <div class="login-card">
-            
+            {{-- Language Switcher on Login --}}
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 12px;">
+                <div style="display: inline-flex; align-items: center; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 2px; gap: 2px;">
+                    <a href="{{ route('locale.switch', 'id') }}" 
+                       style="display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-decoration: none; color: {{ app()->getLocale() === 'id' ? '#b91c1c' : '#64748b' }}; background: {{ app()->getLocale() === 'id' ? '#ffffff' : 'transparent' }}; box-shadow: {{ app()->getLocale() === 'id' ? '0 1px 2px rgba(15,23,42,0.08)' : 'none' }};">
+                        <span>🇮🇩</span> ID
+                    </a>
+                    <a href="{{ route('locale.switch', 'en') }}" 
+                       style="display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-decoration: none; color: {{ app()->getLocale() === 'en' ? '#b91c1c' : '#64748b' }}; background: {{ app()->getLocale() === 'en' ? '#ffffff' : 'transparent' }}; box-shadow: {{ app()->getLocale() === 'en' ? '0 1px 2px rgba(15,23,42,0.08)' : 'none' }};">
+                        <span>🇬🇧</span> EN
+                    </a>
+                </div>
+            </div>
+
             <header class="brand-header">
                 <div class="brand-badge" aria-hidden="true">PTI</div>
                 <h1 class="brand-title">PTI HRMS</h1>

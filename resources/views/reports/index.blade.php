@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Pusat Laporan & Rekapitulasi')
+@section('title', __('reports.center_title'))
 
 @section('content')
 <style>
@@ -33,8 +33,8 @@
 
 <div class="page-header">
     <div class="page-title-box">
-        <h2>Pusat Laporan & Rekapitulasi HRMS</h2>
-        <p>Akses komprehensif ke ringkasan kehadiran, cuti, lembur, payroll, turnover, dan riwayat audit PTI</p>
+        <h2>{{ __('reports.center_title') }}</h2>
+        <p>{{ __('reports.center_subtitle') }}</p>
     </div>
 </div>
 
@@ -43,13 +43,13 @@
     <article class="card report-card">
         <div>
             <div class="report-icon icon-attendance">◷</div>
-            <h3 class="report-title">Laporan Absensi Bulanan</h3>
+            <h3 class="report-title">{{ __('reports.attendance_report') }}</h3>
             <p class="report-desc">
-                Rekapitulasi kehadiran harian karyawan, verifikasi jam masuk/keluar, kepatuhan WFH, keterlambatan, dan status verifikasi perangkat mobile.
+                {{ __('reports.attendance_desc') }}
             </p>
         </div>
         <div class="card-actions">
-            <a href="{{ route('reports.attendances') }}" class="btn btn-primary">Lihat Laporan</a>
+            <a href="{{ route('reports.attendances') }}" class="btn btn-primary">{{ __('reports.view_report') }}</a>
             @if ($canExport)
                 <div style="display: flex; gap: 4px;">
                     <a href="{{ route('reports.attendances.export', ['format' => 'csv']) }}" class="btn btn-outline" style="padding: 8px 9px; font-size: 11.5px;" title="Export CSV">CSV</a>
@@ -64,13 +64,13 @@
     <article class="card report-card">
         <div>
             <div class="report-icon icon-leave">◫</div>
-            <h3 class="report-title">Laporan Cuti & Izin</h3>
+            <h3 class="report-title">{{ __('reports.leave_report') }}</h3>
             <p class="report-desc">
-                Ringkasan permohonan cuti tahunan, sakit, dan izin karyawan beserta status keputusan persetujuan HR, durasi hari, dan catatan verifikasi.
+                {{ __('reports.leave_desc') }}
             </p>
         </div>
         <div class="card-actions">
-            <a href="{{ route('reports.leaves') }}" class="btn btn-primary">Lihat Laporan</a>
+            <a href="{{ route('reports.leaves') }}" class="btn btn-primary">{{ __('reports.view_report') }}</a>
             @if ($canExport)
                 <div style="display: flex; gap: 4px;">
                     <a href="{{ route('reports.leaves.export', ['format' => 'csv']) }}" class="btn btn-outline" style="padding: 8px 9px; font-size: 11.5px;" title="Export CSV">CSV</a>
@@ -85,13 +85,13 @@
     <article class="card report-card">
         <div>
             <div class="report-icon icon-overtime">◴</div>
-            <h3 class="report-title">Laporan Lembur (Overtime)</h3>
+            <h3 class="report-title">{{ __('reports.overtime_report') }}</h3>
             <p class="report-desc">
-                Monitoring akumulasi durasi jam lembur yang disetujui resmi, jadwal kerja lembur, uraian target tugas, dan data pendukung modul payroll.
+                {{ __('reports.overtime_desc') }}
             </p>
         </div>
         <div class="card-actions">
-            <a href="{{ route('reports.overtimes') }}" class="btn btn-primary">Lihat Laporan</a>
+            <a href="{{ route('reports.overtimes') }}" class="btn btn-primary">{{ __('reports.view_report') }}</a>
             @if ($canExport)
                 <div style="display: flex; gap: 4px;">
                     <a href="{{ route('reports.overtimes.export', ['format' => 'csv']) }}" class="btn btn-outline" style="padding: 8px 9px; font-size: 11.5px;" title="Export CSV">CSV</a>
@@ -106,13 +106,13 @@
     <article class="card report-card">
         <div>
             <div class="report-icon icon-payroll">¤</div>
-            <h3 class="report-title">Laporan Penggajian (Payroll)</h3>
+            <h3 class="report-title">{{ __('reports.payroll_report') }}</h3>
             <p class="report-desc">
-                Rekapitulasi kompensasi gaji pokok, total tunjangan, potongan transparan (BPJS, PPh21), serta pembayaran gaji bersih karyawan (take home pay).
+                {{ __('reports.payroll_desc') }}
             </p>
         </div>
         <div class="card-actions">
-            <a href="{{ route('reports.payrolls') }}" class="btn btn-primary">Lihat Laporan</a>
+            <a href="{{ route('reports.payrolls') }}" class="btn btn-primary">{{ __('reports.view_report') }}</a>
             @if ($canExport)
                 <div style="display: flex; gap: 4px;">
                     <a href="{{ route('reports.payrolls.export', ['format' => 'csv']) }}" class="btn btn-outline" style="padding: 8px 9px; font-size: 11.5px;" title="Export CSV">CSV</a>
@@ -127,13 +127,13 @@
     <article class="card report-card">
         <div>
             <div class="report-icon icon-turnover">♙</div>
-            <h3 class="report-title">Laporan Turnover Karyawan</h3>
+            <h3 class="report-title">{{ __('reports.turnover_report') }}</h3>
             <p class="report-desc">
-                Dinamika ketenagakerjaan organisasi mencakup status kepegawaian aktif, non-aktif, jenis hubungan kerja (kontrak/tetap), dan riwayat resign.
+                {{ __('reports.turnover_desc') }}
             </p>
         </div>
         <div class="card-actions">
-            <a href="{{ route('reports.turnover') }}" class="btn btn-primary">Lihat Laporan</a>
+            <a href="{{ route('reports.turnover') }}" class="btn btn-primary">{{ __('reports.view_report') }}</a>
             @if ($canExport)
                 <div style="display: flex; gap: 4px;">
                     <a href="{{ route('reports.turnover.export', ['format' => 'csv']) }}" class="btn btn-outline" style="padding: 8px 9px; font-size: 11.5px;" title="Export CSV">CSV</a>
@@ -149,13 +149,13 @@
         <article class="card report-card">
             <div>
                 <div class="report-icon icon-audit">◉</div>
-                <h3 class="report-title">Laporan Audit Trail</h3>
+                <h3 class="report-title">{{ __('reports.audit_report') }}</h3>
                 <p class="report-desc">
-                    Rekaman log aktivitas sistem, riwayat mutasi data karyawan, persetujuan cuti/lembur, penyesuaian gaji, dan jejak keamanan operasional.
+                    {{ __('reports.audit_desc') }}
                 </p>
             </div>
             <div class="card-actions">
-                <a href="{{ route('reports.audit-logs') }}" class="btn btn-primary">Lihat Laporan</a>
+                <a href="{{ route('reports.audit-logs') }}" class="btn btn-primary">{{ __('reports.view_report') }}</a>
                 @if ($canExport)
                     <div style="display: flex; gap: 4px;">
                         <a href="{{ route('reports.audit-logs.export', ['format' => 'csv']) }}" class="btn btn-outline" style="padding: 8px 9px; font-size: 11.5px;" title="Export CSV">CSV</a>

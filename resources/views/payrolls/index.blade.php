@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Manajemen Payroll')
+@section('title', __('payrolls.title'))
 
 @section('content')
 <style>
@@ -60,59 +60,59 @@
 
 <div class="page-header">
     <div class="page-title-box">
-        <h2>Manajemen Payroll</h2>
-        <p>Pengelolaan kompensasi, evaluasi penggajian, perhitungan gaji bersih, dan rekapitulasi</p>
+        <h2>{{ __('payrolls.title') }}</h2>
+        <p>{{ __('payrolls.subtitle') }}</p>
     </div>
     <div class="header-actions">
         @if (auth()->user()->role?->name !== 'taiwan_account' && (auth()->user()->role?->name === 'super_admin' || auth()->user()->role?->permissions->contains('name', 'manage_payroll')))
             <a href="{{ route('payrolls.create') }}" class="btn btn-primary">
-                <span>+</span> Proses / Buat Payroll
+                <span>+</span> {{ __('payrolls.process_payroll') }}
             </a>
         @endif
     </div>
 </div>
 
 <nav class="nav-tabs" aria-label="Menu Tab Payroll">
-    <a href="{{ route('payrolls.index') }}" class="nav-tab is-active">Daftar Payroll</a>
-    <a href="{{ route('payrolls.evaluation') }}" class="nav-tab">Evaluasi Pra-Finalisasi</a>
-    <a href="{{ route('payrolls.department-summary') }}" class="nav-tab">Rekap Departemen</a>
+    <a href="{{ route('payrolls.index') }}" class="nav-tab is-active">{{ __('payrolls.tab_list') }}</a>
+    <a href="{{ route('payrolls.evaluation') }}" class="nav-tab">{{ __('payrolls.tab_evaluation') }}</a>
+    <a href="{{ route('payrolls.department-summary') }}" class="nav-tab">{{ __('payrolls.tab_department_summary') }}</a>
 </nav>
 
-<section class="summary-grid" aria-label="Ringkasan Payroll">
+<section class="summary-grid" aria-label="{{ __('payrolls.summary_aria') }}">
     <article class="card summary-card">
-        <span>Total Payroll</span>
-        <strong style="color: var(--ink);">{{ number_format($summary['total_count']) }} <small style="display:inline; font-size:14px; font-weight:normal; color:var(--muted);">Slip</small></strong>
-        <small>Akumulasi slip gaji periode terpilih</small>
+        <span>{{ __('payrolls.total_payroll') }}</span>
+        <strong style="color: var(--ink);">{{ number_format($summary['total_count']) }} <small style="display:inline; font-size:14px; font-weight:normal; color:var(--muted);">{{ __('payrolls.slips') }}</small></strong>
+        <small>{{ __('payrolls.total_slip_count_hint') }}</small>
     </article>
 
     <article class="card summary-card">
-        <span>Total BPJS</span>
+        <span>{{ __('payrolls.total_bpjs') }}</span>
         <strong style="color: #2b7bb9;">Rp {{ number_format($summary['total_bpjs'], 0, ',', '.') }}</strong>
-        <small>Total potongan BPJS karyawan</small>
+        <small>{{ __('payrolls.total_bpjs_hint') }}</small>
     </article>
 
     <article class="card summary-card">
-        <span>Total PPh21</span>
+        <span>{{ __('payrolls.total_pph21') }}</span>
         <strong style="color: #c98804;">Rp {{ number_format($summary['total_pph21'], 0, ',', '.') }}</strong>
-        <small>Total potongan pajak PPh21</small>
+        <small>{{ __('payrolls.total_pph21_hint') }}</small>
     </article>
 
     <article class="card summary-card">
-        <span>Total Net Salary</span>
+        <span>{{ __('payrolls.total_net_salary') }}</span>
         <strong style="color: #0c8f82;">Rp {{ number_format($summary['total_net_salary'], 0, ',', '.') }}</strong>
-        <small>Total bersih yang dibayarkan</small>
+        <small>{{ __('payrolls.total_net_salary_hint') }}</small>
     </article>
 </section>
 
 <div class="card filter-card">
     <form action="{{ route('payrolls.index') }}" method="GET" class="filter-form">
         <div class="filter-group search-group">
-            <input type="text" name="search" value="{{ $currentSearch }}" placeholder="Cari nama karyawan atau ID..." class="form-control">
+            <input type="text" name="search" value="{{ $currentSearch }}" placeholder="{{ __('payrolls.search_placeholder') }}" class="form-control">
         </div>
 
         <div class="filter-group">
             <select name="month" class="form-control">
-                <option value="">Semua Bulan</option>
+                <option value="">{{ __('payrolls.all_months') }}</option>
                 @foreach ($months as $num => $name)
                     <option value="{{ $num }}" {{ $currentMonth == $num ? 'selected' : '' }}>
                         {{ $name }}
@@ -123,7 +123,7 @@
 
         <div class="filter-group" style="max-width: 120px;">
             <select name="year" class="form-control">
-                <option value="">Semua Tahun</option>
+                <option value="">{{ __('payrolls.all_years') }}</option>
                 @for ($y = (int) date('Y') + 1; $y >= 2024; $y--)
                     <option value="{{ $y }}" {{ $currentYear == $y ? 'selected' : '' }}>
                         {{ $y }}
@@ -134,7 +134,7 @@
 
         <div class="filter-group">
             <select name="department_id" class="form-control">
-                <option value="">Semua Departemen</option>
+                <option value="">{{ __('payrolls.all_departments') }}</option>
                 @foreach ($departments as $dept)
                     <option value="{{ $dept->id }}" {{ $currentDepartment == $dept->id ? 'selected' : '' }}>
                         {{ $dept->name }}
@@ -145,17 +145,17 @@
 
         <div class="filter-group">
             <select name="status" class="form-control">
-                <option value="">Semua Status</option>
-                <option value="draft" {{ $currentStatus === 'draft' ? 'selected' : '' }}>Draft</option>
-                <option value="generated" {{ $currentStatus === 'generated' ? 'selected' : '' }}>Dihasilkan</option>
-                <option value="paid" {{ $currentStatus === 'paid' ? 'selected' : '' }}>Dibayar</option>
+                <option value="">{{ __('payrolls.all_status') }}</option>
+                <option value="draft" {{ $currentStatus === 'draft' ? 'selected' : '' }}>{{ __('payrolls.status_draft') }}</option>
+                <option value="generated" {{ $currentStatus === 'generated' ? 'selected' : '' }}>{{ __('payrolls.status_generated') }}</option>
+                <option value="paid" {{ $currentStatus === 'paid' ? 'selected' : '' }}>{{ __('payrolls.status_paid') }}</option>
             </select>
         </div>
 
         <div style="display: flex; gap: 8px;">
-            <button type="submit" class="btn btn-primary" style="padding: 9px 14px;">Filter</button>
+            <button type="submit" class="btn btn-primary" style="padding: 9px 14px;">{{ __('common.filter') }}</button>
             @if ($currentSearch || $currentMonth || $currentYear || $currentDepartment || $currentStatus)
-                <a href="{{ route('payrolls.index') }}" class="btn btn-outline" style="padding: 9px 12px;" title="Reset Filter">Reset</a>
+                <a href="{{ route('payrolls.index') }}" class="btn btn-outline" style="padding: 9px 12px;" title="{{ __('common.reset') }}">{{ __('common.reset') }}</a>
             @endif
         </div>
     </form>
@@ -166,15 +166,15 @@
         <table class="table-payroll">
             <thead>
                 <tr>
-                    <th>Karyawan</th>
-                    <th>Departemen</th>
-                    <th>Periode</th>
-                    <th>Gaji Pokok</th>
-                    <th>Tunjangan</th>
-                    <th>Potongan</th>
-                    <th>Gaji Bersih</th>
-                    <th>Status</th>
-                    <th style="text-align: right;">Aksi</th>
+                    <th>{{ __('payrolls.employee') }}</th>
+                    <th>{{ __('payrolls.department') }}</th>
+                    <th>{{ __('payrolls.period') }}</th>
+                    <th>{{ __('payrolls.basic_salary') }}</th>
+                    <th>{{ __('payrolls.allowances') }}</th>
+                    <th>{{ __('payrolls.deductions') }}</th>
+                    <th>{{ __('payrolls.net_salary') }}</th>
+                    <th>{{ __('common.status') }}</th>
+                    <th style="text-align: right;">{{ __('common.action') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -203,10 +203,10 @@
                         </td>
                         <td style="text-align: right;">
                             <div class="action-group">
-                                <a href="{{ route('payrolls.show', $payroll) }}" class="action-link" title="Detail Payroll">Detail</a>
-                                <a href="{{ route('payrolls.slip', $payroll) }}" class="action-link" title="Lihat Slip Gaji" target="_blank">Slip Gaji</a>
+                                <a href="{{ route('payrolls.show', $payroll) }}" class="action-link" title="{{ __('payrolls.detail') }}">{{ __('payrolls.detail') }}</a>
+                                <a href="{{ route('payrolls.slip', $payroll) }}" class="action-link" title="{{ __('payrolls.slip') }}" target="_blank">{{ __('payrolls.slip') }}</a>
                                 @if (auth()->user()->role?->name !== 'taiwan_account' && (auth()->user()->role?->name === 'super_admin' || auth()->user()->role?->permissions->contains('name', 'manage_payroll')))
-                                    <a href="{{ route('payrolls.correction', $payroll) }}" class="action-link" style="color: #9a6a00;" title="Koreksi Payroll">Koreksi</a>
+                                    <a href="{{ route('payrolls.correction', $payroll) }}" class="action-link" style="color: #9a6a00;" title="{{ __('payrolls.correction') }}">{{ __('payrolls.correction') }}</a>
                                 @endif
                             </div>
                         </td>
@@ -214,8 +214,8 @@
                 @empty
                     <tr>
                         <td colspan="9" class="empty-state">
-                            <p style="font-size: 15px; margin: 0 0 6px;">Tidak ada data payroll yang sesuai kriteria.</p>
-                            <small>Silakan ubah filter periode atau buat payroll baru.</small>
+                            <p style="font-size: 15px; margin: 0 0 6px;">{{ __('payrolls.no_records') }}</p>
+                            <small>{{ __('payrolls.no_records_hint') }}</small>
                         </td>
                     </tr>
                 @endforelse
@@ -225,7 +225,7 @@
 
     @if ($payrolls->hasPages())
         <div class="pagination-wrapper">
-            <span>Menampilkan {{ $payrolls->firstItem() }} – {{ $payrolls->lastItem() }} dari {{ $payrolls->total() }} data</span>
+            <span>{{ __('payrolls.showing_records', ['from' => $payrolls->firstItem(), 'to' => $payrolls->lastItem(), 'total' => $payrolls->total()]) }}</span>
             {{ $payrolls->links() }}
         </div>
     @endif

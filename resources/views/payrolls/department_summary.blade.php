@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Rekap Departemen · Payroll')
+@section('title', __('payrolls.department_summary_title') . ' · ' . __('payrolls.title'))
 
 @section('content')
 <style>
@@ -33,15 +33,15 @@
 
 <div class="page-header">
     <div class="page-title-box">
-        <h2>Rekap Departemen</h2>
-        <p>Agregasi dan ringkasan alokasi beban penggajian per departemen PTI</p>
+        <h2>{{ __('payrolls.department_summary_title') }}</h2>
+        <p>{{ __('payrolls.department_summary_subtitle') }}</p>
     </div>
 </div>
 
 <nav class="nav-tabs" aria-label="Menu Tab Payroll">
-    <a href="{{ route('payrolls.index') }}" class="nav-tab">Daftar Payroll</a>
-    <a href="{{ route('payrolls.evaluation') }}" class="nav-tab">Evaluasi Pra-Finalisasi</a>
-    <a href="{{ route('payrolls.department-summary') }}" class="nav-tab is-active">Rekap Departemen</a>
+    <a href="{{ route('payrolls.index') }}" class="nav-tab">{{ __('payrolls.tab_list') }}</a>
+    <a href="{{ route('payrolls.evaluation') }}" class="nav-tab">{{ __('payrolls.tab_evaluation') }}</a>
+    <a href="{{ route('payrolls.department-summary') }}" class="nav-tab is-active">{{ __('payrolls.tab_department_summary') }}</a>
 </nav>
 
 <div class="card filter-card">
@@ -67,7 +67,7 @@
         </div>
 
         <div>
-            <button type="submit" class="btn btn-primary" style="padding: 9px 14px;">Tampilkan Rekap</button>
+            <button type="submit" class="btn btn-primary" style="padding: 9px 14px;">{{ __('common.filter') }}</button>
         </div>
     </form>
 </div>
@@ -77,12 +77,12 @@
         <table class="table-summary">
             <thead>
                 <tr>
-                    <th>Departemen</th>
-                    <th style="text-align: center;">Jumlah Karyawan</th>
-                    <th style="text-align: right;">Total Gaji Pokok</th>
-                    <th style="text-align: right;">Total Tunjangan</th>
-                    <th style="text-align: right;">Total Potongan</th>
-                    <th style="text-align: right;">Total Gaji Bersih</th>
+                    <th>{{ __('payrolls.department') }}</th>
+                    <th style="text-align: center;">{{ __('departments.employee_count') }}</th>
+                    <th style="text-align: right;">{{ __('payrolls.basic_salary') }}</th>
+                    <th style="text-align: right;">{{ __('payrolls.total_allowances') }}</th>
+                    <th style="text-align: right;">{{ __('payrolls.total_deductions') }}</th>
+                    <th style="text-align: right;">{{ __('payrolls.net_salary') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -105,7 +105,7 @@
                         <td><strong>{{ $row->name }}</strong></td>
                         <td style="text-align: center;">
                             <span style="font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--canvas);">
-                                {{ $row->total_employees }} Orang
+                                {{ $row->total_employees }} {{ __('departments.people') }}
                             </span>
                         </td>
                         <td style="text-align: right;">Rp {{ number_format((float) $row->total_basic_salary, 0, ',', '.') }}</td>
@@ -120,15 +120,15 @@
                 @empty
                     <tr>
                         <td colspan="6" style="text-align: center; color: var(--muted); padding: 36px;">
-                            Tidak ada data penggajian untuk periode {{ $months[$currentMonth] ?? $currentMonth }} {{ $currentYear }}.
+                            {{ __('payrolls.no_records') }}
                         </td>
                     </tr>
                 @endforelse
             </tbody>
             <tfoot>
                 <tr>
-                    <td>Total Keseluruhan</td>
-                    <td style="text-align: center;">{{ $grandEmployees }} Orang</td>
+                    <td>{{ __('common.all') }}</td>
+                    <td style="text-align: center;">{{ $grandEmployees }} {{ __('departments.people') }}</td>
                     <td style="text-align: right;">Rp {{ number_format($grandBasic, 0, ',', '.') }}</td>
                     <td style="text-align: right; color: #0c8f82;">+Rp {{ number_format($grandAllowance, 0, ',', '.') }}</td>
                     <td style="text-align: right; color: #b92e2e;">-Rp {{ number_format($grandDeduction, 0, ',', '.') }}</td>

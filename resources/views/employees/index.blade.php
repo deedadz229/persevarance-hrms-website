@@ -40,16 +40,16 @@
 
 <div class="page-header">
     <div class="page-title-box">
-        <h2>Direktori Karyawan</h2>
-        <p>Kelola data seluruh karyawan aktif, kontrak, dan magang Perseverance Technology Indonesia</p>
+        <h2>{{ __('employees.title') }}</h2>
+        <p>{{ __('employees.subtitle') }}</p>
     </div>
     <div class="header-actions">
-        <a href="{{ route('employees.resigned') }}" class="btn btn-outline" title="Lihat Karyawan Resign">
-            <span>↗</span> Karyawan Resign
+        <a href="{{ route('employees.resigned') }}" class="btn btn-outline" title="{{ __('employees.resigned_button') }}">
+            <span>↗</span> {{ __('employees.resigned_button') }}
         </a>
         @if (auth()->user()->role?->name !== 'taiwan_account' && auth()->user()->role?->permissions->contains('name', 'manage_employees'))
             <a href="{{ route('employees.create') }}" class="btn btn-primary">
-                <span>+</span> Tambah Karyawan
+                <span>+</span> {{ __('employees.add_employee') }}
             </a>
         @endif
     </div>
@@ -58,11 +58,11 @@
 <div class="card filter-card">
     <form action="{{ route('employees.index') }}" method="GET" class="filter-form">
         <div class="filter-group search-group">
-            <input type="text" name="search" value="{{ $currentSearch }}" placeholder="Cari nama, ID karyawan, atau email..." class="form-control">
+            <input type="text" name="search" value="{{ $currentSearch }}" placeholder="{{ __('employees.search_placeholder') }}" class="form-control">
         </div>
         <div class="filter-group">
             <select name="department_id" class="form-control">
-                <option value="">Semua Departemen</option>
+                <option value="">{{ __('employees.all_departments') }}</option>
                 @foreach ($departments as $dept)
                     <option value="{{ $dept->id }}" {{ $currentDepartment == $dept->id ? 'selected' : '' }}>
                         {{ $dept->name }}
@@ -72,17 +72,17 @@
         </div>
         <div class="filter-group">
             <select name="status" class="form-control">
-                <option value="" {{ empty($currentStatus) ? 'selected' : '' }}>Status: Aktif & Non-Resign</option>
-                <option value="active" {{ $currentStatus === 'active' ? 'selected' : '' }}>Hanya Aktif</option>
-                <option value="inactive" {{ $currentStatus === 'inactive' ? 'selected' : '' }}>Hanya Tidak Aktif</option>
-                <option value="resigned" {{ $currentStatus === 'resigned' ? 'selected' : '' }}>Hanya Resign</option>
-                <option value="all" {{ $currentStatus === 'all' ? 'selected' : '' }}>Semua Status</option>
+                <option value="" {{ empty($currentStatus) ? 'selected' : '' }}>{{ __('employees.status_filter_default') }}</option>
+                <option value="active" {{ $currentStatus === 'active' ? 'selected' : '' }}>{{ __('employees.only_active') }}</option>
+                <option value="inactive" {{ $currentStatus === 'inactive' ? 'selected' : '' }}>{{ __('employees.only_inactive') }}</option>
+                <option value="resigned" {{ $currentStatus === 'resigned' ? 'selected' : '' }}>{{ __('employees.only_resigned') }}</option>
+                <option value="all" {{ $currentStatus === 'all' ? 'selected' : '' }}>{{ __('employees.all_status') }}</option>
             </select>
         </div>
         <div style="display: flex; gap: 8px;">
-            <button type="submit" class="btn btn-primary" style="padding: 9px 14px;">Filter</button>
+            <button type="submit" class="btn btn-primary" style="padding: 9px 14px;">{{ __('common.filter') }}</button>
             @if ($currentSearch || $currentDepartment || $currentStatus)
-                <a href="{{ route('employees.index') }}" class="btn btn-outline" style="padding: 9px 12px;" title="Reset Filter">Reset</a>
+                <a href="{{ route('employees.index') }}" class="btn btn-outline" style="padding: 9px 12px;" title="{{ __('common.reset') }}">{{ __('common.reset') }}</a>
             @endif
         </div>
     </form>
@@ -93,14 +93,14 @@
         <table class="table-employee">
             <thead>
                 <tr>
-                    <th>Karyawan</th>
-                    <th>ID / Code</th>
-                    <th>Departemen</th>
-                    <th>Jabatan</th>
-                    <th>Kontrak</th>
-                    <th>Bergabung</th>
-                    <th>Status</th>
-                    <th style="text-align: right;">Aksi</th>
+                    <th>{{ __('employees.employee') }}</th>
+                    <th>{{ __('employees.employee_code') }}</th>
+                    <th>{{ __('employees.department') }}</th>
+                    <th>{{ __('employees.position') }}</th>
+                    <th>{{ __('employees.contract') }}</th>
+                    <th>{{ __('employees.join_date') }}</th>
+                    <th>{{ __('common.status') }}</th>
+                    <th style="text-align: right;">{{ __('common.action') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -130,20 +130,20 @@
                         <td>{{ $employee->join_date?->format('d M Y') ?? '-' }}</td>
                         <td>
                             @if ($employee->status === 'active')
-                                <span class="badge-status badge-active">Active</span>
+                                <span class="badge-status badge-active">{{ __('employees.status_active') }}</span>
                             @elseif ($employee->status === 'inactive')
-                                <span class="badge-status badge-inactive">Inactive</span>
+                                <span class="badge-status badge-inactive">{{ __('employees.status_inactive') }}</span>
                             @elseif ($employee->status === 'resigned')
-                                <span class="badge-status badge-resigned">Resigned</span>
+                                <span class="badge-status badge-resigned">{{ __('employees.status_resigned') }}</span>
                             @else
                                 <span class="badge-status">{{ ucfirst($employee->status) }}</span>
                             @endif
                         </td>
                         <td style="text-align: right;">
                             <div class="action-links" style="justify-content: flex-end;">
-                                <a href="{{ route('employees.show', $employee) }}" class="action-link" title="Detail Karyawan">Detail</a>
+                                <a href="{{ route('employees.show', $employee) }}" class="action-link" title="{{ __('common.detail') }}">{{ __('common.detail') }}</a>
                                 @if (auth()->user()->role?->name !== 'taiwan_account' && auth()->user()->role?->permissions->contains('name', 'manage_employees'))
-                                    <a href="{{ route('employees.edit', $employee) }}" class="action-link" title="Edit Karyawan">Edit</a>
+                                    <a href="{{ route('employees.edit', $employee) }}" class="action-link" title="{{ __('common.edit') }}">{{ __('common.edit') }}</a>
                                 @endif
                             </div>
                         </td>
@@ -151,7 +151,7 @@
                 @empty
                     <tr>
                         <td colspan="8" class="empty-state">
-                            Tidak ada data karyawan yang sesuai dengan kriteria pencarian.
+                            {{ __('employees.no_records') }}
                         </td>
                     </tr>
                 @endforelse
@@ -161,7 +161,7 @@
 
     @if ($employees->hasPages())
         <div class="pagination-wrapper">
-            <div>Menampilkan {{ $employees->firstItem() ?? 0 }} - {{ $employees->lastItem() ?? 0 }} dari {{ $employees->total() }} karyawan</div>
+            <div>{{ __('employees.showing_records', ['from' => $employees->firstItem() ?? 0, 'to' => $employees->lastItem() ?? 0, 'total' => $employees->total()]) }}</div>
             <div>{{ $employees->links() }}</div>
         </div>
     @endif

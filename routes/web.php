@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\LeaveRequestController;
+use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\OvertimeController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\ReportController;
@@ -15,6 +16,9 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SharedFileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/locale/{locale}', [LocaleController::class, 'switch'])
+    ->name('locale.switch');
 
 Route::redirect('/', '/login');
 

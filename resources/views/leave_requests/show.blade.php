@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Detail Pengajuan Cuti · ' . ($leaveRequest->employee?->name ?? 'Karyawan'))
+@section('title', __('leave.detail_title') . ' · ' . ($leaveRequest->employee?->name ?? __('leave.employee')))
 
 @section('content')
 <style>
@@ -45,12 +45,12 @@
 
 <div class="page-header">
     <div class="page-title-box">
-        <h2>Detail Pengajuan Cuti</h2>
-        <p>Informasi permohonan, alasan, dan riwayat verifikasi persetujuan</p>
+        <h2>{{ __('leave.detail_title') }}</h2>
+        <p>{{ __('leave.detail_subtitle') }}</p>
     </div>
     <div>
         <a href="{{ route('leave-requests.index') }}" class="btn btn-outline">
-            <span>←</span> Kembali ke Daftar
+            <span>←</span> {{ __('leave.back_to_list') }}
         </a>
     </div>
 </div>
@@ -58,49 +58,49 @@
 <div class="grid-details">
     <div>
         <div class="card section-card">
-            <h3>Informasi Karyawan Pemohon</h3>
+            <h3>{{ __('leave.applicant_info') }}</h3>
             <div class="info-list">
-                <span class="info-label">Nama Karyawan</span>
+                <span class="info-label">{{ __('employees.employee_name') }}</span>
                 <span class="info-value">
                     <a href="{{ $leaveRequest->employee ? route('employees.show', $leaveRequest->employee) : '#' }}" style="color: var(--brand); text-decoration: none;">
-                        {{ $leaveRequest->employee?->name ?? 'Karyawan Dihapus' }}
+                        {{ $leaveRequest->employee?->name ?? __('attendances.deleted_employee') }}
                     </a>
                 </span>
 
-                <span class="info-label">ID / Kode Karyawan</span>
+                <span class="info-label">{{ __('employees.employee_code_label') }}</span>
                 <span class="info-value"><code>{{ $leaveRequest->employee?->employee_code ?? '-' }}</code></span>
 
-                <span class="info-label">Departemen</span>
+                <span class="info-label">{{ __('employees.department') }}</span>
                 <span class="info-value">{{ $leaveRequest->employee?->department?->name ?? '-' }}</span>
 
-                <span class="info-label">Jabatan (Posisi)</span>
+                <span class="info-label">{{ __('employees.position_label') }}</span>
                 <span class="info-value">{{ $leaveRequest->employee?->position?->name ?? '-' }}</span>
             </div>
         </div>
 
         <div class="card section-card">
-            <h3>Rincian Pengajuan Cuti / Izin</h3>
+            <h3>{{ __('leave.request_details') }}</h3>
             <div class="info-list">
-                <span class="info-label">Jenis Cuti</span>
+                <span class="info-label">{{ __('leave.leave_type_label') }}</span>
                 <span class="info-value" style="font-size: 14px; color: var(--brand-dark);">
                     {{ $leaveRequest->leave_type }}
                 </span>
 
-                <span class="info-label">Tanggal Mulai</span>
+                <span class="info-label">{{ __('leave.start_date') }}</span>
                 <span class="info-value">{{ $leaveRequest->start_date?->translatedFormat('l, d F Y') }}</span>
 
-                <span class="info-label">Tanggal Selesai</span>
+                <span class="info-label">{{ __('leave.end_date') }}</span>
                 <span class="info-value">{{ $leaveRequest->end_date?->translatedFormat('l, d F Y') }}</span>
 
-                <span class="info-label">Durasi Cuti</span>
+                <span class="info-label">{{ __('leave.duration_label') }}</span>
                 <span class="info-value">{{ $leaveRequest->duration_label }}</span>
 
-                <span class="info-label">Alasan Pengajuan</span>
+                <span class="info-label">{{ __('leave.reason') }}</span>
                 <span class="info-value" style="font-weight: normal; color: var(--ink); line-height: 1.5;">
                     {{ $leaveRequest->reason }}
                 </span>
 
-                <span class="info-label">Tanggal Diajukan</span>
+                <span class="info-label">{{ __('leave.submitted_at') }}</span>
                 <span class="info-value" style="font-weight: normal; color: var(--muted);">
                     {{ $leaveRequest->created_at?->translatedFormat('d F Y, H:i') ?? '-' }} WIB
                 </span>
@@ -110,9 +110,9 @@
 
     <div>
         <div class="card section-card">
-            <h3>Status & Riwayat Pemrosesan</h3>
+            <h3>{{ __('leave.status_history') }}</h3>
             <div class="info-list">
-                <span class="info-label">Status Saat Ini</span>
+                <span class="info-label">{{ __('leave.current_status') }}</span>
                 <span class="info-value">
                     <span class="badge-status {{ $leaveRequest->status_badge_class }}">
                         {{ $leaveRequest->status_label }}
@@ -120,26 +120,26 @@
                 </span>
 
                 @if ($leaveRequest->status === 'approved')
-                    <span class="info-label">Disetujui Oleh</span>
-                    <span class="info-value">{{ $leaveRequest->approver?->name ?? 'Sistem / HR' }}</span>
+                    <span class="info-label">{{ __('leave.approved_by') }}</span>
+                    <span class="info-value">{{ $leaveRequest->approver?->name ?? __('leave.system_hr') }}</span>
 
-                    <span class="info-label">Waktu Disetujui</span>
+                    <span class="info-label">{{ __('leave.approved_at') }}</span>
                     <span class="info-value">{{ $leaveRequest->approved_at?->translatedFormat('d F Y, H:i') ?? '-' }} WIB</span>
                 @elseif ($leaveRequest->status === 'rejected')
-                    <span class="info-label">Ditolak Oleh</span>
-                    <span class="info-value">{{ $leaveRequest->approver?->name ?? 'Sistem / HR' }}</span>
+                    <span class="info-label">{{ __('leave.rejected_by') }}</span>
+                    <span class="info-value">{{ $leaveRequest->approver?->name ?? __('leave.system_hr') }}</span>
 
-                    <span class="info-label">Waktu Ditolak</span>
+                    <span class="info-label">{{ __('leave.rejected_at') }}</span>
                     <span class="info-value">{{ $leaveRequest->approved_at?->translatedFormat('d F Y, H:i') ?? '-' }} WIB</span>
 
-                    <span class="info-label" style="color: #b92e2e;">Alasan Penolakan</span>
+                    <span class="info-label" style="color: #b92e2e;">{{ __('leave.rejection_reason') }}</span>
                     <span class="info-value" style="color: #b92e2e; font-weight: normal; line-height: 1.45;">
                         {{ $leaveRequest->rejection_reason }}
                     </span>
                 @else
-                    <span class="info-label">Keterangan</span>
+                    <span class="info-label">{{ __('attendances.notes') }}</span>
                     <span class="info-value" style="color: #9a6a00; font-weight: normal;">
-                        Menunggu tinjauan dan keputusan dari pihak HR / Management.
+                        {{ __('leave.pending_explanation') }}
                     </span>
                 @endif
             </div>
@@ -147,18 +147,18 @@
             @if ($leaveRequest->status === 'pending' && auth()->user()->role?->name !== 'taiwan_account' && auth()->user()->role?->permissions->contains('name', 'approve_leave'))
                 <div class="action-panel">
                     <p style="margin: 0 0 12px; font-size: 13px; font-weight: 600; color: var(--ink);">
-                        Tindakan Persetujuan:
+                        {{ __('leave.approval_action') }}
                     </p>
                     <div style="display: flex; gap: 10px;">
-                        <form action="{{ route('leave-requests.approve', $leaveRequest) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menyetujui pengajuan cuti ini?');" style="flex: 1;">
+                        <form action="{{ route('leave-requests.approve', $leaveRequest) }}" method="POST" onsubmit="return confirm('{{ __('leave.confirm_approve') }}');" style="flex: 1;">
                             @csrf
                             <button type="submit" class="btn btn-approve" style="width: 100%; justify-content: center;">
-                                ✓ Setujui Pengajuan
+                                {{ __('leave.approve_submit') }}
                             </button>
                         </form>
 
                         <button type="button" class="btn btn-reject" style="flex: 1; justify-content: center;" onclick="openRejectModal()">
-                            ✗ Tolak Pengajuan
+                            {{ __('leave.reject_submit') }}
                         </button>
                     </div>
                 </div>
@@ -172,24 +172,24 @@
 <div id="rejectModal" class="modal-overlay" onclick="closeRejectModalOnOverlay(event)">
     <div class="modal-card">
         <div class="modal-head">
-            <h3>Tolak Pengajuan Cuti</h3>
+            <h3>{{ __('leave.reject_modal_title') }}</h3>
             <button type="button" class="modal-close" onclick="closeRejectModal()">&times;</button>
         </div>
         <p style="margin: 0 0 16px; font-size: 13px; color: var(--muted);">
-            Menolak permohonan <strong>{{ $leaveRequest->leave_type }}</strong> untuk <strong>{{ $leaveRequest->employee?->name }}</strong>.
+            {{ __('leave.reject_modal_desc_named', ['type' => $leaveRequest->leave_type, 'name' => $leaveRequest->employee?->name]) }}
         </p>
 
         <form method="POST" action="{{ route('leave-requests.reject', $leaveRequest) }}">
             @csrf
             <div style="margin-bottom: 18px;">
                 <label for="rejection_reason" style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 600;">
-                    Alasan Penolakan <span style="color: #d93838;">*</span>
+                    {{ __('leave.rejection_reason') }} <span style="color: #d93838;">*</span>
                 </label>
-                <textarea id="rejection_reason" name="rejection_reason" rows="4" class="form-control" placeholder="Tuliskan alasan penolakan secara jelas..." required></textarea>
+                <textarea id="rejection_reason" name="rejection_reason" rows="4" class="form-control" placeholder="{{ __('leave.rejection_reason_input_placeholder') }}" required></textarea>
             </div>
             <div style="display: flex; justify-content: flex-end; gap: 10px;">
-                <button type="button" class="btn btn-outline" onclick="closeRejectModal()">Batal</button>
-                <button type="submit" class="btn btn-reject">Tolak Pengajuan</button>
+                <button type="button" class="btn btn-outline" onclick="closeRejectModal()">{{ __('common.cancel') }}</button>
+                <button type="submit" class="btn btn-reject">{{ __('leave.reject_submit') }}</button>
             </div>
         </form>
     </div>

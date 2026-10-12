@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Manajemen Departemen')
+@section('title', __('departments.title'))
 
 @section('content')
 <style>
@@ -40,13 +40,13 @@
 
 <div class="page-header">
     <div class="page-title-box">
-        <h2>Manajemen Departemen</h2>
-        <p>Kelola struktur divisi dan departemen operasional perusahaan</p>
+        <h2>{{ __('departments.title') }}</h2>
+        <p>{{ __('departments.subtitle') }}</p>
     </div>
     <div class="header-actions">
         @if (auth()->user()->role?->name === 'super_admin')
             <a href="{{ route('departments.create') }}" class="btn btn-primary">
-                <span>+</span> Tambah Department
+                <span>+</span> {{ __('departments.add_department') }}
             </a>
         @endif
     </div>
@@ -67,18 +67,18 @@
 <div class="card filter-card">
     <form action="{{ route('departments.index') }}" method="GET" class="filter-form">
         <div class="filter-group search-group">
-            <input type="search" name="search" value="{{ $search }}" class="form-control" placeholder="Cari nama atau deskripsi departemen...">
+            <input type="search" name="search" value="{{ $search }}" class="form-control" placeholder="{{ __('departments.search_placeholder') }}">
         </div>
         <div class="filter-group">
             <select name="status" class="form-control">
-                <option value="">Semua Status</option>
+                <option value="">{{ __('departments.all_status') }}</option>
                 <option value="active" {{ $status === 'active' ? 'selected' : '' }}>Active</option>
                 <option value="inactive" {{ $status === 'inactive' ? 'selected' : '' }}>Inactive</option>
             </select>
         </div>
-        <button type="submit" class="btn btn-outline">Filter</button>
+        <button type="submit" class="btn btn-outline">{{ __('common.filter') }}</button>
         @if ($search || $status)
-            <a href="{{ route('departments.index') }}" class="btn btn-outline" style="color: var(--muted);">Reset</a>
+            <a href="{{ route('departments.index') }}" class="btn btn-outline" style="color: var(--muted);">{{ __('common.reset') }}</a>
         @endif
     </form>
 </div>
@@ -89,11 +89,11 @@
             <thead>
                 <tr>
                     <th style="width: 60px;">No</th>
-                    <th>Department Name</th>
-                    <th>Description</th>
-                    <th style="width: 160px;">Jumlah Karyawan</th>
-                    <th style="width: 120px;">Status</th>
-                    <th style="text-align: right; width: 180px;">Actions</th>
+                    <th>{{ __('departments.department_name_header') }}</th>
+                    <th>{{ __('departments.description_header') }}</th>
+                    <th style="width: 160px;">{{ __('departments.employee_count') }}</th>
+                    <th style="width: 120px;">{{ __('common.status') }}</th>
+                    <th style="text-align: right; width: 180px;">{{ __('common.action') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -106,7 +106,7 @@
                         <td>{{ $dept->description ?: '-' }}</td>
                         <td>
                             <span class="badge-count">
-                                <span>👥</span> {{ $dept->employees_count }} orang
+                                <span>👥</span> {{ $dept->employees_count }} {{ __('departments.people') }}
                             </span>
                         </td>
                         <td>
@@ -118,13 +118,13 @@
                         </td>
                         <td style="text-align: right;">
                             <div class="action-links" style="justify-content: flex-end;">
-                                <a href="{{ route('departments.show', $dept) }}" class="action-link" title="Detail Department">Detail</a>
+                                <a href="{{ route('departments.show', $dept) }}" class="action-link" title="{{ __('common.detail') }}">{{ __('common.detail') }}</a>
                                 @if (auth()->user()->role?->name === 'super_admin')
-                                    <a href="{{ route('departments.edit', $dept) }}" class="action-link" title="Edit Department">Edit</a>
-                                    <form action="{{ route('departments.destroy', $dept) }}" method="POST" style="display: inline;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus department {{ $dept->name }}?');">
+                                    <a href="{{ route('departments.edit', $dept) }}" class="action-link" title="{{ __('common.edit') }}">{{ __('common.edit') }}</a>
+                                    <form action="{{ route('departments.destroy', $dept) }}" method="POST" style="display: inline;" onsubmit="return confirm('{{ __('departments.confirm_delete', ['name' => $dept->name]) }}');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="action-link action-link-danger" style="cursor: pointer;" title="Hapus Department">Hapus</button>
+                                        <button type="submit" class="action-link action-link-danger" style="cursor: pointer;" title="{{ __('common.delete') }}">{{ __('common.delete') }}</button>
                                     </form>
                                 @endif
                             </div>
@@ -134,8 +134,8 @@
                     <tr>
                         <td colspan="6">
                             <div class="empty-state">
-                                <p style="margin: 0; font-size: 14px; font-weight: 600;">Belum ada data department</p>
-                                <span style="font-size: 12px; margin-top: 4px; display: block;">Silakan tambahkan department baru atau ubah kriteria pencarian.</span>
+                                <p style="margin: 0; font-size: 14px; font-weight: 600;">{{ __('departments.no_departments') }}</p>
+                                <span style="font-size: 12px; margin-top: 4px; display: block;">{{ __('departments.no_departments_hint') }}</span>
                             </div>
                         </td>
                     </tr>
@@ -147,7 +147,7 @@
     @if ($departments->hasPages())
         <div class="pagination-wrapper">
             <div>
-                Menampilkan {{ $departments->firstItem() }} - {{ $departments->lastItem() }} dari {{ $departments->total() }} department
+                {{ __('departments.showing_records', ['from' => $departments->firstItem(), 'to' => $departments->lastItem(), 'total' => $departments->total()]) }}
             </div>
             <div>
                 {{ $departments->links() }}

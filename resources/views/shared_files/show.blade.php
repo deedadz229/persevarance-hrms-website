@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Detail File · ' . $sharedFile->name)
+@section('title', __('shared_files.detail_title') . ' · ' . $sharedFile->name)
 
 @section('content')
 <style>
@@ -43,16 +43,16 @@
 
 <div class="page-header">
     <div class="page-title-box">
-        <h2>Detail Dokumen</h2>
-        <p>Informasi berkas, riwayat sinkronisasi, dan status akses pembagian</p>
+        <h2>{{ __('shared_files.detail_title') }}</h2>
+        <p>{{ __('shared_files.detail_subtitle') }}</p>
     </div>
     <div class="header-actions">
         <a href="{{ route('shared-files.index') }}" class="btn btn-outline">
-            &larr; Kembali ke Daftar
+            &larr; {{ __('common.back') }}
         </a>
         <a href="{{ route('shared-files.download', $sharedFile) }}" class="btn btn-primary">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Unduh Berkas
+            {{ __('common.download') }}
         </a>
     </div>
 </div>
@@ -61,51 +61,51 @@
     <div>
         {{-- File Information --}}
         <div class="detail-card">
-            <h3 class="card-title">Informasi File</h3>
+            <h3 class="card-title">{{ __('shared_files.file_info') }}</h3>
             <div class="info-list">
                 <div class="info-item">
-                    <span class="info-label">Nama File</span>
+                    <span class="info-label">{{ __('shared_files.file_name') }}</span>
                     <span class="info-value" style="font-weight: 700;">{{ $sharedFile->name }}</span>
                 </div>
                 <div class="info-item">
-                    <span class="info-label">Kategori</span>
+                    <span class="info-label">{{ __('shared_files.category') }}</span>
                     <span class="info-value">{{ $sharedFile->category ?? 'Umum' }}</span>
                 </div>
                 <div class="info-item">
-                    <span class="info-label">Ukuran Dokumen</span>
+                    <span class="info-label">{{ __('shared_files.document_size') }}</span>
                     <span class="info-value tabular-nums">{{ $sharedFile->size ? number_format($sharedFile->size / 1024, 1) . ' KB' : '-' }}</span>
                 </div>
                 <div class="info-item">
-                    <span class="info-label">Tipe MIME</span>
+                    <span class="info-label">{{ __('shared_files.mime_type') }}</span>
                     <span class="info-value">{{ $sharedFile->mime_type ?? '-' }}</span>
                 </div>
                 <div class="info-item">
-                    <span class="info-label">Pemilik / Pengunggah</span>
+                    <span class="info-label">{{ __('shared_files.owner_uploader') }}</span>
                     <span class="info-value">{{ $sharedFile->owner_name ?? $sharedFile->uploader?->name ?? 'Admin' }}</span>
                 </div>
                 <div class="info-item">
-                    <span class="info-label">Status Sinkronisasi</span>
+                    <span class="info-label">{{ __('shared_files.sync_status') }}</span>
                     <span class="info-value">
                         @if ($sharedFile->sync_status === 'synced')
-                            <span class="badge badge-synced">Tersinkron</span>
+                            <span class="badge badge-synced">{{ __('shared_files.synced_status') }}</span>
                         @else
-                            <span class="badge badge-pending">Pending</span>
+                            <span class="badge badge-pending">{{ __('shared_files.pending_status') }}</span>
                         @endif
                     </span>
                 </div>
                 <div class="info-item">
-                    <span class="info-label">Waktu Unggah</span>
+                    <span class="info-label">{{ __('shared_files.uploaded_at') }}</span>
                     <span class="info-value tabular-nums">{{ $sharedFile->created_at->format('d M Y, H:i:s') }}</span>
                 </div>
                 <div class="info-item">
-                    <span class="info-label">Terakhir Diperbarui</span>
+                    <span class="info-label">{{ __('shared_files.last_updated') }}</span>
                     <span class="info-value tabular-nums">{{ $sharedFile->updated_at->format('d M Y, H:i:s') }}</span>
                 </div>
             </div>
 
             @if ($sharedFile->description)
                 <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line);">
-                    <span class="info-label">Deskripsi / Catatan</span>
+                    <span class="info-label">{{ __('shared_files.description') }}</span>
                     <p style="margin: 6px 0 0; color: var(--ink-secondary); font-size: 13px; line-height: 1.6; white-space: pre-line;">{{ $sharedFile->description }}</p>
                 </div>
             @endif
@@ -114,15 +114,15 @@
         @if (! $isTaiwanAccount)
             {{-- Recipients Management --}}
             <div class="detail-card">
-                <h3 class="card-title">Penerima Taiwan Account</h3>
+                <h3 class="card-title">{{ __('shared_files.taiwan_recipients') }}</h3>
                 @if ($sharedFile->recipients->isNotEmpty())
                     <table class="recipients-table">
                         <thead>
                             <tr>
-                                <th>Nama Akun</th>
+                                <th>{{ __('shared_files.account_name') }}</th>
                                 <th>Email</th>
-                                <th>Waktu Dibagikan</th>
-                                <th style="text-align: right;">Aksi</th>
+                                <th>{{ __('shared_files.shared_at') }}</th>
+                                <th style="text-align: right;">{{ __('common.action') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -137,7 +137,7 @@
                                         <form action="{{ route('shared-files.revoke', $sharedFile) }}" method="POST" onsubmit="return confirm('Cabut akses untuk akun {{ $recipient->name }}?');" style="display: inline;">
                                             @csrf
                                             <input type="hidden" name="user_id" value="{{ $recipient->id }}">
-                                            <button type="submit" class="btn btn-danger btn-sm">Cabut Akses</button>
+                                            <button type="submit" class="btn btn-danger btn-sm">{{ __('shared_files.revoke_access') }}</button>
                                         </form>
                                     </td>
                                 </tr>
@@ -163,7 +163,7 @@
                                     <span>{{ $tUser->name }}</span>
                                 </label>
                             @endforeach
-                            <button type="submit" class="btn btn-primary btn-sm">Simpan Pembagian</button>
+                            <button type="submit" class="btn btn-primary btn-sm">{{ __('shared_files.save_sharing') }}</button>
                         </div>
                     </form>
                 </div>
@@ -175,24 +175,24 @@
         @if (! $isTaiwanAccount)
             {{-- Edit Metadata Form --}}
             <div class="detail-card">
-                <h3 class="card-title">Edit Informasi File</h3>
+                <h3 class="card-title">{{ __('shared_files.edit_info') }}</h3>
                 <form action="{{ route('shared-files.update', $sharedFile) }}" method="POST">
                     @csrf
                     @method('PUT')
                     <div style="margin-bottom: 12px;">
-                        <label style="display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px;">Nama File</label>
+                        <label style="display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px;">{{ __('shared_files.file_name') }}</label>
                         <input type="text" name="name" value="{{ $sharedFile->name }}" required class="form-control">
                     </div>
                     <div style="margin-bottom: 12px;">
-                        <label style="display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px;">Kategori</label>
+                        <label style="display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px;">{{ __('shared_files.category') }}</label>
                         <input type="text" name="category" value="{{ $sharedFile->category }}" class="form-control">
                     </div>
                     <div style="margin-bottom: 12px;">
-                        <label style="display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px;">Deskripsi</label>
+                        <label style="display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px;">{{ __('shared_files.description') }}</label>
                         <textarea name="description" rows="3" class="form-control">{{ $sharedFile->description }}</textarea>
                     </div>
                     <button type="submit" class="btn btn-primary btn-sm" style="width: 100%; justify-content: center;">
-                        Perbarui Data
+                        {{ __('shared_files.update_data') }}
                     </button>
                 </form>
             </div>
@@ -201,14 +201,14 @@
         {{-- Sync Logs Activity --}}
         @if (! $isTaiwanAccount)
             <div class="detail-card">
-                <h3 class="card-title">Log Sinkronisasi</h3>
+                <h3 class="card-title">{{ __('shared_files.sync_logs') }}</h3>
                 @forelse ($syncLogs as $log)
                     <div style="padding: 10px 0; border-bottom: 1px solid var(--line-subtle); font-size: 12px;">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
                             <strong style="color: var(--ink);">Status: {{ ucfirst($log->status) }}</strong>
                             <span class="tabular-nums" style="color: var(--muted);">{{ $log->synced_at?->format('d/m/Y H:i') }}</span>
                         </div>
-                        <div style="color: var(--muted);">Arah: {{ strtoupper($log->direction) }}</div>
+                        <div style="color: var(--muted);">{{ __('shared_files.direction') }}: {{ strtoupper($log->direction) }}</div>
                     </div>
                 @empty
                     <p style="color: var(--muted); font-size: 12px; margin: 0; font-style: italic;">Belum ada catatan log sinkronisasi.</p>
